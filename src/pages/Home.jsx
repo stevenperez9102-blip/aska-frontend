@@ -702,7 +702,7 @@ function Home() {
           padding: "80px 24px 100px",
         }}
       >
-        <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
+        <div className="aska-home-products-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {loadingProducts ? (
             <p style={{ color: "rgba(255,255,255,0.68)" }}>
               Cargando productos...
@@ -712,7 +712,7 @@ function Home() {
               No hay productos disponibles.
             </p>
           ) : (
-            <div style={{ display: "grid", gap: "76px" }}>
+            <div className="aska-home-categories-grid" style={{ display: "grid", gap: "76px" }}>
               {categories.map((category) => {
                 const preview = products
                   .filter(
@@ -726,7 +726,7 @@ function Home() {
                 const secondaryProducts = preview.slice(1, 5);
 
                 return (
-                  <section key={category}>
+                  <section key={category} className="aska-home-category-section">
                     <div
                       style={{
                         display: "flex",
@@ -783,9 +783,10 @@ function Home() {
 
                     {mainProduct ? (
                       <div
+                        className="aska-home-product-layout"
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "minmax(320px, 1.25fr) minmax(320px, 1fr)",
+                          gridTemplateColumns: "minmax(0, 1.25fr) minmax(0, 1fr)",
                           gap: "24px",
                           alignItems: "stretch",
                         }}
@@ -793,6 +794,7 @@ function Home() {
                         <ProductCover item={mainProduct} large />
 
                         <div
+                          className="aska-home-secondary-grid"
                           style={{
                             display: "grid",
                             gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
@@ -812,6 +814,58 @@ function Home() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          html,
+          body,
+          #root {
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          .aska-home-products-wrap,
+          .aska-home-categories-grid,
+          .aska-home-category-section,
+          .aska-home-product-layout,
+          .aska-home-secondary-grid {
+            max-width: 100%;
+            min-width: 0;
+          }
+
+          @media (max-width: 768px) {
+            .aska-home-product-layout {
+              grid-template-columns: 1fr !important;
+              gap: 18px !important;
+            }
+
+            .aska-home-secondary-grid {
+              grid-template-columns: 1fr !important;
+              gap: 18px !important;
+            }
+
+            .aska-home-categories-grid {
+              gap: 54px !important;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .aska-home-products-wrap {
+              width: 100%;
+            }
+
+            .aska-home-product-layout,
+            .aska-home-secondary-grid {
+              width: 100%;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
