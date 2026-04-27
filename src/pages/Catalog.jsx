@@ -475,7 +475,7 @@ function Catalog() {
           padding: "36px 24px 70px",
         }}
       >
-        <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
+        <div className="aska-catalog-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {loading ? (
             <p style={{ color: "#222", fontSize: "1rem" }}>Cargando catálogo...</p>
           ) : categoriaActiva ? (
@@ -487,7 +487,7 @@ function Catalog() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
                   gap: "24px",
                 }}
               >
@@ -543,7 +543,7 @@ function Catalog() {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
                           gap: "20px",
                         }}
                       >
@@ -557,6 +557,33 @@ function Catalog() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          html,
+          body,
+          #root {
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          .aska-catalog-wrap {
+            max-width: 100%;
+            min-width: 0;
+          }
+
+          @media (max-width: 480px) {
+            .aska-catalog-wrap {
+              width: 100%;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
