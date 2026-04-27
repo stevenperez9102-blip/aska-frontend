@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function slugifyCategory(name = "") {
@@ -17,6 +17,7 @@ function Navbar() {
   const [showCatalogMenu, setShowCatalogMenu] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const [secretActive, setSecretActive] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
@@ -30,6 +31,26 @@ function Navbar() {
     []
   );
 
+  useEffect(() => {
+    setMobileOpen(false);
+    setShowCatalogMenu(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.body.style.overflowX = "hidden";
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.overflowX = "";
+    };
+  }, [mobileOpen]);
+
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
+    setShowCatalogMenu(false);
+  };
+
   const linkStyle = (active = false) => ({
     color: active ? "#bfa6ff" : "#f4efe8",
     textDecoration: "none",
@@ -37,6 +58,7 @@ function Navbar() {
     fontSize: "0.95rem",
     letterSpacing: "0.04em",
     transition: "all 0.25s ease",
+    whiteSpace: "nowrap",
   });
 
   const buttonTextStyle = {
@@ -48,6 +70,8 @@ function Navbar() {
     fontWeight: 600,
     fontSize: "0.95rem",
     letterSpacing: "0.04em",
+    fontFamily: "inherit",
+    whiteSpace: "nowrap",
   };
 
   const openMenu = () => {
@@ -62,10 +86,18 @@ function Navbar() {
     setTimeoutId(id);
   };
 
+  const toggleCatalogMenu = (e) => {
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      setShowCatalogMenu((value) => !value);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
     window.dispatchEvent(new Event("auth-changed"));
+    closeMobileMenu();
   };
 
   const handleSecretClick = (e) => {
@@ -175,24 +207,6 @@ function Navbar() {
               y Nicky una agente secreta de las zuricatas!
             </h3>
           </div>
-
-          <style>
-            {`
-              @keyframes askaFall {
-                0% {
-                  transform: translateY(-100px) rotate(0deg);
-                  opacity: 0;
-                }
-                12% {
-                  opacity: 1;
-                }
-                100% {
-                  transform: translateY(115vh) rotate(260deg);
-                  opacity: 0;
-                }
-              }
-            `}
-          </style>
         </div>
       )}
 
@@ -207,6 +221,7 @@ function Navbar() {
         }}
       >
         <div
+          className="aska-navbar-inner"
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
@@ -214,6 +229,7 @@ function Navbar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            gap: "18px",
           }}
         >
           <button
@@ -230,30 +246,46 @@ function Navbar() {
               cursor: "pointer",
               fontFamily: "inherit",
               padding: 0,
+              flexShrink: 0,
             }}
           >
             AŞKA
           </button>
 
-          <nav
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "34px",
-              position: "relative",
-            }}
+          <button
+            type="button"
+            className={`aska-hamburger ${mobileOpen ? "is-open" : ""}`}
+            onClick={() => setMobileOpen((value) => !value)}
+            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={mobileOpen}
           >
-            <Link to="/" style={linkStyle(location.pathname === "/")}>
+            <span />
+            <span />
+            <span />
+          </button>
+
+          {mobileOpen && (
+            <button
+              type="button"
+              className="aska-mobile-backdrop"
+              aria-label="Cerrar menú"
+              onClick={closeMobileMenu}
+            />
+          )}
+
+          <nav className={`aska-nav-menu ${mobileOpen ? "open" : ""}`}>
+            <Link to="/" style={linkStyle(location.pathname === "/")} onClick={closeMobileMenu}>
               Inicio
             </Link>
 
             <div
-              style={{ position: "relative" }}
+              className="aska-catalog-wrapper"
               onMouseEnter={openMenu}
               onMouseLeave={closeMenu}
             >
               <Link
                 to="/catalogo"
+                onClick={toggleCatalogMenu}
                 style={linkStyle(
                   location.pathname === "/catalogo" ||
                     location.pathname.startsWith("/catalogo/") ||
@@ -265,20 +297,9 @@ function Navbar() {
 
               {showCatalogMenu && (
                 <div
+                  className="aska-catalog-menu"
                   onMouseEnter={openMenu}
                   onMouseLeave={closeMenu}
-                  style={{
-                    position: "absolute",
-                    top: "48px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "#111",
-                    borderRadius: "6px",
-                    minWidth: "300px",
-                    padding: "12px 0",
-                    boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
                 >
                   {categorias.map((categoria) => (
                     <Link
@@ -290,8 +311,9 @@ function Navbar() {
                         color: "#ddd",
                         textDecoration: "none",
                         fontSize: "0.95rem",
+                        whiteSpace: "nowrap",
                       }}
-                      onClick={() => setShowCatalogMenu(false)}
+                      onClick={closeMobileMenu}
                     >
                       {categoria}
                     </Link>
@@ -303,13 +325,14 @@ function Navbar() {
             <Link
               to="/nosotras"
               style={linkStyle(location.pathname.startsWith("/nosotras"))}
+              onClick={closeMobileMenu}
             >
               Nosotras
             </Link>
 
             {isLoggedIn ? (
               <>
-                <Link to="/mis-pedidos" style={linkStyle(false)}>
+                <Link to="/mis-pedidos" style={linkStyle(false)} onClick={closeMobileMenu}>
                   Mis pedidos
                 </Link>
 
@@ -317,6 +340,7 @@ function Navbar() {
                   <Link
                     to="/admin/pagina"
                     style={linkStyle(location.pathname.startsWith("/admin"))}
+                    onClick={closeMobileMenu}
                   >
                     Administración
                   </Link>
@@ -331,6 +355,7 @@ function Navbar() {
                 <Link
                   to="/login"
                   style={linkStyle(location.pathname.startsWith("/login"))}
+                  onClick={closeMobileMenu}
                 >
                   Ingresar
                 </Link>
@@ -338,6 +363,7 @@ function Navbar() {
                 <Link
                   to="/register"
                   style={linkStyle(location.pathname.startsWith("/register"))}
+                  onClick={closeMobileMenu}
                 >
                   Registrarse
                 </Link>
@@ -346,6 +372,161 @@ function Navbar() {
           </nav>
         </div>
       </header>
+
+      <style>
+        {`
+          @keyframes askaFall {
+            0% {
+              transform: translateY(-100px) rotate(0deg);
+              opacity: 0;
+            }
+            12% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(115vh) rotate(260deg);
+              opacity: 0;
+            }
+          }
+
+          .aska-hamburger {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            cursor: pointer;
+            padding: 9px;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            position: relative;
+            z-index: 10001;
+          }
+
+          .aska-hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            border-radius: 999px;
+            background: #f4efe8;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+          }
+
+          .aska-hamburger.is-open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+          }
+
+          .aska-hamburger.is-open span:nth-child(2) {
+            opacity: 0;
+          }
+
+          .aska-hamburger.is-open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+          }
+
+          .aska-nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+            position: relative;
+          }
+
+          .aska-catalog-wrapper {
+            position: relative;
+          }
+
+          .aska-catalog-menu {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            border-radius: 6px;
+            min-width: 300px;
+            padding: 12px 0;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+          }
+
+          .aska-mobile-backdrop {
+            display: none;
+          }
+
+          @media (max-width: 768px) {
+            .aska-navbar-inner {
+              padding: 14px 18px !important;
+            }
+
+            .aska-hamburger {
+              display: flex;
+            }
+
+            .aska-mobile-backdrop {
+              display: block;
+              position: fixed;
+              inset: 0;
+              z-index: 9998;
+              background: rgba(0,0,0,0.55);
+              border: none;
+              padding: 0;
+            }
+
+            .aska-nav-menu {
+              position: fixed;
+              top: 0;
+              right: 0;
+              z-index: 9999;
+              width: min(82vw, 340px);
+              height: 100vh;
+              padding: 92px 28px 34px;
+              background: rgba(8,8,9,0.98);
+              border-left: 1px solid rgba(255,255,255,0.08);
+              box-shadow: -20px 0 60px rgba(0,0,0,0.55);
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              justify-content: flex-start;
+              gap: 22px;
+              transform: translateX(105%);
+              transition: transform 0.28s ease;
+              overflow-y: auto;
+            }
+
+            .aska-nav-menu.open {
+              transform: translateX(0);
+            }
+
+            .aska-nav-menu a,
+            .aska-nav-menu button {
+              font-size: 1.05rem !important;
+              width: 100%;
+              text-align: left;
+            }
+
+            .aska-catalog-wrapper {
+              width: 100%;
+            }
+
+            .aska-catalog-menu {
+              position: static;
+              transform: none;
+              min-width: 100%;
+              margin-top: 12px;
+              padding: 6px 0;
+              box-shadow: none;
+              background: rgba(255,255,255,0.04);
+              border-radius: 14px;
+            }
+
+            .aska-catalog-menu a {
+              padding: 12px 16px !important;
+              white-space: normal !important;
+            }
+          }
+        `}
+      </style>
     </>
   );
 }
