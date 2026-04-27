@@ -151,6 +151,7 @@ function ProductDetail() {
       <Navbar />
 
       <section
+        className="aska-product-detail-page"
         style={{
           minHeight: "100vh",
           background: "#f3f3f3",
@@ -158,6 +159,7 @@ function ProductDetail() {
         }}
       >
         <div
+          className="aska-product-detail-grid"
           style={{
             maxWidth: "1320px",
             margin: "0 auto",
@@ -168,6 +170,7 @@ function ProductDetail() {
           }}
         >
           <div
+            className="aska-product-gallery-card"
             style={{
               background: "#ffffff",
               borderRadius: "26px",
@@ -190,6 +193,7 @@ function ProductDetail() {
             </p>
 
             <div
+              className="aska-product-image-frame"
               style={{
                 position: "relative",
                 width: "100%",
@@ -277,6 +281,7 @@ function ProductDetail() {
 
             {imagenesProducto.length > 1 && (
               <div
+                className="aska-product-thumbs"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(88px, 1fr))",
@@ -320,6 +325,7 @@ function ProductDetail() {
           </div>
 
           <aside
+            className="aska-product-info-card"
             style={{
               background: "#ffffff",
               borderRadius: "26px",
@@ -368,6 +374,7 @@ function ProductDetail() {
             </p>
 
             <button
+              className="aska-add-to-cart-button"
               type="button"
               onClick={handleAddToCart}
               style={{
@@ -387,6 +394,92 @@ function ProductDetail() {
           </aside>
         </div>
       </section>
+
+      <style>
+        {`
+          html,
+          body,
+          #root {
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          .aska-product-detail-page,
+          .aska-product-detail-grid,
+          .aska-product-gallery-card,
+          .aska-product-info-card,
+          .aska-product-image-frame,
+          .aska-product-thumbs {
+            max-width: 100%;
+            min-width: 0;
+          }
+
+          @media (max-width: 768px) {
+            .aska-product-detail-page {
+              padding: 24px 14px 48px !important;
+            }
+
+            .aska-product-detail-grid {
+              grid-template-columns: 1fr !important;
+              gap: 18px !important;
+            }
+
+            .aska-product-gallery-card {
+              padding: 12px !important;
+              border-radius: 22px !important;
+            }
+
+            .aska-product-image-frame {
+              height: min(78vw, 340px) !important;
+              min-height: 260px !important;
+              padding: 10px !important;
+              border-radius: 18px !important;
+            }
+
+            .aska-product-thumbs {
+              grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)) !important;
+              gap: 10px !important;
+            }
+
+            .aska-product-thumbs button {
+              height: 78px !important;
+              border-radius: 14px !important;
+            }
+
+            .aska-product-info-card {
+              position: static !important;
+              top: auto !important;
+              padding: 26px 22px !important;
+              border-radius: 22px !important;
+            }
+
+            .aska-add-to-cart-button {
+              width: 100% !important;
+              min-width: 0 !important;
+            }
+          }
+
+          @media (max-width: 420px) {
+            .aska-product-detail-page {
+              padding-left: 10px !important;
+              padding-right: 10px !important;
+            }
+
+            .aska-product-image-frame {
+              min-height: 240px !important;
+            }
+
+            .aska-product-info-card h1 {
+              font-size: 2rem !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
