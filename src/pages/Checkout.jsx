@@ -35,6 +35,7 @@ function Checkout() {
   const [loadingMetodos, setLoadingMetodos] = useState(true);
   const [mensaje, setMensaje] = useState("");
   const [loading, setLoading] = useState(false);
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   const total = useMemo(() => {
     return cart.reduce(
@@ -252,7 +253,7 @@ const handleSubmit = async (e) => {
           minHeight: "100vh",
           background: "#f5f5f5",
           color: "#111",
-          padding: "40px 24px 80px",
+          padding: isMobile ? "28px 16px 60px" : "40px 24px 80px",
         }}
       >
         <div
@@ -260,7 +261,7 @@ const handleSubmit = async (e) => {
             maxWidth: "1180px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "1.1fr 0.9fr",
+            gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr",
             gap: "24px",
           }}
         >
@@ -390,7 +391,7 @@ const handleSubmit = async (e) => {
                   Al confirmar tu pedido, serás redirigido a Bold para realizar
                   el pago de forma segura.
 
-🔒 Tus datos están protegidos con estándares de seguridad.
+🔒 Pago seguro con Bold. Tus datos están protegidos con estándares de seguridad.
                 </p>
 
                 {loadingMetodos ? (
