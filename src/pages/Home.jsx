@@ -355,7 +355,7 @@ function Home() {
               fontSize: large ? "0.82rem" : "0.68rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+              fontFamily: `"Playfair Display", Georgia, "Times New Roman", serif`,
               fontWeight: 700,
             }}
           >
@@ -382,7 +382,7 @@ function Home() {
               color: "#ffffff",
               fontWeight: 800,
               fontSize: large ? "1.18rem" : "0.98rem",
-              fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+              fontFamily: `"Playfair Display", Georgia, "Times New Roman", serif`,
             }}
           >
             {formatPrice(item.precio)}
@@ -554,10 +554,9 @@ function Home() {
 
       <section
         style={{
-          background: "#ffffff",
-          color: "#111111",
+          background: "#050505",
           color: "#ffffff",
-          padding: "36px 20px 10px",
+          padding: "46px 24px 0",
           borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
       >
@@ -574,34 +573,80 @@ function Home() {
               margin: "0 auto",
             }}
           >
-
             <p
               style={{
                 margin: 0,
-                marginBottom: "16px",
-                fontSize: "clamp(1.05rem, 1.3vw, 1.2rem)",
-                lineHeight: 1.6,
-                fontWeight: 400,
-                color: "#444",
+                marginBottom: "14px",
+                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+                lineHeight: 1.58,
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.76)",
+                letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
             >
-              En AŞKA creamos piezas únicas en acero inoxidable, diseñadas para expresar tu estilo con fuerza y elegancia.
+              En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
             </p>
 
             <p
               style={{
                 margin: 0,
-                fontSize: "clamp(1.05rem, 1.3vw, 1.2rem)",
-                lineHeight: 1.6,
-                fontWeight: 400,
-                color: "#444",
+                marginBottom: "14px",
+                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+                lineHeight: 1.58,
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.76)",
+                letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
             >
-              Cada joya es elaborada a mano por mujeres artesanas que transforman este arte en propósito y autonomía.
+              Cada joya y accesorio es tejido a mano. Creamos estilos contemporáneos que te dan fuerza y actitud.
             </p>
-    </div>
+
+            <p
+              style={{
+                margin: 0,
+                marginBottom: "24px",
+                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+                lineHeight: 1.58,
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.76)",
+                letterSpacing: "0.003em",
+                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+              }}
+            >
+              Somos una marca unisex que cree en el poder de los detalles para marcar la diferencia.
+            </p>
+
+            <p
+              style={{
+                margin: 0,
+                marginBottom: "12px",
+                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+                lineHeight: 1.58,
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.76)",
+                letterSpacing: "0.003em",
+                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+              }}
+            >
+              AŞKA es mucho más que diseño, somos un taller liderado por mujeres artesanas.
+            </p>
+
+            <p
+              style={{
+                margin: 0,
+                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+                lineHeight: 1.58,
+                fontWeight: 300,
+                color: "rgba(255,255,255,0.76)",
+                letterSpacing: "0.003em",
+                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+              }}
+            >
+              Nuestro sueño es empoderar mujeres, enseñándoles este arte como camino hacia la autonomía económica y una vida con propósito.
+            </p>
+          </div>
 
           <div
             style={{
@@ -632,7 +677,7 @@ function Home() {
               target="_blank"
               rel="noreferrer"
               style={{
-                color: "#111111",
+                color: "#ffffff",
                 textDecoration: "underline",
                 textUnderlineOffset: "4px",
                 fontSize: "clamp(1.1rem, 1.55vw, 1.58rem)",
