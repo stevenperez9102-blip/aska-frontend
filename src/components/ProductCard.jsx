@@ -76,6 +76,18 @@ function ProductCard({ product }) {
           className="product-card-main-image"
         />
 
+        <button
+          className="product-overlay-cart"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addToCart(productForCart);
+          }}
+          aria-label="Agregar al carrito"
+        >
+          <img src={cartLogo} alt="Agregar" />
+        </button>
+
         {gallery.length > 1 && (
           <>
             <button
@@ -139,5 +151,51 @@ function ProductCard({ product }) {
     </div>
   );
 }
+
+
+      <style>
+        {`
+        .product-card{
+          position:relative;
+        }
+        .product-card-image-wrap{
+          position:relative;
+        }
+        .product-overlay-cart{
+          position:absolute;
+          top:10px;
+          right:10px;
+          width:42px;
+          height:42px;
+          border-radius:50%;
+          border:none;
+          background:rgba(255,255,255,0.9);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          cursor:pointer;
+          box-shadow:0 6px 20px rgba(0,0,0,0.2);
+          transition:all .25s ease;
+          z-index:2;
+        }
+        .product-overlay-cart img{
+          width:20px;
+          height:20px;
+        }
+        .product-overlay-cart:hover{
+          transform:scale(1.15);
+          background:#fff;
+        }
+
+        @media(max-width:768px){
+          .product-overlay-cart{
+            width:40px;
+            height:40px;
+            top:8px;
+            right:8px;
+          }
+        }
+        `}
+      </style>
 
 export default ProductCard;
