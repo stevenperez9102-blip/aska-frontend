@@ -370,7 +370,7 @@ function Home() {
                 ? "clamp(1.65rem, 2.5vw, 2.7rem)"
                 : "clamp(1rem, 1.55vw, 1.35rem)",
               lineHeight: 1.05,
-              color: "#ffffff",
+              color: "#111111",
             }}
           >
             {item.nombre}
@@ -379,7 +379,7 @@ function Home() {
           <p
             style={{
               margin: 0,
-              color: "#ffffff",
+              color: "#111111",
               fontWeight: 800,
               fontSize: large ? "1.18rem" : "0.98rem",
               fontFamily: `"Helvetica Neue", Arial, sans-serif`,
@@ -554,8 +554,8 @@ function Home() {
 
       <section
         style={{
-          background: "#050505",
-          color: "#ffffff",
+          background: "#f8f6f2",
+          color: "#111111",
           padding: "46px 24px 0",
           borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
@@ -580,7 +580,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#444",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -595,7 +595,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#444",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -610,7 +610,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#444",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -625,7 +625,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#444",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -639,7 +639,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#444",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -696,19 +696,18 @@ function Home() {
 
       <section
         style={{
-          background:
-            "linear-gradient(180deg, #050505 0%, #080808 48%, #050505 100%)",
-          color: "#fff",
+          background: "#f8f6f2",
+          color: "#111111",
           padding: "80px 24px 100px",
         }}
       >
         <div className="aska-home-products-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {loadingProducts ? (
-            <p style={{ color: "rgba(255,255,255,0.68)" }}>
+            <p style={{ color: "#555" }}>
               Cargando productos...
             </p>
           ) : categories.length === 0 ? (
-            <p style={{ color: "rgba(255,255,255,0.68)" }}>
+            <p style={{ color: "#555" }}>
               No hay productos disponibles.
             </p>
           ) : (
