@@ -61,6 +61,9 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(() => readCartFromStorage(getUserId()));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [cartPulse, setCartPulse] = useState(false);
+  const [lastAddedId, setLastAddedId] = useState(null);
+
 
   const cartKey = useMemo(() => getCartKey(userId), [userId]);
 
@@ -114,9 +117,20 @@ export function CartProvider({ children }) {
       return nextCart;
     });
 
+    // Microinteracciones
+    setLastAddedId(normalized.id);
+    setCartPulse(true);
+    setTimeout(() => setCartPulse(false), 380);
+
+    // Toast más rico
+    const name = normalized.name || normalized.nombre || "Producto";
+    setToastMessage(`“${name}” agregado al carrito`);
+    setTimeout(() => setToastMessage(""), 2200);
+
+    // Notificar a la UI (Navbar badge, etc.)
+    window.dispatchEvent(new Event("cart-updated"));
+
     setIsCartOpen(true);
-    setToastMessage("Producto agregado al carrito");
-    setTimeout(() => setToastMessage(""), 2000);
   };
 
   const removeFromCart = (id) => {
@@ -169,6 +183,8 @@ export function CartProvider({ children }) {
         closeCart,
         openCart,
         toastMessage,
+        cartPulse,
+        lastAddedId,
       }}
     >
       {children}
