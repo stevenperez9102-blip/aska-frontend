@@ -84,19 +84,6 @@ function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    const onDocClick = (e) => {
-      const el = document.querySelector('.aska-navbar-inner');
-      if (el && !el.contains(e.target)) {
-        setShowCatalogMenu(false);
-        setShowPurchasesMenu(false);
-      }
-    };
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
-  }, []);
-
-
   const closeMobileMenu = () => {
     setMobileOpen(false);
     setShowCatalogMenu(false);
@@ -147,10 +134,8 @@ function Navbar() {
   };
 
   const togglePurchasesMenu = (e) => {
-    if (window.innerWidth <= 768) {
-      e.preventDefault();
-      setShowPurchasesMenu((value) => !value);
-    }
+    e.preventDefault();
+    setShowPurchasesMenu((value) => !value);
   };
 
   const toggleCatalogMenu = (e) => {
@@ -292,7 +277,7 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "18px 112px 18px 36px",
+            padding: "18px 128px 18px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -348,12 +333,12 @@ function Navbar() {
 
             <div
               className="aska-catalog-wrapper"
-              
-              
+              onMouseEnter={openMenu}
+              onMouseLeave={closeMenu}
             >
               <Link
                 to="/catalogo"
-                onClick={(e)=>{e.preventDefault(); setShowCatalogMenu(v=>!v);}}
+                onClick={toggleCatalogMenu}
                 style={linkStyle(
                   location.pathname === "/catalogo" ||
                     location.pathname.startsWith("/catalogo/") ||
@@ -365,10 +350,9 @@ function Navbar() {
 
               {showCatalogMenu && (
                 <div
-                  onClick={(e)=>e.stopPropagation()}
                   className="aska-catalog-menu"
-                  
-                  
+                  onMouseEnter={openMenu}
+                  onMouseLeave={closeMenu}
                 >
                   {categorias.map((categoria) => (
                     <Link
@@ -403,12 +387,12 @@ function Navbar() {
               <>
                 <div
                   className="aska-purchases-wrapper"
-                  
-                  
+                  onMouseEnter={openPurchasesMenu}
+                  onMouseLeave={closePurchasesMenu}
                 >
                   <Link
                     to="/mis-pedidos"
-                    onClick={(e)=>{e.preventDefault(); setShowPurchasesMenu(v=>!v);}}
+                    onClick={togglePurchasesMenu}
                     style={linkStyle(
                       location.pathname.startsWith("/mis-pedidos") ||
                         location.pathname.startsWith("/admin")
@@ -419,10 +403,9 @@ function Navbar() {
 
                   {showPurchasesMenu && (
                     <div
-                      onClick={(e)=>e.stopPropagation()}
                       className="aska-purchases-menu"
-                      
-                      
+                      onMouseEnter={openPurchasesMenu}
+                      onMouseLeave={closePurchasesMenu}
                     >
                       <Link
                         to="/mis-pedidos"
@@ -480,12 +463,12 @@ function Navbar() {
               <>
                 <div
                   className="aska-purchases-wrapper"
-                  
-                  
+                  onMouseEnter={openPurchasesMenu}
+                  onMouseLeave={closePurchasesMenu}
                 >
                   <Link
                     to="/login"
-                    onClick={(e)=>{e.preventDefault(); setShowPurchasesMenu(v=>!v);}}
+                    onClick={togglePurchasesMenu}
                     style={linkStyle(
                       location.pathname.startsWith("/login") ||
                         location.pathname.startsWith("/register")
@@ -496,10 +479,9 @@ function Navbar() {
 
                   {showPurchasesMenu && (
                     <div
-                      onClick={(e)=>e.stopPropagation()}
                       className="aska-purchases-menu"
-                      
-                      
+                      onMouseEnter={openPurchasesMenu}
+                      onMouseLeave={closePurchasesMenu}
                     >
                       <Link
                         to="/login"
@@ -635,9 +617,21 @@ function Navbar() {
             position: relative;
           }
 
+
+          .aska-purchases-wrapper::after,
+          .aska-catalog-wrapper::after {
+            content: "";
+            position: absolute;
+            left: -18px;
+            right: -18px;
+            top: 26px;
+            height: 34px;
+            pointer-events: auto;
+          }
+
           .aska-purchases-menu {
             position: absolute;
-            top: 48px;
+            top: 52px;
             left: 50%;
             transform: translateX(-50%);
             background: #111;
@@ -665,7 +659,7 @@ function Navbar() {
           .aska-navbar-cart {
             position: absolute;
             top: 50%;
-            right: 86px;
+            right: 24px;
             transform: translateY(-50%);
             z-index: 10002;
             width: 52px;
@@ -785,11 +779,19 @@ function Navbar() {
 
           @media (max-width: 768px) {
             .aska-navbar-inner {
-              padding: 14px 124px 14px 18px !important;
+              padding: 14px 116px 14px 18px !important;
+              min-height: 72px;
             }
 
             .aska-hamburger {
               display: flex;
+              position: absolute;
+              right: 70px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 44px;
+              height: 44px;
+              border-radius: 999px;
             }
 
             .aska-mobile-backdrop {
@@ -844,10 +846,11 @@ function Navbar() {
               transform: none;
               min-width: 100%;
               margin-top: 12px;
-              padding: 6px 0;
+              padding: 8px 0;
               box-shadow: none;
-              background: rgba(255,255,255,0.04);
-              border-radius: 14px;
+              background: rgba(255,255,255,0.055);
+              border-radius: 16px;
+              border: 1px solid rgba(255,255,255,0.07);
             }
 
             .aska-purchases-menu a {
@@ -857,9 +860,15 @@ function Navbar() {
 
             .aska-navbar-cart {
               right: 16px;
-              width: 46px;
-              height: 46px;
-              font-size: 1.08rem;
+              width: 44px;
+              height: 44px;
+              font-size: 1.05rem;
+            }
+
+            .aska-purchases-wrapper::after,
+            .aska-catalog-wrapper::after {
+              display: none;
+              pointer-events: none !important;
             }
 
             .aska-catalog-wrapper {
