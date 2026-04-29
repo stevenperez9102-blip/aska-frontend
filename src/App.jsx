@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import FloatingCart from "./components/FloatingCart";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -77,8 +76,6 @@ function App() {
   return (
     <Router>
       <div onClickCapture={handleSecretAreaClick}>
-        <FloatingCart />
-
         {secretActive && (
           <div
             style={{
