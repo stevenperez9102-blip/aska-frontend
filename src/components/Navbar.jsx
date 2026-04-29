@@ -277,7 +277,7 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "18px 160px 18px 36px",
+            padding: "18px 128px 18px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -289,16 +289,20 @@ function Navbar() {
             type="button"
             onClick={handleSecretClick}
             style={{
+              color: "#fff",
               background: "transparent",
               border: "none",
+              textDecoration: "none",
+              fontSize: "1.3rem",
+              fontWeight: 500,
+              letterSpacing: "0.08em",
               cursor: "pointer",
+              fontFamily: "inherit",
               padding: 0,
               flexShrink: 0,
-              display:"flex",
-              alignItems:"center"
             }}
           >
-            <img src="/askablanco.png" alt="ASKA" style={{ height: "28px" }} />
+            AŞKA
           </button>
 
           <button
@@ -655,7 +659,7 @@ function Navbar() {
           .aska-navbar-cart {
             position: absolute;
             top: 50%;
-            right: 18px;
+            right: 24px;
             transform: translateY(-50%);
             z-index: 10002;
             width: 52px;
