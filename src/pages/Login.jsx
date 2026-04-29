@@ -222,6 +222,105 @@ function Login() {
           </p>
         </div>
       </section>
+    
+      <style>
+        {`
+        .auth-page{
+          position:relative;
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:40px 16px;
+          background: linear-gradient(to bottom, rgba(0,0,0,0.85) 40%, #f5f5f5 100%);
+        }
+        .auth-bg-video{
+          position:absolute;
+          inset:0;
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          opacity:0.35;
+        }
+        .auth-overlay{
+          position:absolute;
+          inset:0;
+          background: radial-gradient(circle at center, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+        }
+        .auth-container{
+          position:relative;
+          z-index:2;
+          width:100%;
+          max-width:420px;
+          background: rgba(255,255,255,0.08);
+          backdrop-filter: blur(14px);
+          border-radius:20px;
+          padding:28px 22px;
+          border:1px solid rgba(255,255,255,0.15);
+          box-shadow:0 20px 60px rgba(0,0,0,0.5);
+          color:#fff;
+        }
+        .auth-container h1{
+          font-size:2rem;
+          margin:8px 0 10px;
+        }
+        .auth-sub{
+          font-size:0.9rem;
+          color:rgba(255,255,255,0.7);
+          margin-bottom:18px;
+        }
+        .auth-group label{
+          font-size:0.8rem;
+          color:#ddd;
+        }
+        .auth-group input{
+          width:100%;
+          padding:12px 14px;
+          border-radius:12px;
+          border:none;
+          margin-top:6px;
+          background:#fff;
+          color:#000;
+          font-size:0.9rem;
+        }
+        .password-field{
+          position:relative;
+        }
+        .password-toggle{
+          position:absolute;
+          right:10px;
+          top:50%;
+          transform:translateY(-50%);
+          background:none;
+          border:none;
+          cursor:pointer;
+          color:#333;
+        }
+        .auth-submit-button{
+          width:100%;
+          margin-top:18px;
+          padding:12px;
+          border-radius:999px;
+          border:none;
+          background:#fff;
+          color:#000;
+          font-weight:600;
+          cursor:pointer;
+        }
+        .auth-extra{
+          margin-top:10px;
+          font-size:0.8rem;
+          text-align:center;
+        }
+        @media (max-width:768px){
+          .auth-container{
+            padding:22px 16px;
+            border-radius:16px;
+          }
+        }
+        `}
+      </style>
+
     </>
   );
 }
