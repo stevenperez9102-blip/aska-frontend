@@ -298,7 +298,7 @@ function Navbar() {
               alignItems:"center"
             }}
           >
-            <img src="/logo-white.png" alt="ASKA" style={{height:"28px", objectFit:"contain"}} />
+            <img src="/askablanco.png" alt="ASKA" style={{ height: "28px" }} />
           </button>
 
           <button
