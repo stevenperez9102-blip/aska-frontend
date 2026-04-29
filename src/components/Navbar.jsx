@@ -19,6 +19,7 @@ function Navbar() {
   const [timeoutId, setTimeoutId] = useState(null);
   const [secretActive, setSecretActive] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cartLuxPulse, setCartLuxPulse] = useState(false);
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
@@ -62,6 +63,26 @@ function Navbar() {
       document.body.style.overflowX = "";
     };
   }, [mobileOpen]);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setCartLuxPulse(false);
+
+      window.requestAnimationFrame(() => {
+        setCartLuxPulse(true);
+      });
+
+      setTimeout(() => {
+        setCartLuxPulse(false);
+      }, 820);
+    };
+
+    window.addEventListener("cart-updated", handleCartUpdated);
+
+    return () => {
+      window.removeEventListener("cart-updated", handleCartUpdated);
+    };
+  }, []);
 
   const closeMobileMenu = () => {
     setMobileOpen(false);
@@ -504,13 +525,13 @@ function Navbar() {
 
           <Link
             to="/cart"
-            className="aska-navbar-cart"
+            className={`aska-navbar-cart ${cartLuxPulse ? "aska-navbar-cart-lux-pulse" : ""}`}
             aria-label="Ir al carrito de compras"
             onClick={closeMobileMenu}
           >
             <span aria-hidden="true">🛒</span>
             {totalCarrito > 0 && (
-              <span className="aska-navbar-cart-badge">{totalCarrito}</span>
+              <span className={`aska-navbar-cart-badge ${cartLuxPulse ? "aska-navbar-cart-badge-lux-pulse" : ""}`}>{totalCarrito}</span>
             )}
           </Link>
         </div>
@@ -660,6 +681,86 @@ function Navbar() {
             justify-content: center;
             font-size: 0.78rem;
             font-weight: 900;
+          }
+
+          .aska-navbar-cart::before {
+            content: "";
+            position: absolute;
+            inset: -7px;
+            border-radius: inherit;
+            background: radial-gradient(circle, rgba(230,230,230,0.32), transparent 68%);
+            opacity: 0;
+            transform: scale(0.75);
+            pointer-events: none;
+          }
+
+          .aska-navbar-cart-lux-pulse {
+            animation: askaCartDivineBounce 0.82s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            box-shadow:
+              0 0 0 1px rgba(255,255,255,0.18),
+              0 18px 44px rgba(0,0,0,0.38),
+              0 0 34px rgba(230,230,230,0.34);
+          }
+
+          .aska-navbar-cart-lux-pulse::before {
+            animation: askaCartHalo 0.82s ease-out;
+          }
+
+          .aska-navbar-cart-badge-lux-pulse {
+            animation: askaBadgeDivinePop 0.82s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            background: linear-gradient(135deg, #ffffff, #c9c9c9);
+            color: #050505;
+          }
+
+          @keyframes askaCartDivineBounce {
+            0% {
+              transform: translateY(-50%) scale(1) rotate(0deg);
+            }
+            22% {
+              transform: translateY(-50%) scale(1.18) rotate(-4deg);
+            }
+            42% {
+              transform: translateY(-50%) scale(0.96) rotate(3deg);
+            }
+            64% {
+              transform: translateY(-50%) scale(1.08) rotate(-1.5deg);
+            }
+            100% {
+              transform: translateY(-50%) scale(1) rotate(0deg);
+            }
+          }
+
+          @keyframes askaBadgeDivinePop {
+            0% {
+              transform: scale(1);
+            }
+            22% {
+              transform: scale(1.45);
+            }
+            48% {
+              transform: scale(0.92);
+            }
+            72% {
+              transform: scale(1.18);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+
+          @keyframes askaCartHalo {
+            0% {
+              opacity: 0;
+              transform: scale(0.7);
+            }
+            35% {
+              opacity: 1;
+              transform: scale(1.2);
+            }
+            100% {
+              opacity: 0;
+              transform: scale(1.65);
+            }
           }
 
           .aska-mobile-backdrop {
