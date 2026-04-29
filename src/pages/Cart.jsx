@@ -15,6 +15,7 @@ function Cart() {
   const { cart, removeFromCart } = useContext(CartContext);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryCity, setDeliveryCity] = useState("");
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   const total = cart.reduce(
     (acc, product) => acc + Number(product.price || 0) * Number(product.quantity || 0),
@@ -50,7 +51,7 @@ function Cart() {
         style={{
           minHeight: "100vh",
           background: "#f3f3f3",
-          padding: "42px 24px 70px",
+          padding: isMobile ? "28px 16px 60px" : "42px 24px 70px",
           color: "#111",
         }}
       >
@@ -141,8 +142,8 @@ function Cart() {
                     fontWeight: 600,
                   }}
                 >
-                  Aún no has agregado productos.
-Descubre la colección AŞKA y encuentra una pieza única para ti.
+                  Aún no has agregado productos. Descubre la colección AŞKA y encuentra
+                  una pieza única para ti.
                 </p>
 
                 <Link to="/catalogo" style={{ textDecoration: "none" }}>
@@ -169,7 +170,9 @@ Descubre la colección AŞKA y encuentra una pieza única para ti.
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(0, 1.2fr) minmax(280px, 0.8fr)",
+                gridTemplateColumns: isMobile
+                  ? "1fr"
+                  : "minmax(0, 1.2fr) minmax(280px, 0.8fr)",
                 gap: "24px",
                 alignItems: "start",
               }}
@@ -185,7 +188,7 @@ Descubre la colección AŞKA y encuentra una pieza única para ti.
                     key={product.id}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "120px 1fr",
+                      gridTemplateColumns: isMobile ? "1fr" : "120px 1fr",
                       gap: "18px",
                       background: "#fff",
                       border: "1px solid rgba(0,0,0,0.08)",
@@ -196,8 +199,8 @@ Descubre la colección AŞKA y encuentra una pieza única para ti.
                   >
                     <div
                       style={{
-                        width: "120px",
-                        height: "120px",
+                        width: isMobile ? "100%" : "120px",
+                        height: isMobile ? "190px" : "120px",
                         borderRadius: "18px",
                         overflow: "hidden",
                         background: "#ececec",
@@ -321,8 +324,8 @@ Descubre la colección AŞKA y encuentra una pieza única para ti.
                   borderRadius: "24px",
                   padding: "26px",
                   boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
-                  position: "sticky",
-                  top: "100px",
+                  position: isMobile ? "static" : "sticky",
+                  top: isMobile ? "auto" : "100px",
                 }}
               >
                 <h2
