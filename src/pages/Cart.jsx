@@ -109,13 +109,14 @@ function Cart() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "4.7rem",
+                    fontSize: "4.2rem",
+                    color: "#111",
                     animation: "pulse 2s ease-in-out infinite",
                     boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
                   }}
                   aria-hidden="true"
                 >
-                  ✨
+                  🛒
                 </div>
 
                 <h2
@@ -140,8 +141,8 @@ function Cart() {
                     fontWeight: 600,
                   }}
                 >
-                  Aún no agregaste productos. Explora la colección AŞKA y encuentra
-                  una pieza especial para ti.
+                  Aún no has agregado productos.
+Descubre la colección AŞKA y encuentra una pieza única para ti.
                 </p>
 
                 <Link to="/catalogo" style={{ textDecoration: "none" }}>
