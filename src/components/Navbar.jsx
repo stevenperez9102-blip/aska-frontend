@@ -258,11 +258,12 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "18px 96px 18px 36px",
+            padding: "18px 112px 18px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: "18px",
+            position: "relative",
           }}
         >
           <button
@@ -525,19 +526,20 @@ function Navbar() {
               </>
             )}
           </nav>
+
+          <Link
+            to="/cart"
+            className="aska-navbar-cart"
+            aria-label="Ir al carrito de compras"
+            onClick={closeMobileMenu}
+          >
+            <span aria-hidden="true">🛒</span>
+            {totalCarrito > 0 && (
+              <span className="aska-navbar-cart-badge">{totalCarrito}</span>
+            )}
+          </Link>
         </div>
       </header>
-
-      <Link
-        to="/cart"
-        className="aska-floating-cart"
-        aria-label="Ir al carrito de compras"
-      >
-        <span aria-hidden="true">🛒</span>
-        {totalCarrito > 0 && (
-          <span className="aska-floating-cart-badge">{totalCarrito}</span>
-        )}
-      </Link>
 
       <style>
         {`
@@ -648,10 +650,11 @@ function Navbar() {
             font-weight: 900;
           }
 
-          .aska-floating-cart {
-            position: fixed;
-            top: 14px;
-            right: 22px;
+          .aska-navbar-cart {
+            position: absolute;
+            top: 50%;
+            right: 36px;
+            transform: translateY(-50%);
             z-index: 10002;
             width: 52px;
             height: 52px;
@@ -662,12 +665,12 @@ function Navbar() {
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.12);
-            font-size: 1.25rem;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.16);
+            font-size: 1.22rem;
           }
 
-          .aska-floating-cart-badge {
+          .aska-navbar-cart-badge {
             position: absolute;
             top: -6px;
             right: -6px;
@@ -760,10 +763,8 @@ function Navbar() {
               white-space: normal !important;
             }
 
-            .aska-floating-cart {
-              top: 9px;
-              right: 70px;
-              bottom: auto;
+            .aska-navbar-cart {
+              right: 72px;
               width: 46px;
               height: 46px;
               font-size: 1.08rem;
