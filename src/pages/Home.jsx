@@ -221,28 +221,28 @@ function Home() {
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
-          color: "#fff",
-          background: "#070707",
-          border: "1px solid rgba(255,255,255,0.08)",
+          color: "#111111",
+          background: "#ffffff",
+          border: "1px solid rgba(17,17,17,0.08)",
           boxShadow: large
-            ? "0 28px 80px rgba(0,0,0,0.46)"
-            : "0 18px 48px rgba(0,0,0,0.36)",
+            ? "0 28px 80px rgba(0,0,0,0.12)"
+            : "0 18px 48px rgba(0,0,0,0.10)",
           transition:
             "transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = "translateY(-6px)";
-          e.currentTarget.style.borderColor = "rgba(217,200,239,0.35)";
+          e.currentTarget.style.borderColor = "rgba(143,143,143,0.35)";
           e.currentTarget.style.boxShadow = large
-            ? "0 34px 96px rgba(0,0,0,0.58)"
-            : "0 24px 60px rgba(0,0,0,0.48)";
+            ? "0 34px 96px rgba(0,0,0,0.18)"
+            : "0 24px 60px rgba(0,0,0,0.14)";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+          e.currentTarget.style.borderColor = "rgba(17,17,17,0.08)";
           e.currentTarget.style.boxShadow = large
-            ? "0 28px 80px rgba(0,0,0,0.46)"
-            : "0 18px 48px rgba(0,0,0,0.36)";
+            ? "0 28px 80px rgba(0,0,0,0.12)"
+            : "0 18px 48px rgba(0,0,0,0.10)";
         }}
       >
         {currentImage ? (
@@ -271,7 +271,7 @@ function Home() {
               display: "grid",
               placeItems: "center",
               color: "rgba(255,255,255,0.38)",
-              background: "#070707",
+              background: "#eeeeee",
             }}
           >
             Sin imagen
@@ -283,7 +283,7 @@ function Home() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.88) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0.02) 35%, rgba(0,0,0,0.74) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -351,7 +351,7 @@ function Home() {
             style={{
               margin: 0,
               marginBottom: large ? "8px" : "5px",
-              color: "rgba(217,200,239,0.84)",
+              color: "rgba(230,230,230,0.86)",
               fontSize: large ? "0.82rem" : "0.68rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
@@ -370,7 +370,7 @@ function Home() {
                 ? "clamp(1.65rem, 2.5vw, 2.7rem)"
                 : "clamp(1rem, 1.55vw, 1.35rem)",
               lineHeight: 1.05,
-              color: "#111111",
+              color: "#ffffff",
             }}
           >
             {item.nombre}
@@ -379,7 +379,7 @@ function Home() {
           <p
             style={{
               margin: 0,
-              color: "#111111",
+              color: "#ffffff",
               fontWeight: 800,
               fontSize: large ? "1.18rem" : "0.98rem",
               fontFamily: `"Helvetica Neue", Arial, sans-serif`,
@@ -414,7 +414,7 @@ function Home() {
             cursor: "pointer",
             background: "#111",
             border: active
-              ? "1px solid rgba(217,200,239,0.95)"
+              ? "1px solid #d8d8d8"
               : "1px solid rgba(255,255,255,0.14)",
             opacity: active ? 1 : 0.68,
           }}
@@ -554,8 +554,8 @@ function Home() {
 
       <section
         style={{
-          background: "#f8f6f2",
-          color: "#111111",
+          background: "#050505",
+          color: "#ffffff",
           padding: "46px 24px 0",
           borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
@@ -580,7 +580,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#444",
+                color: "rgba(255,255,255,0.76)",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -595,7 +595,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#444",
+                color: "rgba(255,255,255,0.76)",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -610,7 +610,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#444",
+                color: "rgba(255,255,255,0.76)",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -625,7 +625,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#444",
+                color: "rgba(255,255,255,0.76)",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -639,7 +639,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#444",
+                color: "rgba(255,255,255,0.76)",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -651,7 +651,7 @@ function Home() {
           <div
             style={{
               marginTop: "34px",
-              borderTop: "1px solid rgba(255,255,255,0.08)",
+              borderTop: "1px solid rgba(17,17,17,0.10)",
             }}
           />
 
@@ -677,7 +677,7 @@ function Home() {
               target="_blank"
               rel="noreferrer"
               style={{
-                color: "#f3f0ea",
+                color: "#111111",
                 textDecoration: "underline",
                 textUnderlineOffset: "4px",
                 fontSize: "clamp(1.1rem, 1.55vw, 1.58rem)",
@@ -696,18 +696,19 @@ function Home() {
 
       <section
         style={{
-          background: "#f8f6f2",
-          color: "#111111",
+          background:
+            "linear-gradient(180deg, #050505 0%, #080808 48%, #050505 100%)",
+          color: "#fff",
           padding: "80px 24px 100px",
         }}
       >
         <div className="aska-home-products-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {loadingProducts ? (
-            <p style={{ color: "#555" }}>
+            <p style={{ color: "rgba(255,255,255,0.68)" }}>
               Cargando productos...
             </p>
           ) : categories.length === 0 ? (
-            <p style={{ color: "#555" }}>
+            <p style={{ color: "rgba(255,255,255,0.68)" }}>
               No hay productos disponibles.
             </p>
           ) : (
@@ -741,7 +742,7 @@ function Home() {
                           style={{
                             margin: 0,
                             marginBottom: "8px",
-                            color: "rgba(217,200,239,0.72)",
+                            color: "#8f8f8f",
                             letterSpacing: "0.16em",
                             textTransform: "uppercase",
                             fontSize: "0.78rem",
@@ -766,13 +767,14 @@ function Home() {
                       <Link
                         to={`/catalogo/${slugifyCategory(category)}`}
                         style={{
-                          color: "#f3e6ff",
+                          color: "#111111",
                           textDecoration: "none",
-                          fontWeight: 700,
-                          border: "1px solid rgba(217,200,239,0.22)",
+                          fontWeight: 900,
+                          border: "1px solid rgba(17,17,17,0.14)",
                           borderRadius: "999px",
-                          padding: "10px 16px",
-                          background: "rgba(217,200,239,0.08)",
+                          padding: "12px 18px",
+                          background: "rgba(255,255,255,0.82)",
+                          boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
                           fontFamily: `"Helvetica Neue", Arial, sans-serif`,
                         }}
                       >
@@ -834,6 +836,58 @@ function Home() {
           .aska-home-secondary-grid {
             max-width: 100%;
             min-width: 0;
+          }
+
+
+          .aska-home-category-section {
+            position: relative;
+          }
+
+          .aska-home-category-section::before {
+            content: "";
+            display: block;
+            width: 72px;
+            height: 1px;
+            margin-bottom: 26px;
+            background: linear-gradient(90deg, rgba(17,17,17,0.55), rgba(17,17,17,0));
+          }
+
+          .aska-home-category-section h3 {
+            color: #111111 !important;
+            text-shadow: none !important;
+          }
+
+          .aska-home-category-section a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(0,0,0,0.12) !important;
+          }
+
+          .aska-home-product-layout > a,
+          .aska-home-secondary-grid > a {
+            isolation: isolate;
+          }
+
+          .aska-home-product-layout > a::after,
+          .aska-home-secondary-grid > a::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 42%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: 5;
+          }
+
+          .aska-home-product-layout > a:hover::after,
+          .aska-home-secondary-grid > a:hover::after {
+            opacity: 1;
+          }
+
+          .aska-home-product-layout h4,
+          .aska-home-secondary-grid h4 {
+            text-shadow: 0 2px 18px rgba(0,0,0,0.5);
           }
 
           @media (max-width: 768px) {
