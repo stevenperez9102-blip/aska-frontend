@@ -269,8 +269,8 @@ function Checkout() {
                 marginBottom: "22px",
               }}
             >
-              Completa tus datos. Tu pedido quedará registrado con pago pendiente
-              mientras confirmas el pago por el método disponible.
+              Completa tus datos para finalizar tu compra.
+              Tu pedido será preparado con cuidado por AŞKA ✨ mientras confirmas el pago.
             </p>
 
             {mensaje && (
@@ -368,6 +368,8 @@ function Checkout() {
                 >
                   Al confirmar tu pedido, serás redirigido a Bold para realizar
                   el pago de forma segura.
+
+🔒 Tus datos están protegidos con estándares de seguridad.
                 </p>
 
                 {loadingMetodos ? (
@@ -504,7 +506,7 @@ function Checkout() {
                   opacity: loading ? 0.75 : 1,
                 }}
               >
-                {loading ? "Procesando pago..." : "Confirmar pedido y pagar"}
+                {loading ? "Procesando pago..." : "Pagar de forma segura"}
               </button>
             </form>
           </div>
@@ -576,8 +578,33 @@ function Checkout() {
                     fontWeight: 700,
                   }}
                 >
-                  <span>Total:</span>
+                  <span>Subtotal:</span>
                   <span>{formatPrice(total)}</span>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                    color: "#555"
+                  }}
+                >
+                  <span>Envío:</span>
+                  <span>$10.000</span>
+                </div>
+
+                <div
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "1.2rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  <span>Total:</span>
+                  <span>{formatPrice(total + 10000)}</span>
                 </div>
 
                 <div
