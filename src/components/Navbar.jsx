@@ -258,7 +258,7 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "18px 36px",
+            padding: "18px 96px 18px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -650,9 +650,9 @@ function Navbar() {
 
           .aska-floating-cart {
             position: fixed;
-            top: 82px;
+            top: 14px;
             right: 22px;
-            z-index: 9998;
+            z-index: 10002;
             width: 52px;
             height: 52px;
             border-radius: 999px;
@@ -690,7 +690,7 @@ function Navbar() {
 
           @media (max-width: 768px) {
             .aska-navbar-inner {
-              padding: 14px 18px !important;
+              padding: 14px 124px 14px 18px !important;
             }
 
             .aska-hamburger {
@@ -761,11 +761,12 @@ function Navbar() {
             }
 
             .aska-floating-cart {
-              top: auto;
-              right: 18px;
-              bottom: 22px;
-              width: 54px;
-              height: 54px;
+              top: 9px;
+              right: 70px;
+              bottom: auto;
+              width: 46px;
+              height: 46px;
+              font-size: 1.08rem;
             }
 
             .aska-catalog-wrapper {
