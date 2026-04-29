@@ -373,6 +373,38 @@ function ProductDetail() {
               {producto.descripcion}
             </p>
 
+            {producto?.categoria?.toLowerCase().includes("corporal") ? (
+              <div
+                style={{
+                  marginBottom: "22px",
+                  padding: "14px 18px",
+                  borderRadius: "16px",
+                  background: "#fff4f4",
+                  border: "1px solid rgba(200,0,0,0.15)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                Este producto tarda 7 días hábiles en ser diseñado, armado y enviado.
+              </div>
+            ) : (
+              <div
+                style={{
+                  marginBottom: "22px",
+                  padding: "14px 18px",
+                  borderRadius: "16px",
+                  background: "#f4f4ff",
+                  border: "1px solid rgba(120,120,255,0.15)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                El envío tarda de 2 a 4 días hábiles.
+              </div>
+            )}
+
             <button
               className="aska-add-to-cart-button"
               type="button"
