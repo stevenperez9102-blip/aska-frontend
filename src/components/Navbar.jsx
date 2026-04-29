@@ -277,7 +277,7 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "18px 128px 18px 36px",
+            padding: "16px 132px 16px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -288,21 +288,14 @@ function Navbar() {
           <button
             type="button"
             onClick={handleSecretClick}
-            style={{
-              color: "#fff",
-              background: "transparent",
-              border: "none",
-              textDecoration: "none",
-              fontSize: "1.3rem",
-              fontWeight: 500,
-              letterSpacing: "0.08em",
-              cursor: "pointer",
-              fontFamily: "inherit",
-              padding: 0,
-              flexShrink: 0,
-            }}
+            className="aska-brand-logo-button"
+            aria-label="Ir al inicio AŞKA"
           >
-            AŞKA
+            <img
+              src="/askablanco.png"
+              alt="AŞKA"
+              className="aska-brand-logo-img"
+            />
           </button>
 
           <button
@@ -777,20 +770,51 @@ function Navbar() {
             display: none;
           }
 
+
+          .aska-brand-logo-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 96px;
+          }
+
+          .aska-brand-logo-img {
+            display: block;
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+          }
+
+
           @media (max-width: 768px) {
             .aska-navbar-inner {
-              padding: 14px 116px 14px 18px !important;
-              min-height: 72px;
+              padding: 12px 112px 12px 16px !important;
+              min-height: 66px;
+            }
+
+            .aska-brand-logo-button {
+              min-width: 84px;
+              justify-content: flex-start;
+            }
+
+            .aska-brand-logo-img {
+              height: 34px;
+              max-width: 92px;
             }
 
             .aska-hamburger {
               display: flex;
               position: absolute;
-              right: 70px;
+              right: 64px;
               top: 50%;
               transform: translateY(-50%);
-              width: 44px;
-              height: 44px;
+              width: 42px;
+              height: 42px;
               border-radius: 999px;
             }
 
@@ -811,7 +835,7 @@ function Navbar() {
               z-index: 9999;
               width: min(82vw, 340px);
               height: 100vh;
-              padding: 92px 28px 34px;
+              padding: 86px 26px 34px;
               background: rgba(8,8,9,0.98);
               border-left: 1px solid rgba(255,255,255,0.08);
               box-shadow: -20px 0 60px rgba(0,0,0,0.55);
@@ -859,10 +883,10 @@ function Navbar() {
             }
 
             .aska-navbar-cart {
-              right: 16px;
-              width: 44px;
-              height: 44px;
-              font-size: 1.05rem;
+              right: 14px;
+              width: 42px;
+              height: 42px;
+              font-size: 1.02rem;
             }
 
             .aska-purchases-wrapper::after,
