@@ -372,14 +372,14 @@ function Navbar() {
                   onMouseLeave={closePurchasesMenu}
                 >
                   <Link
-                    to="/cart"
+                    to="/mis-pedidos"
                     onClick={togglePurchasesMenu}
                     style={linkStyle(
-                      location.pathname.startsWith("/cart") ||
-                        location.pathname.startsWith("/mis-pedidos")
+                      location.pathname.startsWith("/mis-pedidos") ||
+                        location.pathname.startsWith("/admin")
                     )}
                   >
-                    Mis compras ˅
+                    Mi cuenta ˅
                   </Link>
 
                   {showPurchasesMenu && (
@@ -388,28 +388,6 @@ function Navbar() {
                       onMouseEnter={openPurchasesMenu}
                       onMouseLeave={closePurchasesMenu}
                     >
-                      <Link
-                        to="/cart"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "16px",
-                          padding: "14px 28px",
-                          color: "#ddd",
-                          textDecoration: "none",
-                          fontSize: "0.95rem",
-                          whiteSpace: "nowrap",
-                          fontWeight: 700,
-                        }}
-                        onClick={closeMobileMenu}
-                      >
-                        <span>Carrito de compras</span>
-                        {totalCarrito > 0 && (
-                          <span className="aska-mini-cart-badge">{totalCarrito}</span>
-                        )}
-                      </Link>
-
                       <Link
                         to="/mis-pedidos"
                         style={{
@@ -425,23 +403,42 @@ function Navbar() {
                       >
                         Mis pedidos
                       </Link>
+
+                      {isAdmin && (
+                        <Link
+                          to="/admin/pagina"
+                          style={{
+                            display: "block",
+                            padding: "14px 28px",
+                            color: "#ddd",
+                            textDecoration: "none",
+                            fontSize: "0.95rem",
+                            whiteSpace: "nowrap",
+                            fontWeight: 700,
+                          }}
+                          onClick={closeMobileMenu}
+                        >
+                          Administración
+                        </Link>
+                      )}
+
+                      <button
+                        onClick={handleLogout}
+                        style={{
+                          ...buttonTextStyle,
+                          display: "block",
+                          width: "100%",
+                          padding: "14px 28px",
+                          textAlign: "left",
+                          color: "#ddd",
+                          fontWeight: 700,
+                        }}
+                      >
+                        Cerrar sesión
+                      </button>
                     </div>
                   )}
                 </div>
-
-                {isAdmin && (
-                  <Link
-                    to="/admin/pagina"
-                    style={linkStyle(location.pathname.startsWith("/admin"))}
-                    onClick={closeMobileMenu}
-                  >
-                    Administración
-                  </Link>
-                )}
-
-                <button onClick={handleLogout} style={buttonTextStyle}>
-                  Cerrar sesión
-                </button>
               </>
             ) : (
               <>
@@ -451,14 +448,14 @@ function Navbar() {
                   onMouseLeave={closePurchasesMenu}
                 >
                   <Link
-                    to="/cart"
+                    to="/login"
                     onClick={togglePurchasesMenu}
                     style={linkStyle(
-                      location.pathname.startsWith("/cart") ||
-                        location.pathname.startsWith("/mis-pedidos")
+                      location.pathname.startsWith("/login") ||
+                        location.pathname.startsWith("/register")
                     )}
                   >
-                    Mis compras ˅
+                    Mi cuenta ˅
                   </Link>
 
                   {showPurchasesMenu && (
@@ -468,29 +465,7 @@ function Navbar() {
                       onMouseLeave={closePurchasesMenu}
                     >
                       <Link
-                        to="/cart"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "16px",
-                          padding: "14px 28px",
-                          color: "#ddd",
-                          textDecoration: "none",
-                          fontSize: "0.95rem",
-                          whiteSpace: "nowrap",
-                          fontWeight: 700,
-                        }}
-                        onClick={closeMobileMenu}
-                      >
-                        <span>Carrito de compras</span>
-                        {totalCarrito > 0 && (
-                          <span className="aska-mini-cart-badge">{totalCarrito}</span>
-                        )}
-                      </Link>
-
-                      <Link
-                        to="/mis-pedidos"
+                        to="/login"
                         style={{
                           display: "block",
                           padding: "14px 28px",
@@ -502,27 +477,27 @@ function Navbar() {
                         }}
                         onClick={closeMobileMenu}
                       >
-                        Mis pedidos
+                        Iniciar sesión
+                      </Link>
+
+                      <Link
+                        to="/register"
+                        style={{
+                          display: "block",
+                          padding: "14px 28px",
+                          color: "#ddd",
+                          textDecoration: "none",
+                          fontSize: "0.95rem",
+                          whiteSpace: "nowrap",
+                          fontWeight: 700,
+                        }}
+                        onClick={closeMobileMenu}
+                      >
+                        Registrarse
                       </Link>
                     </div>
                   )}
                 </div>
-
-                <Link
-                  to="/login"
-                  style={linkStyle(location.pathname.startsWith("/login"))}
-                  onClick={closeMobileMenu}
-                >
-                  Ingresar
-                </Link>
-
-                <Link
-                  to="/register"
-                  style={linkStyle(location.pathname.startsWith("/register"))}
-                  onClick={closeMobileMenu}
-                >
-                  Registrarse
-                </Link>
               </>
             )}
           </nav>
