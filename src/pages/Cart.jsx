@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -13,11 +13,34 @@ function formatPrice(value) {
 
 function Cart() {
   const { cart, removeFromCart } = useContext(CartContext);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryCity, setDeliveryCity] = useState("");
 
   const total = cart.reduce(
     (acc, product) => acc + Number(product.price || 0) * Number(product.quantity || 0),
     0
   );
+
+  const shippingCost = useMemo(() => {
+    const city = deliveryCity.trim().toLowerCase();
+
+    if (!deliveryAddress.trim() && !city) return 0;
+
+    if (
+      city.includes("bogota") ||
+      city.includes("bogotá") ||
+      city.includes("medellin") ||
+      city.includes("medellín") ||
+      city.includes("cali") ||
+      city.includes("barranquilla")
+    ) {
+      return 10000;
+    }
+
+    return 15000;
+  }, [deliveryAddress, deliveryCity]);
+
+  const grandTotal = total + shippingCost;
 
   return (
     <>
@@ -41,6 +64,7 @@ function Cart() {
                 textTransform: "uppercase",
                 letterSpacing: "0.14em",
                 fontSize: "0.82rem",
+                fontWeight: 800,
               }}
             >
               Compra
@@ -51,47 +75,93 @@ function Cart() {
                 margin: 0,
                 fontSize: "clamp(2.3rem, 5vw, 4rem)",
                 lineHeight: 1,
+                fontWeight: 900,
               }}
             >
-              Carrito
+              Carrito de compras
             </h1>
           </div>
 
           {cart.length === 0 ? (
             <div
               style={{
+                minHeight: "58vh",
                 background: "#fff",
                 border: "1px solid rgba(0,0,0,0.08)",
-                borderRadius: "24px",
-                padding: "38px 30px",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
+                borderRadius: "30px",
+                padding: "42px 26px",
+                boxShadow: "0 18px 45px rgba(0,0,0,0.07)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
               }}
             >
-              <p
-                style={{
-                  margin: 0,
-                  marginBottom: "18px",
-                  fontSize: "1.05rem",
-                  color: "#333",
-                }}
-              >
-                Tu carrito está vacío.
-              </p>
-
-              <Link to="/catalogo">
-                <button
+              <div style={{ maxWidth: "560px", margin: "0 auto" }}>
+                <div
                   style={{
-                    border: "none",
-                    background: "#111",
-                    color: "#fff",
-                    padding: "14px 22px",
-                    cursor: "pointer",
-                    fontWeight: 700,
+                    width: "150px",
+                    height: "150px",
+                    margin: "0 auto 24px",
+                    borderRadius: "50%",
+                    background:
+                      "linear-gradient(145deg, rgba(17,17,17,0.05), rgba(191,166,255,0.18))",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "4.7rem",
+                    boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
+                  }}
+                  aria-hidden="true"
+                >
+                  🛒
+                </div>
+
+                <h2
+                  style={{
+                    margin: "0 0 12px",
+                    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+                    lineHeight: 1,
+                    fontWeight: 900,
+                    color: "#111",
                   }}
                 >
-                  Ir al catálogo
-                </button>
-              </Link>
+                  Tu carrito está vacío
+                </h2>
+
+                <p
+                  style={{
+                    margin: "0 auto 28px",
+                    maxWidth: "430px",
+                    fontSize: "1.05rem",
+                    lineHeight: 1.6,
+                    color: "#555",
+                    fontWeight: 600,
+                  }}
+                >
+                  Aún no agregaste productos. Explora la colección AŞKA y encuentra
+                  una pieza especial para ti.
+                </p>
+
+                <Link to="/catalogo" style={{ textDecoration: "none" }}>
+                  <button
+                    style={{
+                      border: "none",
+                      background: "#111",
+                      color: "#fff",
+                      padding: "15px 28px",
+                      cursor: "pointer",
+                      fontWeight: 900,
+                      borderRadius: "999px",
+                      fontSize: "1rem",
+                      letterSpacing: "0.03em",
+                      boxShadow: "0 14px 30px rgba(0,0,0,0.18)",
+                    }}
+                  >
+                    Ver productos
+                  </button>
+                </Link>
+              </div>
             </div>
           ) : (
             <div
@@ -152,6 +222,7 @@ function Cart() {
                             justifyContent: "center",
                             color: "#777",
                             fontSize: "0.9rem",
+                            fontWeight: 700,
                           }}
                         >
                           Sin imagen
@@ -171,6 +242,7 @@ function Cart() {
                           margin: 0,
                           fontSize: "1.35rem",
                           lineHeight: 1.1,
+                          fontWeight: 900,
                         }}
                       >
                         {product.name}
@@ -182,6 +254,7 @@ function Cart() {
                             margin: 0,
                             color: "#666",
                             fontSize: "0.92rem",
+                            fontWeight: 700,
                           }}
                         >
                           {product.category}
@@ -191,7 +264,7 @@ function Cart() {
                       <p
                         style={{
                           margin: 0,
-                          fontWeight: 700,
+                          fontWeight: 900,
                           fontSize: "1rem",
                         }}
                       >
@@ -202,6 +275,7 @@ function Cart() {
                         style={{
                           margin: 0,
                           color: "#444",
+                          fontWeight: 700,
                         }}
                       >
                         Cantidad: {product.quantity}
@@ -211,7 +285,7 @@ function Cart() {
                         style={{
                           margin: 0,
                           color: "#111",
-                          fontWeight: 700,
+                          fontWeight: 900,
                         }}
                       >
                         Total: {formatPrice(Number(product.price || 0) * Number(product.quantity || 0))}
@@ -226,7 +300,8 @@ function Cart() {
                             color: "#fff",
                             padding: "11px 16px",
                             cursor: "pointer",
-                            fontWeight: 700,
+                            fontWeight: 900,
+                            borderRadius: "999px",
                           }}
                         >
                           Eliminar
@@ -253,10 +328,75 @@ function Cart() {
                     margin: 0,
                     marginBottom: "18px",
                     fontSize: "1.7rem",
+                    fontWeight: 900,
                   }}
                 >
                   Resumen
                 </h2>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gap: "12px",
+                    marginBottom: "22px",
+                  }}
+                >
+                  <label style={{ display: "grid", gap: "7px" }}>
+                    <span style={{ fontWeight: 900, fontSize: "0.92rem" }}>
+                      Ciudad de envío
+                    </span>
+                    <input
+                      type="text"
+                      value={deliveryCity}
+                      onChange={(e) => setDeliveryCity(e.target.value)}
+                      placeholder="Ej: Bogotá"
+                      style={{
+                        width: "100%",
+                        border: "1px solid rgba(0,0,0,0.14)",
+                        borderRadius: "14px",
+                        padding: "13px 14px",
+                        fontSize: "0.95rem",
+                        fontWeight: 700,
+                        outline: "none",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </label>
+
+                  <label style={{ display: "grid", gap: "7px" }}>
+                    <span style={{ fontWeight: 900, fontSize: "0.92rem" }}>
+                      Dirección
+                    </span>
+                    <input
+                      type="text"
+                      value={deliveryAddress}
+                      onChange={(e) => setDeliveryAddress(e.target.value)}
+                      placeholder="Dirección de entrega"
+                      style={{
+                        width: "100%",
+                        border: "1px solid rgba(0,0,0,0.14)",
+                        borderRadius: "14px",
+                        padding: "13px 14px",
+                        fontSize: "0.95rem",
+                        fontWeight: 700,
+                        outline: "none",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </label>
+
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "#666",
+                      fontSize: "0.86rem",
+                      lineHeight: 1.45,
+                      fontWeight: 700,
+                    }}
+                  >
+                    El costo de envío se calcula cuando ingresas ciudad o dirección.
+                  </p>
+                </div>
 
                 <div
                   style={{
@@ -265,6 +405,7 @@ function Cart() {
                     gap: "16px",
                     marginBottom: "14px",
                     color: "#444",
+                    fontWeight: 700,
                   }}
                 >
                   <span>Productos</span>
@@ -276,13 +417,30 @@ function Cart() {
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "16px",
-                    marginBottom: "20px",
+                    marginBottom: "14px",
                     color: "#444",
+                    fontWeight: 700,
                   }}
                 >
-                  <span>Total estimado</span>
-                  <span style={{ fontWeight: 700, color: "#111" }}>
+                  <span>Subtotal</span>
+                  <span style={{ fontWeight: 900, color: "#111" }}>
                     {formatPrice(total)}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "16px",
+                    marginBottom: "20px",
+                    color: "#444",
+                    fontWeight: 700,
+                  }}
+                >
+                  <span>Envío</span>
+                  <span style={{ fontWeight: 900, color: "#111" }}>
+                    {shippingCost > 0 ? formatPrice(shippingCost) : "Pendiente"}
                   </span>
                 </div>
 
@@ -294,6 +452,21 @@ function Cart() {
                     gap: "12px",
                   }}
                 >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: "16px",
+                      marginBottom: "8px",
+                      color: "#111",
+                      fontSize: "1.12rem",
+                      fontWeight: 900,
+                    }}
+                  >
+                    <span>Total estimado</span>
+                    <span>{formatPrice(grandTotal)}</span>
+                  </div>
+
                   <Link to="/checkout">
                     <button
                       style={{
@@ -303,8 +476,9 @@ function Cart() {
                         color: "#fff",
                         padding: "15px 18px",
                         cursor: "pointer",
-                        fontWeight: 700,
+                        fontWeight: 900,
                         fontSize: "1rem",
+                        borderRadius: "999px",
                       }}
                     >
                       Ir al checkout
@@ -320,8 +494,9 @@ function Cart() {
                         color: "#111",
                         padding: "15px 18px",
                         cursor: "pointer",
-                        fontWeight: 700,
+                        fontWeight: 900,
                         fontSize: "1rem",
+                        borderRadius: "999px",
                       }}
                     >
                       Seguir comprando
