@@ -110,11 +110,12 @@ function Cart() {
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "4.7rem",
+                    animation: "pulse 2s ease-in-out infinite",
                     boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
                   }}
                   aria-hidden="true"
                 >
-                  🛒
+                  ✨
                 </div>
 
                 <h2
