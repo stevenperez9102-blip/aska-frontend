@@ -84,6 +84,19 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const onDocClick = (e) => {
+      const el = document.querySelector('.aska-navbar-inner');
+      if (el && !el.contains(e.target)) {
+        setShowCatalogMenu(false);
+        setShowPurchasesMenu(false);
+      }
+    };
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, []);
+
+
   const closeMobileMenu = () => {
     setMobileOpen(false);
     setShowCatalogMenu(false);
@@ -335,12 +348,12 @@ function Navbar() {
 
             <div
               className="aska-catalog-wrapper"
-              onMouseEnter={openMenu}
-              onMouseLeave={closeMenu}
+              
+              
             >
               <Link
                 to="/catalogo"
-                onClick={toggleCatalogMenu}
+                onClick={(e)=>{e.preventDefault(); setShowCatalogMenu(v=>!v);}}
                 style={linkStyle(
                   location.pathname === "/catalogo" ||
                     location.pathname.startsWith("/catalogo/") ||
@@ -352,9 +365,10 @@ function Navbar() {
 
               {showCatalogMenu && (
                 <div
+                  onClick={(e)=>e.stopPropagation()}
                   className="aska-catalog-menu"
-                  onMouseEnter={openMenu}
-                  onMouseLeave={closeMenu}
+                  
+                  
                 >
                   {categorias.map((categoria) => (
                     <Link
@@ -389,12 +403,12 @@ function Navbar() {
               <>
                 <div
                   className="aska-purchases-wrapper"
-                  onMouseEnter={openPurchasesMenu}
-                  onMouseLeave={closePurchasesMenu}
+                  
+                  
                 >
                   <Link
                     to="/mis-pedidos"
-                    onClick={togglePurchasesMenu}
+                    onClick={(e)=>{e.preventDefault(); setShowPurchasesMenu(v=>!v);}}
                     style={linkStyle(
                       location.pathname.startsWith("/mis-pedidos") ||
                         location.pathname.startsWith("/admin")
@@ -405,9 +419,10 @@ function Navbar() {
 
                   {showPurchasesMenu && (
                     <div
+                      onClick={(e)=>e.stopPropagation()}
                       className="aska-purchases-menu"
-                      onMouseEnter={openPurchasesMenu}
-                      onMouseLeave={closePurchasesMenu}
+                      
+                      
                     >
                       <Link
                         to="/mis-pedidos"
@@ -465,12 +480,12 @@ function Navbar() {
               <>
                 <div
                   className="aska-purchases-wrapper"
-                  onMouseEnter={openPurchasesMenu}
-                  onMouseLeave={closePurchasesMenu}
+                  
+                  
                 >
                   <Link
                     to="/login"
-                    onClick={togglePurchasesMenu}
+                    onClick={(e)=>{e.preventDefault(); setShowPurchasesMenu(v=>!v);}}
                     style={linkStyle(
                       location.pathname.startsWith("/login") ||
                         location.pathname.startsWith("/register")
@@ -481,9 +496,10 @@ function Navbar() {
 
                   {showPurchasesMenu && (
                     <div
+                      onClick={(e)=>e.stopPropagation()}
                       className="aska-purchases-menu"
-                      onMouseEnter={openPurchasesMenu}
-                      onMouseLeave={closePurchasesMenu}
+                      
+                      
                     >
                       <Link
                         to="/login"
@@ -649,7 +665,7 @@ function Navbar() {
           .aska-navbar-cart {
             position: absolute;
             top: 50%;
-            right: 36px;
+            right: 86px;
             transform: translateY(-50%);
             z-index: 10002;
             width: 52px;
@@ -840,7 +856,7 @@ function Navbar() {
             }
 
             .aska-navbar-cart {
-              right: 72px;
+              right: 16px;
               width: 46px;
               height: 46px;
               font-size: 1.08rem;
