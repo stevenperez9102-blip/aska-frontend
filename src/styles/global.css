@@ -2087,15 +2087,96 @@ textarea::placeholder {
 }
 
 
-/* ===== AŞKA MODO LUJO EXTREMO - CAPA FINAL ===== */
-/* Esta capa NO reemplaza el diseño anterior: lo refina con look editorial premium. */
+/* ===== AŞKA AJUSTE LUJO REAL - HOME PREMIUM VISIBLE ===== */
+/* Capa final para que el look premium sí se vea sobre reglas anteriores. */
 
+/* Base visual más editorial */
 body {
-  letter-spacing: 0.018em;
+  background: #f8f6f2 !important;
+  color: #111111 !important;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif !important;
+  letter-spacing: 0.018em !important;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Navbar oscuro premium, limpio y fijo visualmente */
+header,
+.navbar,
+.aska-navbar-inner {
+  background: rgba(5, 5, 5, 0.98) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.aska-nav-menu a,
+.aska-nav-menu button,
+.nav-link-item {
+  color: #f8f6f2 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.07em !important;
+}
+
+/* Home: después del hero debe respirar en blanco cálido */
+.home-brand-text,
+.home-preview-wrapper,
+.home-category-preview,
+.home-instagram-strip,
+.home-intro,
+.home-about,
+.home-story,
+.home-text,
+.home-text-section,
+.home-description,
+.home-description-section,
+.home-info,
+.home-info-section,
+.brand-story,
+.brand-intro,
+.about-brand {
+  background:
+    radial-gradient(circle at top center, rgba(201, 201, 201, 0.24), transparent 34%),
+    #f8f6f2 !important;
+  color: #111111 !important;
+}
+
+/* Fuerza textos del inicio a negro elegante */
+.home-brand-text *,
+.home-preview-wrapper *,
+.home-category-preview *,
+.home-instagram-strip *,
+.home-intro *,
+.home-about *,
+.home-story *,
+.home-text *,
+.home-text-section *,
+.home-description *,
+.home-description-section *,
+.home-info *,
+.home-info-section *,
+.brand-story *,
+.brand-intro *,
+.about-brand * {
+  color: #111111 !important;
+}
+
+/* Bloque de texto del home más fino */
+.home-brand-text {
+  max-width: 100% !important;
+  padding: clamp(52px, 7vw, 92px) 24px !important;
+  font-size: clamp(1.04rem, 1.45vw, 1.22rem) !important;
+  line-height: 2 !important;
+  border-top: 1px solid rgba(17, 17, 17, 0.08) !important;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08) !important;
+}
+
+.home-brand-text p,
+.home-brand-text span {
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Títulos editoriales */
 h1,
 h2,
 h3,
@@ -2106,138 +2187,178 @@ h4,
 .nosotras-hero h1,
 .checkout-header h1,
 .product-detail-info h1,
-.aska-product-info-card h1 {
+.aska-product-info-card h1,
+.section-header-row h2 {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif !important;
   font-weight: 900 !important;
   letter-spacing: 0.045em !important;
 }
 
-h1,
-.home-brand-logo-big,
-.catalog-general-hero h1,
-.category-hero h1,
-.nosotras-hero h1,
-.checkout-header h1 {
-  font-size: clamp(2.8rem, 6vw, 5.4rem) !important;
-  line-height: 0.95 !important;
+.section-header-row h2 {
+  color: #111111 !important;
+  font-size: clamp(2.1rem, 4vw, 3.6rem) !important;
 }
 
-h2,
-.section-header-row h2,
-.cart-drawer-header h2,
-.admin-home-config h2,
-.nosotras-team-header h2 {
-  font-size: clamp(2rem, 4vw, 3.35rem) !important;
-  line-height: 1.02 !important;
-}
-
-h3,
-.product-card-body h3,
-.home-showcase-info h3,
-.pedido-card h3,
-.team-member-content h3 {
+.see-more-link {
+  color: #111111 !important;
   font-weight: 900 !important;
-  letter-spacing: 0.035em !important;
+  letter-spacing: 0.06em !important;
+  text-decoration-color: rgba(17, 17, 17, 0.55) !important;
+  text-underline-offset: 7px !important;
 }
 
-p,
-li,
-span,
-label,
-input,
-textarea,
-select,
-button,
-a {
-  letter-spacing: 0.018em;
+/* Productos del inicio: tarjetas blancas premium */
+.home-scroll-showcase {
+  padding: 10px 4px 20px !important;
 }
 
-.nav-link-item,
-.aska-nav-menu a,
-.aska-nav-menu button,
-.dropdown-item,
-.aska-purchases-menu a {
-  font-weight: 800 !important;
-  letter-spacing: 0.075em !important;
-  text-transform: none;
+.home-showcase-card {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid rgba(17, 17, 17, 0.08) !important;
+  border-radius: 28px !important;
+  overflow: hidden !important;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.09) !important;
+  transition:
+    transform 0.42s ease,
+    box-shadow 0.42s ease,
+    border-color 0.42s ease !important;
 }
 
-.home-brand-subtitle,
-.checkout-eyebrow,
-.product-detail-eyebrow,
-.nosotras-eyebrow,
-.aska-product-gallery-card > p {
-  letter-spacing: 0.18em !important;
-  text-transform: uppercase !important;
-  font-weight: 800 !important;
+.home-showcase-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 34px 78px rgba(0, 0, 0, 0.14) !important;
+  border-color: rgba(143, 143, 143, 0.38) !important;
 }
 
-/* Espaciado editorial */
-.home-brand-text,
-.home-preview-wrapper,
-.catalog-general-block,
-.category-products-grid,
+.home-product-image-wrapper {
+  background: #eeeeee !important;
+}
+
+.home-product-image {
+  transition:
+    transform 0.6s ease,
+    filter 0.6s ease !important;
+}
+
+.home-showcase-card:hover .home-product-image {
+  transform: scale(1.065) !important;
+  filter: contrast(1.05) brightness(1.04) !important;
+}
+
+.home-showcase-info {
+  padding: 18px 18px 22px !important;
+  gap: 8px !important;
+}
+
+.home-showcase-info h3 {
+  color: #111111 !important;
+  font-size: clamp(1.12rem, 1.5vw, 1.35rem) !important;
+  font-weight: 900 !important;
+}
+
+.home-showcase-price {
+  color: #111111 !important;
+  font-weight: 900 !important;
+  font-size: 1.05rem !important;
+}
+
+.home-showcase-description {
+  color: #555555 !important;
+  line-height: 1.65 !important;
+}
+
+/* Catálogo, producto, checkout: oscuro para que las joyas resalten */
+.catalog-general-page,
+.catalog-page,
+.category-page,
+.product-detail-shell,
 .checkout-page,
 .mis-pedidos-page,
 .admin-page,
-.nosotras-team,
-.nosotras-team-section {
-  padding-top: clamp(48px, 6vw, 86px) !important;
-  padding-bottom: clamp(56px, 7vw, 96px) !important;
+.nosotras-page {
+  background: #050505 !important;
+  color: #ffffff !important;
 }
 
-.section-header-row {
-  margin-bottom: 10px !important;
+/* Pero Nosotras tiene bloques claros respirables */
+.nosotras-intro,
+.nosotras-intro-block,
+.nosotras-instagram-strip {
+  background: #f8f6f2 !important;
+  color: #111111 !important;
 }
 
-/* Cards más premium */
+.nosotras-intro *,
+.nosotras-intro-block *,
+.nosotras-instagram-strip * {
+  color: #111111 !important;
+}
+
+/* Cards oscuras premium */
 .product-card,
-.home-showcase-card,
-.catalog-preview-card,
+.product-detail-info,
+.checkout-form-card,
+.checkout-summary-card,
+.checkout-payment-box,
+.admin-home-config,
+.admin-trash-section,
+.admin-product-item,
+.admin-modal-card,
+.admin-preview-box,
 .pedido-card,
 .admin-order-card,
-.team-member {
+.cart-drawer,
+.team-member,
+.admin-order-detail-item {
+  background: #0d0d0d !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
   border-radius: 26px !important;
   overflow: hidden !important;
+}
+
+/* Productos catálogo con hover más lujoso */
+.product-card {
   transition:
-    transform 0.38s ease,
-    box-shadow 0.38s ease,
-    border-color 0.38s ease,
-    filter 0.38s ease !important;
+    transform 0.42s ease,
+    box-shadow 0.42s ease,
+    border-color 0.42s ease !important;
 }
 
-.product-card:hover,
-.home-showcase-card:hover,
-.catalog-preview-card:hover,
-.pedido-card:hover,
-.admin-order-card:hover,
-.team-member:hover {
-  transform: translateY(-7px) !important;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18) !important;
-  border-color: rgba(201, 201, 201, 0.34) !important;
+.product-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(201, 201, 201, 0.30) !important;
 }
 
-/* Imágenes con microinteracción de lujo */
-.product-card-main-image,
-.home-product-image,
-.catalog-preview-card img,
-.team-member-image-wrap img,
-.nosotras-card-media,
-.product-detail-main-image {
+.product-card-main-image {
   transition:
-    transform 0.55s ease,
-    filter 0.55s ease !important;
+    transform 0.6s ease,
+    filter 0.6s ease !important;
 }
 
-.product-card:hover .product-card-main-image,
-.home-showcase-card:hover .home-product-image,
-.catalog-preview-card:hover img,
-.team-member:hover .team-member-image-wrap img {
-  transform: scale(1.055) !important;
-  filter: contrast(1.04) brightness(1.03) !important;
+.product-card:hover .product-card-main-image {
+  transform: scale(1.065) !important;
+  filter: contrast(1.06) brightness(1.04) !important;
 }
 
-/* Botones: más finos, menos planos */
+.product-card-body h3,
+.product-card-price {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+}
+
+.product-card-description,
+.product-detail-description,
+.checkout-subtitle,
+.pedido-product p,
+.team-member p,
+.team-member-content p {
+  color: rgba(255, 255, 255, 0.74) !important;
+}
+
+/* Botones premium redondeados */
 button,
 .product-main-button,
 .product-detail-cart-button,
@@ -2256,8 +2377,7 @@ button,
   transition:
     transform 0.28s ease,
     box-shadow 0.28s ease,
-    opacity 0.28s ease,
-    background 0.28s ease !important;
+    opacity 0.28s ease !important;
 }
 
 button:hover,
@@ -2265,47 +2385,17 @@ button:hover,
 .product-detail-cart-button:hover,
 .checkout-submit-btn:hover,
 .cart-checkout-button:hover,
-.auth-submit-button:hover,
-.admin-home-form button:hover,
-.admin-add-product-btn:hover,
-.admin-trash-toggle-btn:hover,
-.admin-order-actions button:hover,
-.admin-top-links button:hover,
-.admin-product-item button:hover {
+.auth-submit-button:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.20) !important;
-  opacity: 0.96 !important;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22) !important;
 }
 
-/* Precio y nombres de productos más protagonistas */
-.product-card-body h3,
-.home-showcase-info h3,
-.checkout-summary-name,
-.cart-item-info h4,
-.pedido-product strong {
-  font-size: clamp(1.08rem, 1.6vw, 1.35rem) !important;
-  font-weight: 900 !important;
-}
-
-.product-card-price,
-.home-showcase-price,
-.product-detail-price,
-.checkout-total-row,
-.cart-drawer-footer h3 {
-  font-weight: 900 !important;
-  letter-spacing: 0.035em !important;
-}
-
-/* Inputs más elegantes */
+/* Inputs finos */
 input,
 textarea,
 select {
   border-radius: 16px !important;
   padding: 13px 15px !important;
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease !important;
 }
 
 input:focus,
@@ -2316,61 +2406,34 @@ select:focus {
   box-shadow: 0 0 0 4px rgba(201, 201, 201, 0.16) !important;
 }
 
-/* Detalles plateados sutiles */
-.see-more-link,
-.home-instagram-strip a,
-.nosotras-instagram-strip a,
-.cart-remove-button {
-  text-underline-offset: 6px !important;
-  text-decoration-thickness: 1px !important;
+/* Carrito flotante antiguo: oculto por CSS por si algún componente lo intenta renderizar */
+.floating-cart-button,
+.floating-cart-badge,
+.floating-cart-image {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-.see-more-link:hover,
-.home-instagram-strip a:hover,
-.nosotras-instagram-strip a:hover {
-  color: #8f8f8f !important;
-}
-
-/* Mobile: evita que el look editorial se vuelva exagerado */
+/* Ajuste responsive */
 @media (max-width: 680px) {
-  body {
-    letter-spacing: 0.01em;
-  }
-
-  h1,
-  .home-brand-logo-big,
-  .catalog-general-hero h1,
-  .category-hero h1,
-  .nosotras-hero h1,
-  .checkout-header h1 {
-    font-size: clamp(2.4rem, 12vw, 3.8rem) !important;
-    letter-spacing: 0.025em !important;
-  }
-
-  h2,
-  .section-header-row h2 {
-    font-size: clamp(1.8rem, 9vw, 2.7rem) !important;
-  }
-
   .home-brand-text,
-  .home-preview-wrapper,
-  .catalog-general-block,
-  .category-products-grid,
-  .checkout-page,
-  .mis-pedidos-page,
-  .admin-page,
-  .nosotras-team,
-  .nosotras-team-section {
+  .home-preview-wrapper {
     padding-top: 42px !important;
     padding-bottom: 54px !important;
   }
 
-  .product-card:hover,
+  .section-header-row {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .section-header-row h2 {
+    font-size: clamp(1.9rem, 10vw, 2.9rem) !important;
+  }
+
   .home-showcase-card:hover,
-  .catalog-preview-card:hover,
-  .pedido-card:hover,
-  .admin-order-card:hover,
-  .team-member:hover {
+  .product-card:hover {
     transform: translateY(-3px) !important;
   }
 }
