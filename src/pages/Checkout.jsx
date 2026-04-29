@@ -83,7 +83,26 @@ function Checkout() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const guardarIntento = async () => {
+    try {
+      await fetch("https://aska-backend-nyx8.onrender.com/api/lead-carrito", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: form.nombre,
+          correo: form.correo,
+          carrito: cart,
+          total,
+        }),
+      });
+    } catch (e) {
+      console.log("lead no guardado");
+    }
+  };
+
+const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!cart.length) {
@@ -104,6 +123,8 @@ function Checkout() {
 
     try {
       setLoading(true);
+
+      await guardarIntento();
 
       const productosNormalizados = cart
         .map((item) => {
