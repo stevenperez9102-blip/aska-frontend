@@ -15,6 +15,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   const [showCatalogMenu, setShowCatalogMenu] = useState(false);
+  const [showPurchasesMenu, setShowPurchasesMenu] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const [secretActive, setSecretActive] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,6 +27,21 @@ function Navbar() {
   const isLoggedIn = !!usuario;
   const isAdmin = usuario?.rol === "admin";
 
+  const carritoGuardado = JSON.parse(
+    localStorage.getItem("carrito") ||
+      localStorage.getItem("cart") ||
+      localStorage.getItem("cartItems") ||
+      "[]"
+  );
+
+  const totalCarrito = Array.isArray(carritoGuardado)
+    ? carritoGuardado.reduce(
+        (total, item) =>
+          total + Number(item?.cantidad || item?.quantity || item?.qty || 1),
+        0
+      )
+    : 0;
+
   const categorias = useMemo(
     () => ["Collares", "Accesorios corporales", "Pulseras", "Aretes y anillos"],
     []
@@ -34,6 +50,7 @@ function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setShowCatalogMenu(false);
+    setShowPurchasesMenu(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -49,6 +66,7 @@ function Navbar() {
   const closeMobileMenu = () => {
     setMobileOpen(false);
     setShowCatalogMenu(false);
+    setShowPurchasesMenu(false);
   };
 
   const linkStyle = (active = false) => ({
@@ -84,6 +102,21 @@ function Navbar() {
       setShowCatalogMenu(false);
     }, 200);
     setTimeoutId(id);
+  };
+
+  const openPurchasesMenu = () => {
+    setShowPurchasesMenu(true);
+  };
+
+  const closePurchasesMenu = () => {
+    setShowPurchasesMenu(false);
+  };
+
+  const togglePurchasesMenu = (e) => {
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      setShowPurchasesMenu((value) => !value);
+    }
   };
 
   const toggleCatalogMenu = (e) => {
@@ -332,9 +365,68 @@ function Navbar() {
 
             {isLoggedIn ? (
               <>
-                <Link to="/mis-pedidos" style={linkStyle(false)} onClick={closeMobileMenu}>
-                  Mis pedidos
-                </Link>
+                <div
+                  className="aska-purchases-wrapper"
+                  onMouseEnter={openPurchasesMenu}
+                  onMouseLeave={closePurchasesMenu}
+                >
+                  <Link
+                    to="/cart"
+                    onClick={togglePurchasesMenu}
+                    style={linkStyle(
+                      location.pathname.startsWith("/cart") ||
+                        location.pathname.startsWith("/mis-pedidos")
+                    )}
+                  >
+                    Mis compras ˅
+                  </Link>
+
+                  {showPurchasesMenu && (
+                    <div
+                      className="aska-purchases-menu"
+                      onMouseEnter={openPurchasesMenu}
+                      onMouseLeave={closePurchasesMenu}
+                    >
+                      <Link
+                        to="/cart"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "16px",
+                          padding: "14px 28px",
+                          color: "#ddd",
+                          textDecoration: "none",
+                          fontSize: "0.95rem",
+                          whiteSpace: "nowrap",
+                          fontWeight: 700,
+                        }}
+                        onClick={closeMobileMenu}
+                      >
+                        <span>Carrito de compras</span>
+                        {totalCarrito > 0 && (
+                          <span className="aska-mini-cart-badge">{totalCarrito}</span>
+                        )}
+                      </Link>
+
+                      <Link
+                        to="/mis-pedidos"
+                        style={{
+                          display: "block",
+                          padding: "14px 28px",
+                          color: "#ddd",
+                          textDecoration: "none",
+                          fontSize: "0.95rem",
+                          whiteSpace: "nowrap",
+                          fontWeight: 700,
+                        }}
+                        onClick={closeMobileMenu}
+                      >
+                        Mis pedidos
+                      </Link>
+                    </div>
+                  )}
+                </div>
 
                 {isAdmin && (
                   <Link
@@ -352,6 +444,69 @@ function Navbar() {
               </>
             ) : (
               <>
+                <div
+                  className="aska-purchases-wrapper"
+                  onMouseEnter={openPurchasesMenu}
+                  onMouseLeave={closePurchasesMenu}
+                >
+                  <Link
+                    to="/cart"
+                    onClick={togglePurchasesMenu}
+                    style={linkStyle(
+                      location.pathname.startsWith("/cart") ||
+                        location.pathname.startsWith("/mis-pedidos")
+                    )}
+                  >
+                    Mis compras ˅
+                  </Link>
+
+                  {showPurchasesMenu && (
+                    <div
+                      className="aska-purchases-menu"
+                      onMouseEnter={openPurchasesMenu}
+                      onMouseLeave={closePurchasesMenu}
+                    >
+                      <Link
+                        to="/cart"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "16px",
+                          padding: "14px 28px",
+                          color: "#ddd",
+                          textDecoration: "none",
+                          fontSize: "0.95rem",
+                          whiteSpace: "nowrap",
+                          fontWeight: 700,
+                        }}
+                        onClick={closeMobileMenu}
+                      >
+                        <span>Carrito de compras</span>
+                        {totalCarrito > 0 && (
+                          <span className="aska-mini-cart-badge">{totalCarrito}</span>
+                        )}
+                      </Link>
+
+                      <Link
+                        to="/mis-pedidos"
+                        style={{
+                          display: "block",
+                          padding: "14px 28px",
+                          color: "#ddd",
+                          textDecoration: "none",
+                          fontSize: "0.95rem",
+                          whiteSpace: "nowrap",
+                          fontWeight: 700,
+                        }}
+                        onClick={closeMobileMenu}
+                      >
+                        Mis pedidos
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
                 <Link
                   to="/login"
                   style={linkStyle(location.pathname.startsWith("/login"))}
@@ -372,6 +527,17 @@ function Navbar() {
           </nav>
         </div>
       </header>
+
+      <Link
+        to="/cart"
+        className="aska-floating-cart"
+        aria-label="Ir al carrito de compras"
+      >
+        <span aria-hidden="true">🛒</span>
+        {totalCarrito > 0 && (
+          <span className="aska-floating-cart-badge">{totalCarrito}</span>
+        )}
+      </Link>
 
       <style>
         {`
@@ -450,6 +616,74 @@ function Navbar() {
             border: 1px solid rgba(255,255,255,0.05);
           }
 
+
+          .aska-purchases-wrapper {
+            position: relative;
+          }
+
+          .aska-purchases-menu {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            border-radius: 6px;
+            min-width: 260px;
+            padding: 12px 0;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+          }
+
+          .aska-mini-cart-badge {
+            min-width: 22px;
+            height: 22px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: #bfa6ff;
+            color: #0a0a0a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 900;
+          }
+
+          .aska-floating-cart {
+            position: fixed;
+            top: 82px;
+            right: 22px;
+            z-index: 9998;
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: rgba(10,10,10,0.94);
+            color: #f4efe8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            font-size: 1.25rem;
+          }
+
+          .aska-floating-cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 23px;
+            height: 23px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: #bfa6ff;
+            color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 900;
+          }
+
           .aska-mobile-backdrop {
             display: none;
           }
@@ -503,6 +737,35 @@ function Navbar() {
               font-size: 1.05rem !important;
               width: 100%;
               text-align: left;
+            }
+
+
+            .aska-purchases-wrapper {
+              width: 100%;
+            }
+
+            .aska-purchases-menu {
+              position: static;
+              transform: none;
+              min-width: 100%;
+              margin-top: 12px;
+              padding: 6px 0;
+              box-shadow: none;
+              background: rgba(255,255,255,0.04);
+              border-radius: 14px;
+            }
+
+            .aska-purchases-menu a {
+              padding: 12px 16px !important;
+              white-space: normal !important;
+            }
+
+            .aska-floating-cart {
+              top: auto;
+              right: 18px;
+              bottom: 22px;
+              width: 54px;
+              height: 54px;
             }
 
             .aska-catalog-wrapper {
