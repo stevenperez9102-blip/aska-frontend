@@ -554,9 +554,10 @@ function Home() {
 
       <section
         style={{
-          background: "#050505",
+          background: "#ffffff",
+          color: "#111111",
           color: "#ffffff",
-          padding: "46px 24px 0",
+          padding: "36px 20px 10px",
           borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
       >
@@ -573,80 +574,34 @@ function Home() {
               margin: "0 auto",
             }}
           >
+
             <p
               style={{
                 margin: 0,
-                marginBottom: "14px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
-                letterSpacing: "0.003em",
+                marginBottom: "16px",
+                fontSize: "clamp(1.05rem, 1.3vw, 1.2rem)",
+                lineHeight: 1.6,
+                fontWeight: 400,
+                color: "#444",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
             >
-              En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
+              En AŞKA creamos piezas únicas en acero inoxidable, diseñadas para expresar tu estilo con fuerza y elegancia.
             </p>
 
             <p
               style={{
                 margin: 0,
-                marginBottom: "14px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
-                letterSpacing: "0.003em",
+                fontSize: "clamp(1.05rem, 1.3vw, 1.2rem)",
+                lineHeight: 1.6,
+                fontWeight: 400,
+                color: "#444",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
             >
-              Cada joya y accesorio es tejido a mano. Creamos estilos contemporáneos que te dan fuerza y actitud.
+              Cada joya es elaborada a mano por mujeres artesanas que transforman este arte en propósito y autonomía.
             </p>
-
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "24px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
-                letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
-              }}
-            >
-              Somos una marca unisex que cree en el poder de los detalles para marcar la diferencia.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "12px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
-                letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
-              }}
-            >
-              AŞKA es mucho más que diseño, somos un taller liderado por mujeres artesanas.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
-                fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
-                letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
-              }}
-            >
-              Nuestro sueño es empoderar mujeres, enseñándoles este arte como camino hacia la autonomía económica y una vida con propósito.
-            </p>
-          </div>
+    </div>
 
           <div
             style={{
