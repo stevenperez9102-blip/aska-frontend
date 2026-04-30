@@ -34,7 +34,32 @@ function Checkout() {
   const [metodosPago, setMetodosPago] = useState([]);
   const [loadingMetodos, setLoadingMetodos] = useState(true);
   const [mensaje, setMensaje] = useState("");
+  const [cupon, setCupon] = useState("");
+  const [cuponAplicado, setCuponAplicado] = useState(null);
+  const [descuento, setDescuento] = useState(0);
   const [loading, setLoading] = useState(false);
+  
+  const aplicarCupon = async () => {
+    if (!cupon.trim()) return;
+
+    try {
+      const res = await fetch(`https://aska-backend-nyx8.onrender.com/api/cupones/${cupon}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje("Cupón inválido o expirado");
+        return;
+      }
+
+      setCuponAplicado(data.cupon);
+      const porcentaje = data.cupon.descuento_porcentaje || 0;
+      setDescuento((total * porcentaje) / 100);
+      setMensaje("Cupón aplicado correctamente");
+    } catch {
+      setMensaje("Error aplicando cupón");
+    }
+  };
+
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   const total = useMemo(() => {
@@ -95,7 +120,7 @@ function Checkout() {
           nombre: form.nombre,
           correo: form.correo,
           carrito: cart,
-          total,
+          total: total - descuento,
         }),
       });
     } catch (e) {
@@ -181,7 +206,7 @@ const handleSubmit = async (e) => {
           ciudad: form.ciudad.trim(),
 
           productos: productosNormalizados,
-          total,
+          total: total - descuento,
           estado_pago: "pendiente",
         }),
       });
@@ -214,7 +239,7 @@ const handleSubmit = async (e) => {
           },
           body: JSON.stringify({
             pedidoId,
-            total,
+            total: total - descuento,
             nombre: form.nombre.trim(),
             correo: form.correo.trim(),
           }),
@@ -595,7 +620,37 @@ const handleSubmit = async (e) => {
                   ))}
                 </div>
 
-                <div
+                
+                <div style={{ marginTop: "18px" }}>
+                  <input
+                    placeholder="Código de descuento"
+                    value={cupon}
+                    onChange={(e) => setCupon(e.target.value)}
+                    style={{...inputStyle, marginBottom: "10px"}}
+                  />
+                  <button
+                    type="button"
+                    onClick={aplicarCupon}
+                    style={{
+                      border: "none",
+                      borderRadius: "999px",
+                      padding: "10px 16px",
+                      background: "#111",
+                      color: "#fff",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Aplicar cupón
+                  </button>
+                </div>
+
+                {cuponAplicado && (
+                  <div style={{ marginTop: "10px", color: "#356f48", fontWeight: 600 }}>
+                    Cupón aplicado: {cuponAplicado.codigo}
+                  </div>
+                )}
+
+<div
                   style={{
                     marginTop: "18px",
                     display: "flex",
@@ -630,7 +685,7 @@ const handleSubmit = async (e) => {
                   }}
                 >
                   <span>Total:</span>
-                  <span>{formatPrice(total + 10000)}</span>
+                  <span>{formatPrice(total + 10000 - descuento)}</span>
                 </div>
 
                 <div
