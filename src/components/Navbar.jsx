@@ -420,21 +420,39 @@ function Navbar() {
                       </Link>
 
                       {isAdmin && (
-                        <Link
-                          to="/admin/pagina"
-                          style={{
-                            display: "block",
-                            padding: "14px 28px",
-                            color: "#ddd",
-                            textDecoration: "none",
-                            fontSize: "0.95rem",
-                            whiteSpace: "nowrap",
-                            fontWeight: 700,
-                          }}
-                          onClick={closeMobileMenu}
-                        >
-                          Administración
-                        </Link>
+                        <>
+                          <Link
+                            to="/admin/dashboard"
+                            style={{
+                              display: "block",
+                              padding: "14px 28px",
+                              color: "#ddd",
+                              textDecoration: "none",
+                              fontSize: "0.95rem",
+                              whiteSpace: "nowrap",
+                              fontWeight: 700,
+                            }}
+                            onClick={closeMobileMenu}
+                          >
+                            Dashboard
+                          </Link>
+
+                          <Link
+                            to="/admin/pagina"
+                            style={{
+                              display: "block",
+                              padding: "14px 28px",
+                              color: "#ddd",
+                              textDecoration: "none",
+                              fontSize: "0.95rem",
+                              whiteSpace: "nowrap",
+                              fontWeight: 700,
+                            }}
+                            onClick={closeMobileMenu}
+                          >
+                            Administración
+                          </Link>
+                        </>
                       )}
 
                       <button
