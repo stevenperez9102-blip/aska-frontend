@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -15,6 +15,16 @@ function formatDate(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString("es-CO");
+}
+
+function formatDay(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value).slice(5);
+  return date.toLocaleDateString("es-CO", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function metricCard(label, value, helper) {
@@ -87,6 +97,46 @@ function topButton(active = false) {
   };
 }
 
+function ChartCard({ title, subtitle, children }) {
+  return (
+    <div
+      style={{
+        background: "#0f0f0f",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: "28px",
+        padding: "24px",
+        boxShadow: "0 18px 45px rgba(0,0,0,0.22)",
+      }}
+    >
+      <h2
+        style={{
+          margin: "0 0 8px",
+          fontSize: "1.25rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          fontWeight: 900,
+        }}
+      >
+        {title}
+      </h2>
+
+      {subtitle && (
+        <p
+          style={{
+            margin: "0 0 20px",
+            color: "rgba(255,255,255,0.58)",
+            lineHeight: 1.55,
+          }}
+        >
+          {subtitle}
+        </p>
+      )}
+
+      {children}
+    </div>
+  );
+}
+
 function AdminDashboard() {
   const [data, setData] = useState({
     metricas: {
@@ -99,6 +149,8 @@ function AdminDashboard() {
     },
     estados: [],
     recientes: [],
+    ventas_por_dia: [],
+    top_productos: [],
   });
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState("");
@@ -120,6 +172,12 @@ function AdminDashboard() {
         metricas: result.metricas || data.metricas,
         estados: Array.isArray(result.estados) ? result.estados : [],
         recientes: Array.isArray(result.recientes) ? result.recientes : [],
+        ventas_por_dia: Array.isArray(result.ventas_por_dia)
+          ? result.ventas_por_dia
+          : [],
+        top_productos: Array.isArray(result.top_productos)
+          ? result.top_productos
+          : [],
       });
     } catch (error) {
       console.error("Error cargando dashboard:", error);
@@ -134,6 +192,14 @@ function AdminDashboard() {
   }, []);
 
   const { metricas } = data;
+
+  const maxIngresosDia = useMemo(() => {
+    return Math.max(...data.ventas_por_dia.map((item) => Number(item.ingresos || 0)), 1);
+  }, [data.ventas_por_dia]);
+
+  const maxTopProducto = useMemo(() => {
+    return Math.max(...data.top_productos.map((item) => Number(item.unidades || 0)), 1);
+  }, [data.top_productos]);
 
   return (
     <>
@@ -194,7 +260,7 @@ function AdminDashboard() {
                   lineHeight: 1.7,
                 }}
               >
-                Métricas principales de ventas, pedidos y cupones para tomar decisiones reales del negocio.
+                Métricas principales, ventas por día y productos más vendidos.
               </p>
             </div>
 
@@ -312,30 +378,159 @@ function AdminDashboard() {
               <div
                 style={{
                   display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                  gap: "18px",
+                  marginBottom: "18px",
+                }}
+              >
+                <ChartCard
+                  title="Ventas últimos 14 días"
+                  subtitle="Ingresos diarios por pedidos pagados o activos."
+                >
+                  {data.ventas_por_dia.length === 0 ? (
+                    <p style={{ color: "rgba(255,255,255,0.62)" }}>
+                      Aún no hay ventas suficientes para graficar.
+                    </p>
+                  ) : (
+                    <div
+                      style={{
+                        height: "260px",
+                        display: "flex",
+                        alignItems: "flex-end",
+                        gap: "10px",
+                        paddingTop: "20px",
+                      }}
+                    >
+                      {data.ventas_por_dia.map((item) => {
+                        const height = Math.max(
+                          8,
+                          (Number(item.ingresos || 0) / maxIngresosDia) * 210
+                        );
+
+                        return (
+                          <div
+                            key={String(item.dia)}
+                            style={{
+                              flex: 1,
+                              minWidth: "24px",
+                              display: "grid",
+                              alignItems: "end",
+                              gap: "8px",
+                            }}
+                            title={`${formatDay(item.dia)} · ${formatPrice(item.ingresos)}`}
+                          >
+                            <div
+                              style={{
+                                height: `${height}px`,
+                                borderRadius: "999px 999px 8px 8px",
+                                background:
+                                  "linear-gradient(180deg, #f1e6ff, #6f5491)",
+                                boxShadow:
+                                  "0 12px 28px rgba(111,84,145,0.32)",
+                              }}
+                            />
+                            <span
+                              style={{
+                                color: "rgba(255,255,255,0.55)",
+                                fontSize: "0.72rem",
+                                textAlign: "center",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {formatDay(item.dia)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </ChartCard>
+
+                <ChartCard
+                  title="Productos más vendidos"
+                  subtitle="Top por unidades vendidas."
+                >
+                  {data.top_productos.length === 0 ? (
+                    <p style={{ color: "rgba(255,255,255,0.62)" }}>
+                      Aún no hay productos vendidos para graficar.
+                    </p>
+                  ) : (
+                    <div style={{ display: "grid", gap: "14px" }}>
+                      {data.top_productos.map((item) => {
+                        const width = Math.max(
+                          8,
+                          (Number(item.unidades || 0) / maxTopProducto) * 100
+                        );
+
+                        return (
+                          <div key={item.nombre}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                gap: "14px",
+                                marginBottom: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "70%",
+                                }}
+                              >
+                                {item.nombre}
+                              </strong>
+                              <span style={{ color: "rgba(255,255,255,0.64)" }}>
+                                {item.unidades} uds
+                              </span>
+                            </div>
+
+                            <div
+                              style={{
+                                height: "12px",
+                                borderRadius: "999px",
+                                background: "rgba(255,255,255,0.08)",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  width: `${width}%`,
+                                  height: "100%",
+                                  borderRadius: "999px",
+                                  background:
+                                    "linear-gradient(90deg, #f1e6ff, #6f5491)",
+                                }}
+                              />
+                            </div>
+
+                            <p
+                              style={{
+                                margin: "6px 0 0",
+                                color: "rgba(255,255,255,0.52)",
+                                fontSize: "0.82rem",
+                              }}
+                            >
+                              {formatPrice(item.ingresos)}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </ChartCard>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
                   gridTemplateColumns: "minmax(0, 0.85fr) minmax(0, 1.15fr)",
                   gap: "18px",
                 }}
               >
-                <div
-                  style={{
-                    background: "#0f0f0f",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    borderRadius: "28px",
-                    padding: "24px",
-                    boxShadow: "0 18px 45px rgba(0,0,0,0.22)",
-                  }}
-                >
-                  <h2
-                    style={{
-                      margin: "0 0 18px",
-                      fontSize: "1.35rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    Estados de pedidos
-                  </h2>
-
+                <ChartCard title="Estados de pedidos">
                   {data.estados.length === 0 ? (
                     <p style={{ color: "rgba(255,255,255,0.62)" }}>
                       No hay pedidos activos todavía.
@@ -368,28 +563,9 @@ function AdminDashboard() {
                       ))}
                     </div>
                   )}
-                </div>
+                </ChartCard>
 
-                <div
-                  style={{
-                    background: "#0f0f0f",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    borderRadius: "28px",
-                    padding: "24px",
-                    boxShadow: "0 18px 45px rgba(0,0,0,0.22)",
-                  }}
-                >
-                  <h2
-                    style={{
-                      margin: "0 0 18px",
-                      fontSize: "1.35rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    Pedidos recientes
-                  </h2>
-
+                <ChartCard title="Pedidos recientes">
                   {data.recientes.length === 0 ? (
                     <p style={{ color: "rgba(255,255,255,0.62)" }}>
                       No hay pedidos recientes.
@@ -455,7 +631,7 @@ function AdminDashboard() {
                       ))}
                     </div>
                   )}
-                </div>
+                </ChartCard>
               </div>
             </>
           )}
