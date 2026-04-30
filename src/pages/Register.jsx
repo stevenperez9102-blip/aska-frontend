@@ -65,6 +65,7 @@ function Register() {
   const [formData, setFormData] = useState({
     nombre: "",
     correo: "",
+    fechaNacimiento: "",
     password: "",
     confirmarPassword: "",
   });
@@ -121,6 +122,7 @@ function Register() {
         body: JSON.stringify({
           nombre: nombreLimpio,
           correo: correoLimpio,
+          fechaNacimiento: formData.fechaNacimiento,
           password: passwordLimpia,
         }),
       });
@@ -193,6 +195,17 @@ function Register() {
                 value={formData.correo}
                 onChange={handleChange}
                 autoComplete="email"
+                required
+              />
+            </div>
+
+            <div className="auth-group">
+              <label>Fecha de nacimiento</label>
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleChange}
                 required
               />
             </div>
