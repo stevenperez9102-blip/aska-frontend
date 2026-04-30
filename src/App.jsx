@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Confirmacion from "./pages/Confirmacion";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -178,6 +179,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/confirmacion" element={<Confirmacion />} />
           <Route path="/nosotras" element={<Nosotras />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/catalogo/:slug" element={<Catalog />} />
@@ -193,14 +195,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/carrito" element={<Navigate to="/cart" replace />} />
 
-          <Route
-            path="/checkout"
-            element={
-              <PrivateRoute>
-                <Checkout />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/checkout" element={<Checkout />} />
 
           <Route
             path="/mis-pedidos"
