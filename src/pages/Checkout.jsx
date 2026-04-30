@@ -293,6 +293,8 @@ const handleSubmit = async (e) => {
             >
               Completa tus datos para finalizar tu compra.
               Tu pedido será preparado con cuidado por AŞKA ✨ mientras confirmas el pago.
+
+              Puedes comprar sin registrarte. Solo completa tus datos.
             </p>
 
             {mensaje && (
@@ -326,8 +328,9 @@ const handleSubmit = async (e) => {
               />
 
               <input
+                type="email"
                 name="correo"
-                placeholder="Correo"
+                placeholder="Correo electrónico"
                 value={form.correo}
                 onChange={handleChange}
                 required
@@ -335,8 +338,9 @@ const handleSubmit = async (e) => {
               />
 
               <input
+                type="tel"
                 name="telefono"
-                placeholder="Teléfono"
+                placeholder="Número de celular"
                 value={form.telefono}
                 onChange={handleChange}
                 required
