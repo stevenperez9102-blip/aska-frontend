@@ -279,7 +279,7 @@ function Navbar() {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "16px 120px 16px 12px",
+            padding: "16px 132px 16px 36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -782,12 +782,12 @@ function Navbar() {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 160px; margin-left: -8px;
+            min-width: 142px;
           }
 
           .aska-brand-logo-img {
             display: block;
-            height: 78px;
+            height: 64px;
             width: auto;
             object-fit: contain;
           }
@@ -815,7 +815,7 @@ function Navbar() {
             }
 
             .aska-brand-logo-img {
-              height: 56px;
+              height: 48px;
               max-width: 120px;
             }
 
