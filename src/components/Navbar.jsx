@@ -277,9 +277,10 @@ function Navbar() {
         <div
           className="aska-navbar-inner"
           style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            padding: "16px 132px 16px 36px",
+            width: "100%",
+            maxWidth: "none",
+            margin: "0",
+            padding: "16px 120px 16px 0",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -588,6 +589,7 @@ function Navbar() {
             align-items: center;
             gap: 34px;
             position: relative;
+            margin-left: auto;
           }
 
           .aska-catalog-wrapper {
@@ -781,15 +783,19 @@ function Navbar() {
             flex-shrink: 0;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            min-width: 142px;
+            justify-content: flex-start;
+            min-width: 210px;
+            margin-left: 0;
+            overflow: visible;
           }
 
           .aska-brand-logo-img {
             display: block;
-            height: 64px;
+            height: 92px;
             width: auto;
             object-fit: contain;
+            transform: scale(2.45) translateX(-12px);
+            transform-origin: left center;
           }
 
 
@@ -805,18 +811,21 @@ function Navbar() {
 
           @media (max-width: 768px) {
             .aska-navbar-inner {
-              padding: 12px 112px 12px 16px !important;
+              padding: 12px 112px 12px 0 !important;
               min-height: 66px;
             }
 
             .aska-brand-logo-button {
-              min-width: 118px;
+              min-width: 132px;
               justify-content: flex-start;
+              margin-left: 0;
             }
 
             .aska-brand-logo-img {
-              height: 48px;
-              max-width: 120px;
+              height: 62px;
+              max-width: none;
+              transform: scale(1.9) translateX(-8px);
+              transform-origin: left center;
             }
 
             .aska-hamburger {
