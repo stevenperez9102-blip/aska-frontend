@@ -264,16 +264,35 @@ function AdminDashboard() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={cargarDashboard}
-              style={{
-                ...topButton(false),
-                marginTop: "8px",
-              }}
-            >
-              Actualizar
-            </button>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", marginTop: "8px" }}>
+              <button
+                type="button"
+                onClick={() => window.open("https://aska-backend-nyx8.onrender.com/api/admin/exportar", "_blank")}
+                style={{
+                  background: "#fff",
+                  color: "#000",
+                  padding: "12px 18px",
+                  borderRadius: "999px",
+                  border: "none",
+                  fontWeight: 900,
+                  cursor: "pointer",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                Exportar Excel
+              </button>
+
+              <button
+                type="button"
+                onClick={cargarDashboard}
+                style={{
+                  ...topButton(false),
+                }}
+              >
+                Actualizar
+              </button>
+            </div>
           </div>
 
           <div
