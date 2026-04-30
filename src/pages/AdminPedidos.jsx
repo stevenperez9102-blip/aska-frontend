@@ -525,15 +525,34 @@ function AdminPedidos() {
                         >
                           Pedido #{pedido.id}
                         </p>
-                        <h3
-                          style={{
-                            margin: 0,
-                            fontSize: "1.6rem",
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {pedido.nombre}
-                        </h3>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <h3
+                            style={{
+                              margin: 0,
+                              fontSize: "1.6rem",
+                              lineHeight: 1.1,
+                            }}
+                          >
+                            {pedido.nombre}
+                          </h3>
+
+                          {!pedido.usuario_id && (
+                            <span
+                              style={{
+                                background: "rgba(255,255,255,0.08)",
+                                border: "1px solid rgba(255,255,255,0.18)",
+                                color: "#f5f5f5",
+                                borderRadius: "999px",
+                                padding: "4px 10px",
+                                fontSize: "0.7rem",
+                                fontWeight: 700,
+                                letterSpacing: "0.1em",
+                              }}
+                            >
+                              INVITADO
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <span style={estadoBadgeStyles(pedido.estado)}>
