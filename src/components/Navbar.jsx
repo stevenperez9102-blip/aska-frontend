@@ -93,9 +93,10 @@ function Navbar() {
   const linkStyle = (active = false) => ({
     color: active ? "#bfa6ff" : "#f4efe8",
     textDecoration: "none",
-    fontWeight: 600,
+    fontWeight: 800,
     fontSize: "0.95rem",
-    letterSpacing: "0.04em",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
     transition: "all 0.25s ease",
     whiteSpace: "nowrap",
   });
@@ -106,9 +107,10 @@ function Navbar() {
     padding: 0,
     cursor: "pointer",
     color: "#f4efe8",
-    fontWeight: 600,
+    fontWeight: 800,
     fontSize: "0.95rem",
-    letterSpacing: "0.04em",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
     fontFamily: "inherit",
     whiteSpace: "nowrap",
   };
@@ -780,16 +782,26 @@ function Navbar() {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 96px;
+            min-width: 142px;
           }
 
           .aska-brand-logo-img {
             display: block;
-            height: 42px;
+            height: 64px;
             width: auto;
             object-fit: contain;
           }
 
+
+          /* AŞKA NAVBAR MARCA FINAL */
+          .aska-nav-menu a,
+          .aska-nav-menu button,
+          .aska-catalog-menu a,
+          .aska-purchases-menu a {
+            text-transform: uppercase !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.08em !important;
+          }
 
           @media (max-width: 768px) {
             .aska-navbar-inner {
@@ -798,13 +810,13 @@ function Navbar() {
             }
 
             .aska-brand-logo-button {
-              min-width: 84px;
+              min-width: 118px;
               justify-content: flex-start;
             }
 
             .aska-brand-logo-img {
-              height: 34px;
-              max-width: 92px;
+              height: 48px;
+              max-width: 120px;
             }
 
             .aska-hamburger {
