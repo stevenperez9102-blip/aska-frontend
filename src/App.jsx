@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminPagina from "./pages/AdminPagina";
 import AdminProductos from "./pages/AdminProductos";
 import AdminPedidos from "./pages/AdminPedidos";
+import AdminDashboard from "./pages/AdminDashboard";
 import MisPedidos from "./pages/MisPedidos";
 
 function getUsuario() {
@@ -229,6 +230,15 @@ function App() {
             element={
               <AdminRoute>
                 <AdminPedidos />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
               </AdminRoute>
             }
           />
