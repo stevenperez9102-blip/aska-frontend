@@ -30,17 +30,19 @@ html {
 }
 
 body {
-  background: var(--bg-main);
-  color: var(--text-main);
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-  line-height: 1.5;
+  background: #f8f6f2 !important;
+  color: #111111 !important;
+  font-family: "Helvetica Now", Helvetica, Arial, sans-serif !important;
+  letter-spacing: 0.02em;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-weight: 900;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
 }
 
 a {
@@ -2438,3 +2440,11 @@ select:focus {
   }
 }
 
+
+
+.nav-link-item {
+  font-family: "Helvetica Now", Helvetica, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
