@@ -96,7 +96,13 @@ function Register() {
 
     setMensaje("");
 
-    if (!nombreLimpio || !correoLimpio || !passwordLimpia || !confirmarPasswordLimpia) {
+    if (
+      !nombreLimpio ||
+      !correoLimpio ||
+      !formData.fechaNacimiento ||
+      !passwordLimpia ||
+      !confirmarPasswordLimpia
+    ) {
       setMensaje("Completa todos los campos");
       return;
     }
