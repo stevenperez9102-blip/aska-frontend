@@ -112,7 +112,7 @@ function Home() {
   const mediaTipo = config?.media_tipo || "imagen";
   const titulo = config?.titulo || "";
   const subtitulo = config?.subtitulo || "";
-  const colorTexto = config?.color_texto || "#ffffff";
+  const colorTexto = "#ffffff";
   const overlayOpacidad =
     config?.overlay_opacidad !== null && config?.overlay_opacidad !== undefined
       ? Number(config.overlay_opacidad)
@@ -125,9 +125,9 @@ function Home() {
   const mostrarTexto = Number(config?.mostrar_texto ?? 1) === 1;
 
   const logoPosX = Number(config?.logo_pos_x ?? 50);
-  const logoPosY = Number(config?.logo_pos_y ?? 42);
+  const logoPosY = Number(config?.logo_pos_y ?? 32);
   const textoPosX = Number(config?.texto_pos_x ?? 50);
-  const textoPosY = Number(config?.texto_pos_y ?? 72);
+  const textoPosY = Number(config?.texto_pos_y ?? 70);
 
   const tituloFontSize = Number(config?.titulo_font_size || 74);
   const subtituloFontSize = Number(config?.subtitulo_font_size || 28);
@@ -553,6 +553,7 @@ function Home() {
       </section>
 
       <section
+        className="aska-home-intro-dark"
         style={{
           background: "#050505",
           color: "#ffffff",
@@ -580,7 +581,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#ffffff",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -595,7 +596,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#ffffff",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -610,7 +611,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#ffffff",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -625,7 +626,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#ffffff",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -639,7 +640,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "rgba(255,255,255,0.76)",
+                color: "#ffffff",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -888,6 +889,17 @@ function Home() {
           .aska-home-product-layout h4,
           .aska-home-secondary-grid h4 {
             text-shadow: 0 2px 18px rgba(0,0,0,0.5);
+          }
+
+
+          .aska-home-intro-dark,
+          .aska-home-intro-dark * {
+            background-color: #050505 !important;
+            color: #ffffff !important;
+          }
+
+          .aska-home-intro-dark p {
+            color: #ffffff !important;
           }
 
           @media (max-width: 768px) {
