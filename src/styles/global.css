@@ -2448,3 +2448,15 @@ select:focus {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+
+/* ===== FIX FINAL HOME LINEA ROJA (forzar blanco) ===== */
+.aska-home-intro-dark {
+  background: #050505 !important;
+  color: #ffffff !important;
+}
+
+.aska-home-intro-dark * {
+  color: #ffffff !important;
+}
+
