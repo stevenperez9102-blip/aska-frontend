@@ -156,6 +156,8 @@ function AdminDashboard() {
   const [mensaje, setMensaje] = useState("");
   const [desdeExcel, setDesdeExcel] = useState("");
   const [hastaExcel, setHastaExcel] = useState("");
+  const [ultimoPedidoId, setUltimoPedidoId] = useState(null);
+  const [nuevoPedido, setNuevoPedido] = useState(false);
 
   const cargarDashboard = async () => {
     try {
@@ -168,6 +170,16 @@ function AdminDashboard() {
       if (!res.ok) {
         setMensaje(result.mensaje || "No fue posible cargar el dashboard.");
         return;
+      }
+
+      const recientes = Array.isArray(result.recientes) ? result.recientes : [];
+
+      if (recientes.length > 0) {
+        const idActual = recientes[0].id;
+        if (ultimoPedidoId && idActual !== ultimoPedidoId) {
+          setNuevoPedido(true);
+        }
+        setUltimoPedidoId(idActual);
       }
 
       setData({
@@ -191,6 +203,12 @@ function AdminDashboard() {
 
   useEffect(() => {
     cargarDashboard();
+
+    const interval = setInterval(() => {
+      cargarDashboard();
+    }, 20000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const { metricas } = data;
@@ -384,6 +402,43 @@ function AdminDashboard() {
               }}
             >
               {mensaje}
+            </div>
+          )}
+
+          
+          {nuevoPedido && (
+            <div
+              style={{
+                background: "#0f5132",
+                border: "1px solid #198754",
+                borderRadius: "16px",
+                padding: "14px",
+                marginBottom: "20px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "10px",
+                flexWrap: "wrap"
+              }}
+            >
+              <strong>Nuevo pedido recibido 🛒</strong>
+              <button
+                onClick={() => {
+                  setNuevoPedido(false);
+                  window.location.href = "/admin/pedidos";
+                }}
+                style={{
+                  background: "#fff",
+                  color: "#000",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
+                  border: "none",
+                  fontWeight: 800,
+                  cursor: "pointer"
+                }}
+              >
+                Ver pedidos
+              </button>
             </div>
           )}
 
