@@ -498,6 +498,83 @@ function AdminDashboard() {
                   metricas.cupones_usados,
                   "Cupones marcados como utilizados."
                 )}
+
+              {/* CARROS ABANDONADOS */}
+              <div
+                style={{
+                  background: "#0f0f0f",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "28px",
+                  padding: "24px",
+                  marginBottom: "28px"
+                }}
+              >
+                <h2 style={{
+                  margin: "0 0 12px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  fontWeight: 900
+                }}>
+                  Carritos abandonados
+                </h2>
+
+                {!Array.isArray(data.carritos_abandonados) || data.carritos_abandonados.length === 0 ? (
+                  <p style={{ color: "rgba(255,255,255,0.6)" }}>
+                    No hay carritos abandonados por ahora.
+                  </p>
+                ) : (
+                  <div style={{ display: "grid", gap: "12px" }}>
+                    {data.carritos_abandonados.map((c) => {
+                      const telefono = (c.telefono || "").replace(/\D/g,"");
+                      const wa = telefono
+                        ? `https://wa.me/${telefono.startsWith("57") ? telefono : "57"+telefono}?text=${encodeURIComponent(
+                            `Hola ${c.nombre} ✨%0AVimos que dejaste productos en tu carrito en AŞKA 🛍️%0ATe esperamos 💎`
+                          )}`
+                        : null;
+
+                      return (
+                        <div key={c.id} style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: "10px",
+                          padding: "14px",
+                          borderRadius: "16px",
+                          background: "rgba(255,255,255,0.04)",
+                          border: "1px solid rgba(255,255,255,0.06)"
+                        }}>
+                          <div>
+                            <strong>{c.nombre || "Cliente"}</strong>
+                            <p style={{
+                              margin: "4px 0 0",
+                              color: "rgba(255,255,255,0.6)"
+                            }}>
+                              {c.fecha ? new Date(c.fecha).toLocaleString() : "Hace un momento"}
+                            </p>
+                          </div>
+
+                          {wa && (
+                            <a href={wa} target="_blank" rel="noreferrer">
+                              <button style={{
+                                background: "#1f8f5f",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "999px",
+                                padding: "10px 14px",
+                                fontWeight: 800,
+                                cursor: "pointer"
+                              }}>
+                                WhatsApp
+                              </button>
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               </div>
 
               <div
