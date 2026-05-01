@@ -154,6 +154,8 @@ function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState("");
+  const [desdeExcel, setDesdeExcel] = useState("");
+  const [hastaExcel, setHastaExcel] = useState("");
 
   const cargarDashboard = async () => {
     try {
@@ -200,6 +202,23 @@ function AdminDashboard() {
   const maxTopProducto = useMemo(() => {
     return Math.max(...data.top_productos.map((item) => Number(item.unidades || 0)), 1);
   }, [data.top_productos]);
+
+  const exportarExcel = () => {
+    const params = new URLSearchParams();
+
+    if (desdeExcel) {
+      params.append("desde", desdeExcel);
+    }
+
+    if (hastaExcel) {
+      params.append("hasta", hastaExcel);
+    }
+
+    const query = params.toString();
+    const url = `https://aska-backend-nyx8.onrender.com/api/admin/exportar${query ? `?${query}` : ""}`;
+
+    window.open(url, "_blank");
+  };
 
   return (
     <>
@@ -265,9 +284,41 @@ function AdminDashboard() {
             </div>
 
             <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", marginTop: "8px" }}>
+              <input
+                type="date"
+                value={desdeExcel}
+                onChange={(e) => setDesdeExcel(e.target.value)}
+                title="Desde"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                  padding: "11px 12px",
+                  borderRadius: "999px",
+                  fontWeight: 800,
+                  outline: "none",
+                }}
+              />
+
+              <input
+                type="date"
+                value={hastaExcel}
+                onChange={(e) => setHastaExcel(e.target.value)}
+                title="Hasta"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                  padding: "11px 12px",
+                  borderRadius: "999px",
+                  fontWeight: 800,
+                  outline: "none",
+                }}
+              />
+
               <button
                 type="button"
-                onClick={() => window.open("https://aska-backend-nyx8.onrender.com/api/admin/exportar", "_blank")}
+                onClick={exportarExcel}
                 style={{
                   background: "#fff",
                   color: "#000",
