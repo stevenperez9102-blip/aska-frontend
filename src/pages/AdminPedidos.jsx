@@ -489,9 +489,7 @@ function AdminPedidos() {
               {pedidos.map((pedido) => {
                 const telefonoWhatsApp = normalizarTelefono(pedido.telefono);
                 const waLink = telefonoWhatsApp
-                  ? `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(
-                      `Hola ${pedido.nombre}, te escribimos desde AŞKA para hacer seguimiento a tu pedido #${pedido.id}. Estado actual: ${pedido.estado}.`
-                    )}`
+                  ? `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(`Hola ${pedido.nombre} ✨%0A%0ATu pedido #${pedido.id} en AŞKA está en estado: ${pedido.estado.toUpperCase()} 🛍️%0A%0ATotal: ${formatPrice(pedido.total)}%0A%0ACualquier duda estamos atentos 💎`)}`
                   : null;
 
                 return (
