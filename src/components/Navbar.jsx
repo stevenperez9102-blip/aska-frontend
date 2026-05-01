@@ -280,7 +280,8 @@ function Navbar() {
             width: "100%",
             maxWidth: "none",
             margin: "0",
-            padding: "16px 120px 16px 0",
+            padding: "0 120px 0 0",
+            minHeight: "96px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -608,6 +609,7 @@ function Navbar() {
             gap: 34px;
             position: relative;
             margin-left: auto;
+            transform: translateY(-8px);
           }
 
           .aska-catalog-wrapper {
@@ -673,7 +675,7 @@ function Navbar() {
 
           .aska-navbar-cart {
             position: absolute;
-            top: 50%;
+            top: calc(50% - 8px);
             right: 24px;
             transform: translateY(-50%);
             z-index: 10002;
@@ -805,6 +807,7 @@ function Navbar() {
             min-width: 210px;
             margin-left: 0;
             overflow: visible;
+            transform: translateY(-8px);
           }
 
           .aska-brand-logo-img {
@@ -868,6 +871,7 @@ function Navbar() {
             }
 
             .aska-nav-menu {
+              transform: translateX(105%);
               position: fixed;
               top: 0;
               right: 0;
