@@ -125,9 +125,9 @@ function Home() {
   const mostrarTexto = Number(config?.mostrar_texto ?? 1) === 1;
 
   const logoPosX = Number(config?.logo_pos_x ?? 50);
-  const logoPosY = Number(config?.logo_pos_y ?? 32);
+  const logoPosY = 32;
   const textoPosX = Number(config?.texto_pos_x ?? 50);
-  const textoPosY = Number(config?.texto_pos_y ?? 70);
+  const textoPosY = Number(config?.texto_pos_y ?? 72);
 
   const tituloFontSize = Number(config?.titulo_font_size || 74);
   const subtituloFontSize = Number(config?.subtitulo_font_size || 28);
@@ -553,12 +553,11 @@ function Home() {
       </section>
 
       <section
-        className="aska-home-intro-dark"
         style={{
-          background: "#050505",
-          color: "#ffffff",
+          background: "#f8f6f2",
+          color: "#111111",
           padding: "46px 24px 0",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderTop: "1px solid rgba(17,17,17,0.08)",
         }}
       >
         <div
@@ -581,7 +580,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#ffffff",
+                color: "#111111",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -596,7 +595,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#ffffff",
+                color: "#111111",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -611,7 +610,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#ffffff",
+                color: "#111111",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -626,7 +625,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#ffffff",
+                color: "#111111",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -640,7 +639,7 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#ffffff",
+                color: "#111111",
                 letterSpacing: "0.003em",
                 fontFamily: `"Helvetica Neue", Arial, sans-serif`,
               }}
@@ -666,11 +665,9 @@ function Home() {
               justifyContent: "center",
               overflow: "hidden",
               borderRadius: "26px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 22px 70px rgba(0,0,0,0.35)",
-              background: mediaUrl
-                ? `linear-gradient(rgba(0,0,0,0.86), rgba(0,0,0,0.86)), url(${mediaUrl}) center/cover no-repeat`
-                : "#000000",
+              border: "1px solid rgba(17,17,17,0.08)",
+              boxShadow: "0 22px 70px rgba(0,0,0,0.12)",
+              background: "#ffffff",
             }}
           >
             <a
@@ -678,7 +675,7 @@ function Home() {
               target="_blank"
               rel="noreferrer"
               style={{
-                color: "#ffffff",
+                color: "#111111",
                 textDecoration: "underline",
                 textUnderlineOffset: "4px",
                 fontSize: "clamp(1.1rem, 1.55vw, 1.58rem)",
@@ -889,17 +886,6 @@ function Home() {
           .aska-home-product-layout h4,
           .aska-home-secondary-grid h4 {
             text-shadow: 0 2px 18px rgba(0,0,0,0.5);
-          }
-
-
-          .aska-home-intro-dark,
-          .aska-home-intro-dark * {
-            background-color: #050505 !important;
-            color: #ffffff !important;
-          }
-
-          .aska-home-intro-dark p {
-            color: #ffffff !important;
           }
 
           @media (max-width: 768px) {
