@@ -1,7 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+
+const API_URL = "https://aska-backend-nyx8.onrender.com";
+const SHIPPING_COST = 10000;
+const REQUEST_TIMEOUT = 30000;
 
 function formatPrice(value) {
   return new Intl.NumberFormat("es-CO", {
@@ -11,9 +14,32 @@ function formatPrice(value) {
   }).format(Number(value || 0));
 }
 
+async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function readJsonSafe(response) {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
 function Checkout() {
-  const { cart, clearCart } = useContext(CartContext);
-  const navigate = useNavigate();
+  const { cart } = useContext(CartContext);
 
   const usuario = (() => {
     try {
@@ -36,33 +62,11 @@ function Checkout() {
   const [mensaje, setMensaje] = useState("");
   const [cupon, setCupon] = useState("");
   const [cuponAplicado, setCuponAplicado] = useState(null);
-  const [descuento, setDescuento] = useState(0);
   const [loading, setLoading] = useState(false);
-  
-  const aplicarCupon = async () => {
-    if (!cupon.trim()) return;
-
-    try {
-      const res = await fetch(`https://aska-backend-nyx8.onrender.com/api/cupones/${cupon}`);
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMensaje("Cupón inválido o expirado");
-        return;
-      }
-
-      setCuponAplicado(data.cupon);
-      const porcentaje = data.cupon.descuento_porcentaje || 0;
-      setDescuento((total * porcentaje) / 100);
-      setMensaje("Cupón aplicado correctamente");
-    } catch {
-      setMensaje("Error aplicando cupón");
-    }
-  };
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
-  const total = useMemo(() => {
+  const subtotal = useMemo(() => {
     return cart.reduce(
       (acc, item) =>
         acc +
@@ -72,17 +76,21 @@ function Checkout() {
     );
   }, [cart]);
 
+  const descuento = useMemo(() => {
+    if (!cuponAplicado) return 0;
+    const porcentaje = Number(cuponAplicado.descuento_porcentaje || 0);
+    return Math.round((subtotal * porcentaje) / 100);
+  }, [cuponAplicado, subtotal]);
+
+  const totalPedido = useMemo(() => {
+    return Math.max(0, Math.round(subtotal + SHIPPING_COST - descuento));
+  }, [subtotal, descuento]);
+
   useEffect(() => {
     const cargarMetodosPago = async () => {
       try {
-        const response = await fetch("https://aska-backend-nyx8.onrender.com/api/metodos-pago");
-
-        let data = [];
-        try {
-          data = await response.json();
-        } catch {
-          data = [];
-        }
+        const response = await fetchWithTimeout(`${API_URL}/api/metodos-pago`, {}, 15000);
+        const data = await readJsonSafe(response);
 
         if (!response.ok) {
           setMetodosPago([]);
@@ -109,54 +117,88 @@ function Checkout() {
     });
   };
 
-  const guardarIntento = async () => {
+  const aplicarCupon = async () => {
+    const codigo = cupon.trim().toUpperCase();
+    if (!codigo) return;
+
     try {
-      await fetch("https://aska-backend-nyx8.onrender.com/api/lead-carrito", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre: form.nombre,
-          correo: form.correo,
-          carrito: cart,
-          total: total - descuento,
-        }),
-      });
-    } catch (e) {
-      console.log("lead no guardado");
+      setMensaje("");
+      const res = await fetchWithTimeout(`${API_URL}/api/cupones/${codigo}`, {}, 15000);
+      const data = await readJsonSafe(res);
+
+      if (!res.ok || !data?.cupon) {
+        setCuponAplicado(null);
+        setMensaje(data?.mensaje || "Cupón inválido o expirado");
+        return;
+      }
+
+      setCuponAplicado(data.cupon);
+      setMensaje("Cupón aplicado correctamente");
+    } catch (error) {
+      console.error("Error aplicando cupón:", error);
+      setCuponAplicado(null);
+      setMensaje("Error aplicando cupón. Inténtalo nuevamente.");
     }
   };
 
-const handleSubmit = async (e) => {
+  const guardarIntento = async () => {
+    try {
+      await fetchWithTimeout(
+        `${API_URL}/api/lead-carrito`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre: form.nombre.trim(),
+            correo: form.correo.trim(),
+            carrito: cart,
+            total: totalPedido,
+          }),
+        },
+        12000
+      );
+    } catch (error) {
+      console.log("lead no guardado", error?.message || error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
 
     if (!cart.length) {
       setMensaje("El carrito está vacío.");
       return;
     }
 
-    if (
-      !form.nombre.trim() ||
-      !form.correo.trim() ||
-      !form.telefono.trim() ||
-      !form.direccion.trim() ||
-      !form.ciudad.trim()
-    ) {
+    const nombreFinal = form.nombre.trim();
+    const correoFinal = form.correo.trim().toLowerCase();
+    const telefonoFinal = form.telefono.trim();
+    const direccionFinal = form.direccion.trim();
+    const ciudadFinal = form.ciudad.trim();
+
+    if (!nombreFinal || !correoFinal || !telefonoFinal || !direccionFinal || !ciudadFinal) {
       setMensaje("Completa todos los campos.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoFinal)) {
+      setMensaje("Ingresa un correo electrónico válido.");
       return;
     }
 
     try {
       setLoading(true);
+      setMensaje("Preparando tu pedido seguro...");
 
       await guardarIntento();
 
       const productosNormalizados = cart
         .map((item) => {
-          const productoId = Number(
-            item.id || item.producto_id || item.productId || 0
-          );
+          const productoId = Number(item.id || item.producto_id || item.productId || 0);
           const nombre = item.name || item.nombre || "Producto";
           const precio = Number(item.price || item.precio || 0);
           const cantidad = Number(item.quantity || item.cantidad || 0);
@@ -176,50 +218,51 @@ const handleSubmit = async (e) => {
             category: item.category || item.categoria || "",
           };
         })
-        .filter((item) => item.id && item.cantidad > 0);
+        .filter((item) => item.id && item.cantidad > 0 && item.precio >= 0);
 
       if (!productosNormalizados.length) {
         setMensaje("No fue posible preparar los productos del pedido.");
         return;
       }
 
-      const response = await fetch("https://aska-backend-nyx8.onrender.com/api/pedidos", {
+      if (totalPedido < 1000) {
+        setMensaje("El total del pedido no es válido para pago en línea.");
+        return;
+      }
+
+      const response = await fetchWithTimeout(`${API_URL}/api/pedidos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           usuario_id: usuario?.id || null,
-
           cliente: {
-            nombre: form.nombre.trim(),
-            correo: form.correo.trim(),
-            telefono: form.telefono.trim(),
-            direccion: form.direccion.trim(),
-            ciudad: form.ciudad.trim(),
+            nombre: nombreFinal,
+            correo: correoFinal,
+            telefono: telefonoFinal,
+            direccion: direccionFinal,
+            ciudad: ciudadFinal,
           },
-
-          nombre: form.nombre.trim(),
-          correo: form.correo.trim(),
-          telefono: form.telefono.trim(),
-          direccion: form.direccion.trim(),
-          ciudad: form.ciudad.trim(),
-
+          nombre: nombreFinal,
+          correo: correoFinal,
+          telefono: telefonoFinal,
+          direccion: direccionFinal,
+          ciudad: ciudadFinal,
           productos: productosNormalizados,
-          total: total - descuento,
+          total: totalPedido,
+          subtotal,
+          envio: SHIPPING_COST,
+          descuento,
+          cupon: cuponAplicado?.codigo || null,
           estado_pago: "pendiente",
         }),
       });
 
-      let data = {};
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
+      const data = await readJsonSafe(response);
 
       if (!response.ok) {
-        setMensaje(data.mensaje || "No fue posible crear el pedido.");
+        setMensaje(data?.mensaje || "No fue posible crear el pedido.");
         return;
       }
 
@@ -230,40 +273,61 @@ const handleSubmit = async (e) => {
         return;
       }
 
-      const pagoResponse = await fetch(
-        "https://aska-backend-nyx8.onrender.com/api/bold/crear-link-pago",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pedidoId,
-            total: total - descuento,
-            nombre: form.nombre.trim(),
-            correo: form.correo.trim(),
-          }),
-        }
-      );
+      setMensaje("Pedido creado. Conectando con Bold...");
 
-      let pagoData = {};
-      try {
-        pagoData = await pagoResponse.json();
-      } catch {
-        pagoData = {};
-      }
+      const pagoResponse = await fetchWithTimeout(`${API_URL}/api/bold/crear-link-pago`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pedidoId,
+          total: totalPedido,
+          nombre: nombreFinal,
+          correo: correoFinal,
+        }),
+      });
 
-      if (!pagoResponse.ok || !pagoData.url) {
-        setMensaje("Pedido creado, pero no fue posible generar el link de pago.");
+      const pagoData = await readJsonSafe(pagoResponse);
+
+      if (!pagoResponse.ok || !pagoData?.url) {
+        console.error("Error generando link Bold:", pagoData);
+        setMensaje(
+          pagoData?.mensaje ||
+            "Pedido creado, pero no fue posible generar el link de pago. Inténtalo nuevamente o contacta a AŞKA."
+        );
         return;
       }
 
+      try {
+        sessionStorage.setItem(
+          "aska_pending_order",
+          JSON.stringify({
+            pedidoId,
+            reference: pagoData.reference || "",
+            total: totalPedido,
+            createdAt: Date.now(),
+          })
+        );
+      } catch {
+        // No bloquea el pago si sessionStorage no está disponible.
+      }
+
+      setMensaje("Redirigiendo a Bold...");
+
       // No limpiamos el carrito aquí.
-      // Solo debe limpiarse cuando Bold confirme el pago.
-      window.location.href = pagoData.url;
+      // Solo debe limpiarse cuando el pago sea confirmado por Bold/webhook.
+      window.location.assign(pagoData.url);
     } catch (error) {
       console.error("Error creando pedido:", error);
-      setMensaje("Error creando el pedido.");
+
+      if (error?.name === "AbortError") {
+        setMensaje(
+          "El servidor tardó demasiado en responder. Verifica tu conexión e inténtalo nuevamente."
+        );
+      } else {
+        setMensaje("Error creando el pedido. Inténtalo nuevamente.");
+      }
     } finally {
       setLoading(false);
     }
@@ -316,9 +380,10 @@ const handleSubmit = async (e) => {
                 marginBottom: "22px",
               }}
             >
-              Completa tus datos para finalizar tu compra.
-              Tu pedido será preparado con cuidado por AŞKA ✨ mientras confirmas el pago.
-
+              Completa tus datos para finalizar tu compra. Tu pedido será preparado
+              con cuidado por AŞKA ✨ mientras confirmas el pago.
+              <br />
+              <br />
               Puedes comprar sin registrarte. Solo completa tus datos.
             </p>
 
@@ -326,9 +391,13 @@ const handleSubmit = async (e) => {
               <p
                 style={{
                   marginBottom: "18px",
-                  color: mensaje.includes("correctamente")
-                    ? "#356f48"
-                    : "#9b243c",
+                  color:
+                    mensaje.includes("correctamente") ||
+                    mensaje.includes("Preparando") ||
+                    mensaje.includes("Conectando") ||
+                    mensaje.includes("Redirigiendo")
+                      ? "#356f48"
+                      : "#9b243c",
                   fontWeight: 600,
                 }}
               >
@@ -419,8 +488,10 @@ const handleSubmit = async (e) => {
                 >
                   Al confirmar tu pedido, serás redirigido a Bold para realizar
                   el pago de forma segura.
-
-🔒 Pago seguro con Bold. Tus datos están protegidos con estándares de seguridad.
+                  <br />
+                  <br />
+                  🔒 Pago seguro con Bold. Tus datos están protegidos con estándares
+                  de seguridad.
                 </p>
 
                 {loadingMetodos ? (
@@ -445,8 +516,7 @@ const handleSubmit = async (e) => {
                         lineHeight: 1.5,
                       }}
                     >
-                      Tu pedido se creará y luego pasarás a la plataforma de
-                      pago.
+                      Tu pedido se creará y luego pasarás a la plataforma de pago.
                     </p>
                   </div>
                 ) : (
@@ -456,9 +526,7 @@ const handleSubmit = async (e) => {
                         key={metodo.id}
                         style={{
                           display: "grid",
-                          gridTemplateColumns: metodo.qr_url
-                            ? "1fr 120px"
-                            : "1fr",
+                          gridTemplateColumns: metodo.qr_url ? "1fr 120px" : "1fr",
                           gap: "14px",
                           alignItems: "center",
                           borderRadius: "18px",
@@ -511,12 +579,7 @@ const handleSubmit = async (e) => {
                           )}
 
                           {metodo.descripcion && (
-                            <p
-                              style={{
-                                ...paymentTextStyle,
-                                lineHeight: 1.5,
-                              }}
-                            >
+                            <p style={{ ...paymentTextStyle, lineHeight: 1.5 }}>
                               {metodo.descripcion}
                             </p>
                           )}
@@ -602,9 +665,7 @@ const handleSubmit = async (e) => {
                       />
 
                       <div>
-                        <div style={{ fontWeight: 700 }}>
-                          {item.name || item.nombre}
-                        </div>
+                        <div style={{ fontWeight: 700 }}>{item.name || item.nombre}</div>
                         <div style={{ color: "#666" }}>
                           Cantidad: {item.quantity || item.cantidad}
                         </div>
@@ -620,13 +681,16 @@ const handleSubmit = async (e) => {
                   ))}
                 </div>
 
-                
                 <div style={{ marginTop: "18px" }}>
                   <input
                     placeholder="Código de descuento"
                     value={cupon}
-                    onChange={(e) => setCupon(e.target.value)}
-                    style={{...inputStyle, marginBottom: "10px"}}
+                    onChange={(e) => {
+                      setCupon(e.target.value);
+                      if (cuponAplicado) setCuponAplicado(null);
+                      setMensaje("");
+                    }}
+                    style={{ ...inputStyle, marginBottom: "10px" }}
                   />
                   <button
                     type="button"
@@ -637,7 +701,7 @@ const handleSubmit = async (e) => {
                       padding: "10px 16px",
                       background: "#111",
                       color: "#fff",
-                      cursor: "pointer"
+                      cursor: "pointer",
                     }}
                   >
                     Aplicar cupón
@@ -650,7 +714,7 @@ const handleSubmit = async (e) => {
                   </div>
                 )}
 
-<div
+                <div
                   style={{
                     marginTop: "18px",
                     display: "flex",
@@ -660,7 +724,7 @@ const handleSubmit = async (e) => {
                   }}
                 >
                   <span>Subtotal:</span>
-                  <span>{formatPrice(total)}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
 
                 <div
@@ -668,12 +732,27 @@ const handleSubmit = async (e) => {
                     display: "flex",
                     justifyContent: "space-between",
                     marginTop: "10px",
-                    color: "#555"
+                    color: "#555",
                   }}
                 >
                   <span>Envío:</span>
-                  <span>$10.000</span>
+                  <span>{formatPrice(SHIPPING_COST)}</span>
                 </div>
+
+                {descuento > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "10px",
+                      color: "#356f48",
+                      fontWeight: 700,
+                    }}
+                  >
+                    <span>Descuento:</span>
+                    <span>-{formatPrice(descuento)}</span>
+                  </div>
+                )}
 
                 <div
                   style={{
@@ -685,7 +764,7 @@ const handleSubmit = async (e) => {
                   }}
                 >
                   <span>Total:</span>
-                  <span>{formatPrice(total + 10000 - descuento)}</span>
+                  <span>{formatPrice(totalPedido)}</span>
                 </div>
 
                 <div
@@ -699,9 +778,9 @@ const handleSubmit = async (e) => {
                     lineHeight: 1.55,
                   }}
                 >
-                  Tu pedido se registrará como{" "}
-                  <strong>pago pendiente</strong>. Cuando el pago sea confirmado,
-                  AŞKA actualizará el estado desde administración.
+                  Tu pedido se registrará como <strong>pago pendiente</strong>. Cuando
+                  el pago sea confirmado, AŞKA actualizará el estado desde
+                  administración.
                 </div>
               </>
             )}

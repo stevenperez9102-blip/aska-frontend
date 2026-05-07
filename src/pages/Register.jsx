@@ -120,11 +120,18 @@ function Register() {
     setCargando(true);
 
     try {
+      const controller = new AbortController();
+
+      const timeout = setTimeout(() => {
+        controller.abort();
+      }, 30000);
+
       const response = await fetch("https://aska-backend-nyx8.onrender.com/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
         body: JSON.stringify({
           nombre: nombreLimpio,
           correo: correoLimpio,
@@ -132,6 +139,8 @@ function Register() {
           password: passwordLimpia,
         }),
       });
+
+      clearTimeout(timeout);
 
       let data = {};
       try {
@@ -145,12 +154,19 @@ function Register() {
         return;
       }
 
+      setCargando(false);
+
       navigate("/verificar-correo", {
         state: { correo: correoLimpio },
       });
     } catch (error) {
       console.error("Error al registrar:", error);
-      setMensaje("Error de conexión con el servidor");
+
+      if (error.name === "AbortError") {
+        setMensaje("El servidor tardó demasiado en responder");
+      } else {
+        setMensaje("Error de conexión con el servidor");
+      }
     } finally {
       setCargando(false);
     }
