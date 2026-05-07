@@ -91,7 +91,7 @@ function Navbar() {
   };
 
   const linkStyle = (active = false) => ({
-    color: active ? "#bfa6ff" : "#f4efe8",
+    color: active ? "var(--aska-accent-color, #bfa6ff)" : "var(--aska-text-color, #f4efe8)",
     textDecoration: "none",
     fontWeight: 800,
     fontSize: "0.95rem",
@@ -106,12 +106,12 @@ function Navbar() {
     border: "none",
     padding: 0,
     cursor: "pointer",
-    color: "#f4efe8",
+    color: "var(--aska-text-color, #f4efe8)",
     fontWeight: 800,
     fontSize: "0.95rem",
     letterSpacing: "0.08em",
     textTransform: "uppercase",
-    fontFamily: "inherit",
+    fontFamily: "var(--aska-font-family, inherit)",
     whiteSpace: "nowrap",
   };
 
@@ -247,7 +247,7 @@ function Navbar() {
                 lineHeight: 1,
               }}
             >
-              Aska es una chimba
+              ¿Estás listx para elevar tu estilo con AŞKA?⚡️
             </h2>
 
             <h3
@@ -269,7 +269,7 @@ function Navbar() {
           position: "sticky",
           top: 0,
           zIndex: 9999,
-          background: "rgba(10,10,10,0.95)",
+          background: "var(--aska-navbar-bg, rgba(10,10,10,0.95))",
           backdropFilter: "blur(10px)",
           borderBottom: "1px solid rgba(255,255,255,0.05)",
         }}
@@ -552,6 +552,14 @@ function Navbar() {
 
       <style>
         {`
+          :root {
+            --aska-navbar-bg: rgba(10,10,10,0.95);
+            --aska-accent-color: #bfa6ff;
+            --aska-text-color: #f4efe8;
+            --aska-font-family: inherit;
+          }
+
+
           @keyframes askaFall {
             0% {
               transform: translateY(-100px) rotate(0deg);
@@ -587,7 +595,7 @@ function Navbar() {
             width: 100%;
             height: 2px;
             border-radius: 999px;
-            background: #f4efe8;
+            background: var(--aska-text-color, #f4efe8);
             transition: transform 0.25s ease, opacity 0.25s ease;
           }
 
@@ -664,7 +672,7 @@ function Navbar() {
             height: 22px;
             padding: 0 7px;
             border-radius: 999px;
-            background: #bfa6ff;
+            background: var(--aska-accent-color, #bfa6ff);
             color: #0a0a0a;
             display: inline-flex;
             align-items: center;
@@ -683,7 +691,7 @@ function Navbar() {
             height: 52px;
             border-radius: 999px;
             background: rgba(10,10,10,0.94);
-            color: #f4efe8;
+            color: var(--aska-text-color, #f4efe8);
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -701,7 +709,7 @@ function Navbar() {
             height: 23px;
             padding: 0 7px;
             border-radius: 999px;
-            background: #bfa6ff;
+            background: var(--aska-accent-color, #bfa6ff);
             color: #0a0a0a;
             display: flex;
             align-items: center;
