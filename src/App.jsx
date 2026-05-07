@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Confirmacion from "./pages/Confirmacion";
 
@@ -43,8 +43,71 @@ function AdminRoute({ children }) {
 
 function App() {
   const [secretActive, setSecretActive] = useState(false);
+
+  const [cmsVisual, setCmsVisual] = useState({
+    accent: "#c9c9c9",
+    background: "#050505",
+    text: "#ffffff",
+    font: "Playfair Display",
+  });
+
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
+
+
+  useEffect(() => {
+    const cargarCmsVisual = async () => {
+      try {
+        const response = await fetch(
+          "https://aska-backend-nyx8.onrender.com/api/home-config"
+        );
+
+        const data = await response.json();
+
+        if (!data) return;
+
+        const visual = {
+          accent: data.cms_accent_color || "#c9c9c9",
+          background: data.cms_background_color || "#050505",
+          text: data.cms_text_color || "#ffffff",
+          font: data.cms_font_family || "Playfair Display",
+        };
+
+        setCmsVisual(visual);
+
+        const root = document.documentElement;
+
+        root.style.setProperty(
+          "--aska-accent-primary",
+          visual.accent
+        );
+
+        root.style.setProperty(
+          "--aska-bg-primary",
+          visual.background
+        );
+
+        root.style.setProperty(
+          "--aska-text-primary",
+          visual.text
+        );
+
+        root.style.setProperty(
+          "--aska-font-family-primary",
+          visual.font
+        );
+
+        root.style.setProperty(
+          "--aska-font-family-secondary",
+          visual.font
+        );
+      } catch (error) {
+        console.error("Error cargando CMS visual:", error);
+      }
+    };
+
+    cargarCmsVisual();
+  }, []);
 
   const handleSecretAreaClick = (e) => {
     const isLogoZone = e.clientX <= 150 && e.clientY <= 95;
@@ -118,10 +181,10 @@ function App() {
                 padding: "42px 34px",
                 textAlign: "center",
                 borderRadius: "34px",
-                background: "rgba(15,15,16,0.82)",
+                background: `${cmsVisual.background}EE`,
                 border: "1px solid rgba(255,255,255,0.14)",
                 boxShadow: "0 30px 90px rgba(0,0,0,0.65)",
-                color: "#fff",
+                color: cmsVisual.text,
               }}
             >
               <p
@@ -150,7 +213,7 @@ function App() {
                 style={{
                   margin: "16px 0 0",
                   fontSize: "clamp(1.05rem, 3vw, 1.7rem)",
-                  color: "#d6b36a",
+                  color: cmsVisual.accent,
                   lineHeight: 1.35,
                 }}
               >
