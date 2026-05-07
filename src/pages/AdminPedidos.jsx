@@ -83,6 +83,8 @@ function topLinkButton(active = false) {
     padding: "12px 18px",
     fontWeight: 600,
     cursor: "pointer",
+    transition: "transform .22s ease, opacity .22s ease",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
   };
 }
 
@@ -93,6 +95,8 @@ function actionButtonStyles(type = "default") {
     padding: "10px 16px",
     fontWeight: 700,
     cursor: "pointer",
+    transition: "transform .22s ease, opacity .22s ease",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
   };
 
   if (type === "secondary") {
@@ -124,23 +128,23 @@ function actionButtonStyles(type = "default") {
   if (type === "success") {
     return {
       ...common,
-      background: "#6f5491",
-      color: "#fff",
+      background: "var(--aska-accent-primary, #6f5491)",
+      color: "var(--aska-text-secondary, #fff)",
     };
   }
 
   if (type === "whatsapp") {
     return {
       ...common,
-      background: "#1f8f5f",
-      color: "#fff",
+      background: "var(--aska-success-color, #1f8f5f)",
+      color: "var(--aska-text-secondary, #fff)",
     };
   }
 
   return {
     ...common,
     background: "#1f1f1f",
-    color: "#fff",
+    color: "var(--aska-text-secondary, #fff)",
   };
 }
 
@@ -337,7 +341,7 @@ function AdminPedidos() {
               noticeType === "error"
                 ? "rgba(122, 47, 67, 0.96)"
                 : "rgba(111, 84, 145, 0.96)",
-            color: "#fff",
+            color: "var(--aska-text-secondary, #fff)",
             padding: "14px 18px",
             borderRadius: "16px",
             boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
@@ -352,8 +356,8 @@ function AdminPedidos() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#050505",
-          color: "#fff",
+          background: "var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "38px 24px 60px",
         }}
       >
@@ -375,6 +379,7 @@ function AdminPedidos() {
               style={{
                 fontSize: "clamp(2rem, 5vw, 3.6rem)",
                 lineHeight: 1.05,
+                fontFamily: "var(--aska-font-family-primary, inherit)",
                 margin: 0,
               }}
             >
@@ -440,7 +445,7 @@ function AdminPedidos() {
               <div
                 key={item.label}
                 style={{
-                  background: "#0f0f0f",
+                  background: "var(--aska-card-dark-soft, #0f0f0f)",
                   border: "1px solid rgba(255,255,255,0.08)",
                   borderRadius: "24px",
                   padding: "20px",
@@ -463,7 +468,7 @@ function AdminPedidos() {
           {loading ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark-soft, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -474,7 +479,7 @@ function AdminPedidos() {
           ) : pedidos.length === 0 ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark-soft, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -495,8 +500,9 @@ function AdminPedidos() {
                 return (
                   <article
                     key={pedido.id}
+                    className="aska-admin-order-card"
                     style={{
-                      background: "#090909",
+                      background: "var(--aska-card-dark, #090909)",
                       border: "1px solid rgba(255,255,255,0.08)",
                       borderRadius: "28px",
                       padding: "24px",
@@ -745,8 +751,9 @@ function AdminPedidos() {
                             {detalles[pedido.id].map((item) => (
                               <div
                                 key={item.id}
+                                className="aska-admin-order-detail-card"
                                 style={{
-                                  background: "#111",
+                                  background: "var(--aska-card-dark-2, #111)",
                                   border: "1px solid rgba(255,255,255,0.06)",
                                   borderRadius: "20px",
                                   padding: "16px",
@@ -824,6 +831,43 @@ function AdminPedidos() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          :root{
+            --aska-card-dark:#090909;
+            --aska-card-dark-2:#111111;
+            --aska-card-dark-soft:#0f0f0f;
+            --aska-success-color:#1f8f5f;
+          }
+
+          .aska-admin-order-card,
+          .aska-admin-order-detail-card{
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease,
+              border-color .28s ease;
+          }
+
+          .aska-admin-order-card:hover,
+          .aska-admin-order-detail-card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 28px 70px rgba(0,0,0,.22) !important;
+          }
+
+          button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+
+          @media (max-width:860px){
+            .aska-admin-order-detail-card{
+              grid-template-columns:1fr !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
