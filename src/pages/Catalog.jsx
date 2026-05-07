@@ -210,8 +210,8 @@ function Catalog() {
         to={`/producto/${item.id}`}
         style={{
           textDecoration: "none",
-          color: "#111",
-          background: "#fff",
+          color: "var(--aska-text-primary, #111)",
+          background: "var(--aska-card-bg, #fff)",
           borderRadius: "24px",
           overflow: "hidden",
           border: "1px solid rgba(0,0,0,0.08)",
@@ -223,7 +223,7 @@ function Catalog() {
           style={{
             width: "100%",
             height: "300px",
-            background: "#efefef",
+            background: "var(--aska-card-bg, #efefef)",
             overflow: "hidden",
             position: "relative",
           }}
@@ -304,7 +304,7 @@ function Catalog() {
               margin: 0,
               marginBottom: imgs.length > 0 ? "12px" : "0",
               fontWeight: 700,
-              color: "#222",
+              color: "var(--aska-text-primary, #222)",
             }}
           >
             {formatPrice(item.precio)}
@@ -343,9 +343,9 @@ function Catalog() {
                     }
                     style={{
                       border: active
-                        ? "1px solid rgba(111, 84, 145, 0.85)"
+                        ? "1px solid var(--aska-accent-primary, rgba(111, 84, 145, 0.85))"
                         : "1px solid rgba(0,0,0,0.10)",
-                      background: "#f5f5f5",
+                      background: "var(--aska-card-bg, #f5f5f5)",
                       borderRadius: "10px",
                       height: "48px",
                       overflow: "hidden",
@@ -430,7 +430,7 @@ function Catalog() {
             margin: "0 auto",
             padding: "44px 30px 70px",
             color: heroColor,
-            fontFamily: heroFuente,
+            fontFamily: `var(--aska-font-family-primary, ${heroFuente})`,
           }}
         >
           <p
@@ -470,17 +470,17 @@ function Catalog() {
 
       <section
         style={{
-          background: "#f3f3f3",
+          background: "var(--aska-bg-secondary, #f3f3f3)",
           minHeight: "60vh",
           padding: "36px 24px 70px",
         }}
       >
         <div className="aska-catalog-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {loading ? (
-            <p style={{ color: "#222", fontSize: "1rem" }}>Cargando catálogo...</p>
+            <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>Cargando catálogo...</p>
           ) : categoriaActiva ? (
             filteredProducts.length === 0 ? (
-              <p style={{ color: "#222", fontSize: "1rem" }}>
+              <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>
                 No hay productos en esta categoría todavía.
               </p>
             ) : (
@@ -497,7 +497,7 @@ function Catalog() {
           ) : (
             <div style={{ display: "grid", gap: "36px" }}>
               {categories.length === 0 ? (
-                <p style={{ color: "#222", fontSize: "1rem" }}>
+                <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>
                   No hay productos disponibles.
                 </p>
               ) : (
@@ -521,7 +521,7 @@ function Catalog() {
                         <h2
                           style={{
                             margin: 0,
-                            color: "#111",
+                            color: "var(--aska-text-primary, #111)",
                             fontSize: "clamp(1.7rem, 3vw, 2.4rem)",
                           }}
                         >
@@ -532,7 +532,7 @@ function Catalog() {
                           to={`/catalogo/${slugifyCategory(category)}`}
                           style={{
                             textDecoration: "none",
-                            color: "#6f5491",
+                            color: "var(--aska-accent-primary, #6f5491)",
                             fontWeight: 700,
                           }}
                         >
@@ -560,6 +560,23 @@ function Catalog() {
 
       <style>
         {`
+          :root {
+            --aska-card-bg: #ffffff;
+          }
+
+          .aska-catalog-wrap a {
+            transition:
+              transform 0.28s ease,
+              box-shadow 0.28s ease,
+              border-color 0.28s ease;
+          }
+
+          .aska-catalog-wrap a:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.12) !important;
+          }
+
+
           html,
           body,
           #root {
