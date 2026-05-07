@@ -159,6 +159,13 @@ function AdminDashboard() {
   const [ultimoPedidoId, setUltimoPedidoId] = useState(null);
   const [nuevoPedido, setNuevoPedido] = useState(false);
 
+  const [cmsPreview, setCmsPreview] = useState({
+    accent: "#c9c9c9",
+    background: "#050505",
+    text: "#ffffff",
+    font: "Playfair Display",
+  });
+
   const cargarDashboard = async () => {
     try {
       setLoading(true);
@@ -441,6 +448,151 @@ function AdminDashboard() {
               </button>
             </div>
           )}
+
+
+          <div
+            style={{
+              marginBottom: "30px",
+              background: "linear-gradient(145deg, #111, #070707)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "30px",
+              padding: "28px",
+              boxShadow: "0 18px 45px rgba(0,0,0,0.28)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "18px",
+                flexWrap: "wrap",
+                marginBottom: "22px",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    margin: "0 0 10px",
+                    color: "rgba(255,255,255,0.58)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.16em",
+                    fontSize: "0.8rem",
+                    fontWeight: 900,
+                  }}
+                >
+                  CMS Visual
+                </p>
+
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "clamp(1.8rem, 4vw, 3rem)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    fontWeight: 900,
+                  }}
+                >
+                  Branding global
+                </h2>
+
+                <p
+                  style={{
+                    marginTop: "12px",
+                    color: "rgba(255,255,255,0.62)",
+                    maxWidth: "720px",
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Base preparada para personalizar colores, tipografía,
+                  branding y apariencia global de AŞKA desde administración.
+                </p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                gap: "16px",
+              }}
+            >
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "22px",
+                  padding: "18px",
+                }}
+              >
+                <p style={{ marginBottom: "10px", fontWeight: 800 }}>
+                  Color principal
+                </p>
+
+                <div
+                  style={{
+                    width: "100%",
+                    height: "52px",
+                    borderRadius: "16px",
+                    background: cmsPreview.accent,
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "22px",
+                  padding: "18px",
+                }}
+              >
+                <p style={{ marginBottom: "10px", fontWeight: 800 }}>
+                  Fondo global
+                </p>
+
+                <div
+                  style={{
+                    width: "100%",
+                    height: "52px",
+                    borderRadius: "16px",
+                    background: cmsPreview.background,
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "22px",
+                  padding: "18px",
+                }}
+              >
+                <p style={{ marginBottom: "10px", fontWeight: 800 }}>
+                  Tipografía
+                </p>
+
+                <div
+                  style={{
+                    minHeight: "52px",
+                    borderRadius: "16px",
+                    background: "rgba(255,255,255,0.04)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    fontFamily: cmsPreview.font,
+                    fontWeight: 900,
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  AŞKA Premium
+                </div>
+              </div>
+            </div>
+          </div>
 
           {loading ? (
             <div
@@ -844,3 +996,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+  
