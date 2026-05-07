@@ -90,6 +90,13 @@ const [nuevoMetodo, setNuevoMetodo] = useState({
   qr_url: "",
 });
 
+const [cmsVisual, setCmsVisual] = useState({
+  accentColor: "#c9c9c9",
+  backgroundColor: "#050505",
+  textColor: "#ffffff",
+  fontFamily: "Playfair Display",
+});
+
 
   const defaultHome = {
     media_url: "",
@@ -1328,6 +1335,213 @@ const cargarMetodos = async () => {
             </div>
           </div>
         </div>
+
+{/* ======================= */}
+{/* CMS VISUAL */}
+{/* ======================= */}
+
+<div
+  style={{
+    marginTop: "40px",
+    background: "#0d0d0d",
+    padding: "28px",
+    borderRadius: "28px",
+    border: "1px solid rgba(255,255,255,0.08)",
+  }}
+>
+  <h2 style={{ marginTop: 0 }}>CMS Visual</h2>
+
+  <p
+    style={{
+      color: "rgba(255,255,255,0.62)",
+      lineHeight: 1.7,
+      marginBottom: "24px",
+    }}
+  >
+    Personaliza branding, colores y tipografía global de AŞKA.
+  </p>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+      gap: "18px",
+      marginBottom: "28px",
+    }}
+  >
+    <div>
+      <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
+        Color principal
+      </label>
+
+      <input
+        type="color"
+        value={cmsVisual.accentColor}
+        onChange={(e) =>
+          setCmsVisual((prev) => ({
+            ...prev,
+            accentColor: e.target.value,
+          }))
+        }
+        style={{
+          width: "100%",
+          height: "54px",
+          borderRadius: "14px",
+          border: "1px solid rgba(255,255,255,0.12)",
+          background: "#111",
+        }}
+      />
+    </div>
+
+    <div>
+      <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
+        Fondo global
+      </label>
+
+      <input
+        type="color"
+        value={cmsVisual.backgroundColor}
+        onChange={(e) =>
+          setCmsVisual((prev) => ({
+            ...prev,
+            backgroundColor: e.target.value,
+          }))
+        }
+        style={{
+          width: "100%",
+          height: "54px",
+          borderRadius: "14px",
+          border: "1px solid rgba(255,255,255,0.12)",
+          background: "#111",
+        }}
+      />
+    </div>
+
+    <div>
+      <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
+        Color texto
+      </label>
+
+      <input
+        type="color"
+        value={cmsVisual.textColor}
+        onChange={(e) =>
+          setCmsVisual((prev) => ({
+            ...prev,
+            textColor: e.target.value,
+          }))
+        }
+        style={{
+          width: "100%",
+          height: "54px",
+          borderRadius: "14px",
+          border: "1px solid rgba(255,255,255,0.12)",
+          background: "#111",
+        }}
+      />
+    </div>
+
+    <div>
+      <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
+        Tipografía
+      </label>
+
+      <select
+        value={cmsVisual.fontFamily}
+        onChange={(e) =>
+          setCmsVisual((prev) => ({
+            ...prev,
+            fontFamily: e.target.value,
+          }))
+        }
+        style={inputStyle}
+      >
+        <option value="Playfair Display">Playfair Display</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Cormorant Garamond">Cormorant Garamond</option>
+        <option value="Helvetica">Helvetica</option>
+      </select>
+    </div>
+  </div>
+
+  <div
+    style={{
+      borderRadius: "28px",
+      overflow: "hidden",
+      border: "1px solid rgba(255,255,255,0.08)",
+      background: cmsVisual.backgroundColor,
+      padding: "40px",
+      minHeight: "240px",
+      position: "relative",
+    }}
+  >
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: `radial-gradient(circle at top left, ${cmsVisual.accentColor}22, transparent 35%)`,
+      }}
+    />
+
+    <div style={{ position: "relative", zIndex: 2 }}>
+      <p
+        style={{
+          color: cmsVisual.accentColor,
+          textTransform: "uppercase",
+          letterSpacing: "0.18em",
+          fontWeight: 900,
+          marginBottom: "12px",
+        }}
+      >
+        Preview branding
+      </p>
+
+      <h2
+        style={{
+          margin: 0,
+          color: cmsVisual.textColor,
+          fontSize: "clamp(2rem, 5vw, 4rem)",
+          fontFamily: cmsVisual.fontFamily,
+          lineHeight: 1,
+        }}
+      >
+        AŞKA Premium
+      </h2>
+
+      <p
+        style={{
+          marginTop: "18px",
+          color: cmsVisual.textColor,
+          opacity: 0.78,
+          maxWidth: "520px",
+          lineHeight: 1.7,
+          fontFamily: cmsVisual.fontFamily,
+        }}
+      >
+        Sistema visual preparado para branding dinámico, personalización
+        premium y CMS administrativo escalable.
+      </p>
+
+      <button
+        type="button"
+        style={{
+          marginTop: "24px",
+          background: cmsVisual.accentColor,
+          color: "#000",
+          border: "none",
+          borderRadius: "999px",
+          padding: "14px 22px",
+          fontWeight: 800,
+          cursor: "pointer",
+          fontFamily: cmsVisual.fontFamily,
+        }}
+      >
+        Preview botón
+      </button>
+    </div>
+  </div>
+</div>
+
 
 {/* ======================= */}
 {/* METODOS DE PAGO ADMIN */}
