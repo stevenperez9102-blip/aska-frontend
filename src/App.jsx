@@ -51,6 +51,7 @@ function App() {
     accent: "#c9c9c9",
     background: "#050505",
     text: "#ffffff",
+    navbar: "#050505",
     font: "Playfair Display",
   });
 
@@ -62,7 +63,7 @@ function App() {
     const cargarCmsVisual = async () => {
       try {
         const response = await fetch(
-          "https://aska-backend-nyx8.onrender.com/api/home-config"
+          "https://aska-backend-nyx8.onrender.com/api/admin/cms-visual"
         );
 
         const data = await response.json();
@@ -73,6 +74,7 @@ function App() {
           accent: data.cms_accent_color || "#c9c9c9",
           background: data.cms_background_color || "#050505",
           text: data.cms_text_color || "#ffffff",
+          navbar: data.cms_navbar_background || "#050505",
           font: data.cms_font_family || "Playfair Display",
         };
 
@@ -100,6 +102,11 @@ function App() {
         root.style.setProperty(
           "--aska-text-secondary",
           visual.text
+        );
+
+        root.style.setProperty(
+          "--aska-navbar-background",
+          visual.navbar
         );
 
         root.style.setProperty(
@@ -188,6 +195,7 @@ function App() {
             --aska-bg-primary:#050505;
             --aska-text-primary:#ffffff;
             --aska-text-secondary:#ffffff;
+            --aska-navbar-background:#050505;
             --aska-font-family-primary:'Playfair Display', serif;
             --aska-font-family-secondary:'Playfair Display', serif;
           }
@@ -207,7 +215,8 @@ function App() {
             font-family:var(--aska-font-family-secondary, inherit);
             transition:
               background .32s ease,
-              color .32s ease;
+              color .32s ease,
+              font-family .22s ease;
           }
 
           button,
