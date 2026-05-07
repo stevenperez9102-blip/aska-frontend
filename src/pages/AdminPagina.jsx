@@ -96,10 +96,27 @@ const [cmsVisual, setCmsVisual] = useState({
   accentColor: "#c9c9c9",
   backgroundColor: "#050505",
   textColor: "#ffffff",
+  navbarBackground: "#050505",
   fontFamily: "Playfair Display",
 });
 
 
+
+  const aplicarCmsVisual = (visual = cmsVisual) => {
+    const root = document.documentElement;
+
+    root.style.setProperty("--aska-accent-primary", visual.accentColor);
+    root.style.setProperty("--aska-bg-primary", visual.backgroundColor);
+    root.style.setProperty("--aska-text-primary", visual.textColor);
+    root.style.setProperty("--aska-text-secondary", visual.textColor);
+    root.style.setProperty("--aska-navbar-background", visual.navbarBackground);
+    root.style.setProperty("--aska-font-family-primary", visual.fontFamily);
+    root.style.setProperty("--aska-font-family-secondary", visual.fontFamily);
+
+    document.body.style.background = visual.backgroundColor;
+    document.body.style.color = visual.textColor;
+    document.body.style.fontFamily = visual.fontFamily;
+  };
 
   const guardarCmsVisual = async () => {
     try {
@@ -107,10 +124,11 @@ const [cmsVisual, setCmsVisual] = useState({
         cms_accent_color: cmsVisual.accentColor,
         cms_background_color: cmsVisual.backgroundColor,
         cms_text_color: cmsVisual.textColor,
+        cms_navbar_background: cmsVisual.navbarBackground,
         cms_font_family: cmsVisual.fontFamily,
       };
 
-      await fetch("https://aska-backend-nyx8.onrender.com/api/admin/cms-visual", {
+      const response = await fetch("https://aska-backend-nyx8.onrender.com/api/admin/cms-visual", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,32 +136,20 @@ const [cmsVisual, setCmsVisual] = useState({
         body: JSON.stringify(payload),
       });
 
-      document.documentElement.style.setProperty(
-        "--aska-accent-primary",
-        cmsVisual.accentColor
-      );
+      if (!response.ok) {
+        let data = {};
+        try {
+          data = await response.json();
+        } catch {
+          data = {};
+        }
 
-      document.documentElement.style.setProperty(
-        "--aska-bg-primary",
-        cmsVisual.backgroundColor
-      );
+        setMensaje(data?.mensaje || "❌ No se pudo guardar el CMS visual");
+        return;
+      }
 
-      document.documentElement.style.setProperty(
-        "--aska-text-secondary",
-        cmsVisual.textColor
-      );
-
-      document.documentElement.style.setProperty(
-        "--aska-font-family-primary",
-        cmsVisual.fontFamily
-      );
-
-      document.documentElement.style.setProperty(
-        "--aska-font-family-secondary",
-        cmsVisual.fontFamily
-      );
-
-      setMensaje("✅ Branding CMS actualizado");
+      aplicarCmsVisual(cmsVisual);
+      setMensaje("✅ Cambios CMS guardados correctamente");
     } catch (err) {
       console.error(err);
       setMensaje("❌ Error actualizando branding CMS");
@@ -160,12 +166,16 @@ const [cmsVisual, setCmsVisual] = useState({
 
       if (!data) return;
 
-      setCmsVisual({
+      const visual = {
         accentColor: data.cms_accent_color || "#c9c9c9",
         backgroundColor: data.cms_background_color || "#050505",
         textColor: data.cms_text_color || "#ffffff",
+        navbarBackground: data.cms_navbar_background || "#050505",
         fontFamily: data.cms_font_family || "Playfair Display",
-      });
+      };
+
+      setCmsVisual(visual);
+      aplicarCmsVisual(visual);
     } catch (err) {
       console.error(err);
     }
@@ -668,7 +678,7 @@ const cargarMetodos = async () => {
             top: "92px",
             right: "24px",
             zIndex: 9998,
-            background: "rgba(111, 84, 145, 0.96)",
+            background: "var(--aska-accent-primary, rgba(111, 84, 145, 0.96))",
             color: "var(--aska-text-secondary, #fff)",
             padding: "14px 18px",
             borderRadius: "16px",
@@ -1428,6 +1438,16 @@ const cargarMetodos = async () => {
   }}
 >
   <h2 style={{ marginTop: 0 }}>CMS Visual</h2>
+  <p
+    style={{
+      marginTop: "-4px",
+      marginBottom: "16px",
+      color: "rgba(255,255,255,0.72)",
+      fontSize: "0.92rem",
+    }}
+  >
+    Cambia los colores, revisa el preview y presiona <strong>Guardar cambios CMS</strong>.
+  </p>
 
   <p
     style={{
@@ -1521,6 +1541,30 @@ const cargarMetodos = async () => {
 
     <div>
       <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
+        Fondo navbar
+      </label>
+
+      <input
+        type="color"
+        value={cmsVisual.navbarBackground}
+        onChange={(e) =>
+          setCmsVisual((prev) => ({
+            ...prev,
+            navbarBackground: e.target.value,
+          }))
+        }
+        style={{
+          width: "100%",
+          height: "54px",
+          borderRadius: "14px",
+          border: "1px solid rgba(255,255,255,0.12)",
+          background: "var(--aska-card-dark-2, #111)",
+        }}
+      />
+    </div>
+
+    <div>
+      <label style={{ display: "block", marginBottom: "8px", fontWeight: 700 }}>
         Tipografía
       </label>
 
@@ -1560,6 +1604,28 @@ const cargarMetodos = async () => {
         background: `radial-gradient(circle at top left, ${cmsVisual.accentColor}22, transparent 35%)`,
       }}
     />
+
+    <div
+      style={{
+        position: "relative",
+        zIndex: 2,
+        marginBottom: "24px",
+        background: cmsVisual.navbarBackground,
+        color: cmsVisual.textColor,
+        borderRadius: "18px",
+        padding: "14px 18px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        border: "1px solid rgba(255,255,255,0.12)",
+        fontFamily: cmsVisual.fontFamily,
+      }}
+    >
+      <strong>AŞKA</strong>
+      <span style={{ fontSize: "0.8rem", opacity: 0.78 }}>
+        Preview navbar
+      </span>
+    </div>
 
     <div style={{ position: "relative", zIndex: 2 }}>
       <p
@@ -1616,7 +1682,38 @@ const cargarMetodos = async () => {
           fontFamily: cmsVisual.fontFamily,
         }}
       >
-        Preview botón
+        Guardar cambios CMS
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          const premiumDefault = {
+            accentColor: "#c9c9c9",
+            backgroundColor: "#050505",
+            textColor: "#ffffff",
+            navbarBackground: "#050505",
+            fontFamily: "Playfair Display",
+          };
+
+          setCmsVisual(premiumDefault);
+          aplicarCmsVisual(premiumDefault);
+          setMensaje("✨ Preview CMS restaurado. Guarda para persistirlo.");
+        }}
+        style={{
+          marginTop: "24px",
+          marginLeft: "12px",
+          background: "transparent",
+          color: cmsVisual.textColor,
+          border: `1px solid ${cmsVisual.accentColor}`,
+          borderRadius: "999px",
+          padding: "14px 22px",
+          fontWeight: 800,
+          cursor: "pointer",
+          fontFamily: cmsVisual.fontFamily,
+        }}
+      >
+        Restaurar premium
       </button>
     </div>
   </div>
