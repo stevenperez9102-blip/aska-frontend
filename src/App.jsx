@@ -143,7 +143,7 @@ function App() {
                   lineHeight: 1,
                 }}
               >
-                Aska es una chimba
+                ¿Estás listx para elevar tu estilo con AŞKA?⚡️
               </h2>
 
               <h3
@@ -154,7 +154,7 @@ function App() {
                   lineHeight: 1.35,
                 }}
               >
-                y Nicky una agente secreta de las zuricatas!
+                
               </h3>
             </div>
 
