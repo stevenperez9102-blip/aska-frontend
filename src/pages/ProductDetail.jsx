@@ -99,10 +99,14 @@ function ProductDetail() {
     addToCart({
       id: producto.id,
       name: producto.nombre,
+      nombre: producto.nombre,
       price: Number(producto.precio || 0),
+      precio: Number(producto.precio || 0),
       image: selectedImage || producto.imagen || "",
+      imagen: selectedImage || producto.imagen || "",
       description: producto.descripcion || "",
       category: producto.categoria || "",
+      categoria: producto.categoria || "",
     });
   };
 
@@ -419,6 +423,7 @@ function ProductDetail() {
                 fontWeight: 700,
                 cursor: "pointer",
                 minWidth: "240px",
+                transition: "transform .22s ease, opacity .22s ease, background .22s ease",
               }}
             >
               Agregar al carrito
@@ -492,6 +497,11 @@ function ProductDetail() {
             .aska-add-to-cart-button {
               width: 100% !important;
               min-width: 0 !important;
+            }
+
+            .aska-add-to-cart-button:hover {
+              transform: translateY(-2px);
+              opacity: 0.96;
             }
           }
 
