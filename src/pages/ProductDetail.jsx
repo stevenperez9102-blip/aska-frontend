@@ -117,9 +117,9 @@ function ProductDetail() {
         <section
           style={{
             minHeight: "100vh",
-            background: "#f5f5f5",
+            background: "var(--aska-bg-secondary, #f5f5f5)",
             padding: "120px 24px 60px",
-            color: "#111",
+            color: "var(--aska-text-primary, #111)",
           }}
         >
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -137,9 +137,9 @@ function ProductDetail() {
         <section
           style={{
             minHeight: "100vh",
-            background: "#f5f5f5",
+            background: "var(--aska-bg-secondary, #f5f5f5)",
             padding: "120px 24px 60px",
-            color: "#111",
+            color: "var(--aska-text-primary, #111)",
           }}
         >
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -158,7 +158,7 @@ function ProductDetail() {
         className="aska-product-detail-page"
         style={{
           minHeight: "100vh",
-          background: "#f3f3f3",
+          background: "var(--aska-bg-secondary, #f3f3f3)",
           padding: "42px 24px 60px",
         }}
       >
@@ -176,7 +176,7 @@ function ProductDetail() {
           <div
             className="aska-product-gallery-card"
             style={{
-              background: "#ffffff",
+              background: "var(--aska-card-bg, #ffffff)",
               borderRadius: "26px",
               border: "1px solid rgba(0,0,0,0.08)",
               padding: "18px",
@@ -249,7 +249,7 @@ function ProductDetail() {
                       borderRadius: "999px",
                       border: "none",
                       background: "rgba(0,0,0,0.55)",
-                      color: "#fff",
+                      color: "var(--aska-text-secondary, #fff)",
                       fontSize: "1.6rem",
                       cursor: "pointer",
                       zIndex: 3,
@@ -271,7 +271,7 @@ function ProductDetail() {
                       borderRadius: "999px",
                       border: "none",
                       background: "rgba(0,0,0,0.55)",
-                      color: "#fff",
+                      color: "var(--aska-text-secondary, #fff)",
                       fontSize: "1.6rem",
                       cursor: "pointer",
                       zIndex: 3,
@@ -301,7 +301,7 @@ function ProductDetail() {
                     style={{
                       border:
                         selectedIndex === index
-                          ? "2px solid #6f5491"
+                          ? "2px solid var(--aska-accent-primary, #6f5491)"
                           : "1px solid rgba(0,0,0,0.10)",
                       borderRadius: "16px",
                       background: "#f8f8f8",
@@ -331,14 +331,14 @@ function ProductDetail() {
           <aside
             className="aska-product-info-card"
             style={{
-              background: "#ffffff",
+              background: "var(--aska-card-bg, #ffffff)",
               borderRadius: "26px",
               border: "1px solid rgba(0,0,0,0.08)",
               padding: "40px",
               boxShadow: "0 18px 45px rgba(0,0,0,0.08)",
               position: "sticky",
               top: "108px",
-              color: "#111",
+              color: "var(--aska-text-primary, #111)",
             }}
           >
             <h1
@@ -347,7 +347,8 @@ function ProductDetail() {
                 marginBottom: "18px",
                 fontSize: "clamp(2.2rem, 4vw, 3.8rem)",
                 lineHeight: 1.02,
-                color: "#111",
+                fontFamily: "var(--aska-font-family-primary, inherit)",
+                color: "var(--aska-text-primary, #111)",
               }}
             >
               {producto.nombre}
@@ -359,7 +360,8 @@ function ProductDetail() {
                 marginBottom: "22px",
                 fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
                 fontWeight: 700,
-                color: "#111",
+                color: "var(--aska-text-primary, #111)",
+                fontFamily: "var(--aska-font-family-primary, inherit)",
               }}
             >
               {formatPrice(producto.precio)}
@@ -369,7 +371,7 @@ function ProductDetail() {
               style={{
                 margin: 0,
                 marginBottom: "28px",
-                color: "#2b2b2b",
+                color: "var(--aska-text-primary, #2b2b2b)",
                 lineHeight: 1.8,
                 fontSize: "1.05rem",
               }}
@@ -415,8 +417,8 @@ function ProductDetail() {
               onClick={handleAddToCart}
               style={{
                 border: "none",
-                background: "#0b0b0b",
-                color: "#fff",
+                background: "var(--aska-bg-primary, #0b0b0b)",
+                color: "var(--aska-text-secondary, #fff)",
                 borderRadius: "0",
                 padding: "18px 28px",
                 fontSize: "1rem",
@@ -424,6 +426,9 @@ function ProductDetail() {
                 cursor: "pointer",
                 minWidth: "240px",
                 transition: "transform .22s ease, opacity .22s ease, background .22s ease",
+                fontFamily: "var(--aska-font-family-secondary, inherit)",
+                borderRadius: "999px",
+                boxShadow: "0 14px 36px rgba(0,0,0,0.18)",
               }}
             >
               Agregar al carrito
@@ -434,6 +439,29 @@ function ProductDetail() {
 
       <style>
         {`
+          :root {
+            --aska-card-bg: #ffffff;
+          }
+
+          .aska-add-to-cart-button:hover {
+            transform: translateY(-3px);
+            opacity: 0.96;
+          }
+
+          .aska-product-gallery-card,
+          .aska-product-info-card {
+            transition:
+              transform 0.28s ease,
+              box-shadow 0.28s ease;
+          }
+
+          .aska-product-gallery-card:hover,
+          .aska-product-info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.12) !important;
+          }
+
+
           html,
           body,
           #root {

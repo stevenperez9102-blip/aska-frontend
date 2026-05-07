@@ -50,9 +50,9 @@ function Cart() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#f3f3f3",
+          background: "var(--aska-bg-secondary, #f3f3f3)",
           padding: isMobile ? "28px 16px 60px" : "42px 24px 70px",
-          color: "#111",
+          color: "var(--aska-text-primary, #111)",
         }}
       >
         <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
@@ -61,7 +61,7 @@ function Cart() {
               style={{
                 margin: 0,
                 marginBottom: "10px",
-                color: "#666",
+                color: "rgba(0,0,0,0.58)",
                 textTransform: "uppercase",
                 letterSpacing: "0.14em",
                 fontSize: "0.82rem",
@@ -87,7 +87,7 @@ function Cart() {
             <div
               style={{
                 minHeight: "58vh",
-                background: "#fff",
+                background: "var(--aska-card-bg, #fff)",
                 border: "1px solid rgba(0,0,0,0.08)",
                 borderRadius: "30px",
                 padding: "42px 26px",
@@ -106,12 +106,12 @@ function Cart() {
                     margin: "0 auto 24px",
                     borderRadius: "50%",
                     background:
-                      "linear-gradient(145deg, rgba(17,17,17,0.05), rgba(191,166,255,0.18))",
+                      "linear-gradient(145deg, rgba(17,17,17,0.05), color-mix(in srgb, var(--aska-accent-primary, #bfa6ff) 22%, transparent))",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "4.2rem",
-                    color: "#111",
+                    color: "var(--aska-text-primary, #111)",
                     animation: "pulse 2s ease-in-out infinite",
                     boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
                   }}
@@ -126,7 +126,7 @@ function Cart() {
                     fontSize: "clamp(2rem, 5vw, 3.2rem)",
                     lineHeight: 1,
                     fontWeight: 900,
-                    color: "#111",
+                    color: "var(--aska-text-primary, #111)",
                   }}
                 >
                   Tu carrito está vacío
@@ -150,8 +150,8 @@ function Cart() {
                   <button
                     style={{
                       border: "none",
-                      background: "#111",
-                      color: "#fff",
+                      background: "var(--aska-bg-primary, #111)",
+                      color: "var(--aska-text-secondary, #fff)",
                       padding: "15px 28px",
                       cursor: "pointer",
                       fontWeight: 900,
@@ -190,7 +190,7 @@ function Cart() {
                       display: "grid",
                       gridTemplateColumns: isMobile ? "1fr" : "120px 1fr",
                       gap: "18px",
-                      background: "#fff",
+                      background: "var(--aska-card-bg, #fff)",
                       border: "1px solid rgba(0,0,0,0.08)",
                       borderRadius: "24px",
                       padding: "16px",
@@ -257,7 +257,7 @@ function Cart() {
                         <p
                           style={{
                             margin: 0,
-                            color: "#666",
+                            color: "rgba(0,0,0,0.58)",
                             fontSize: "0.92rem",
                             fontWeight: 700,
                           }}
@@ -279,7 +279,7 @@ function Cart() {
                       <p
                         style={{
                           margin: 0,
-                          color: "#444",
+                          color: "var(--aska-text-primary, #444)",
                           fontWeight: 700,
                         }}
                       >
@@ -289,7 +289,7 @@ function Cart() {
                       <p
                         style={{
                           margin: 0,
-                          color: "#111",
+                          color: "var(--aska-text-primary, #111)",
                           fontWeight: 900,
                         }}
                       >
@@ -301,8 +301,8 @@ function Cart() {
                           onClick={() => removeFromCart(product.id)}
                           style={{
                             border: "none",
-                            background: "#111",
-                            color: "#fff",
+                            background: "var(--aska-bg-primary, #111)",
+                            color: "var(--aska-text-secondary, #fff)",
                             padding: "11px 16px",
                             cursor: "pointer",
                             fontWeight: 900,
@@ -319,7 +319,7 @@ function Cart() {
 
               <aside
                 style={{
-                  background: "#fff",
+                  background: "var(--aska-card-bg, #fff)",
                   border: "1px solid rgba(0,0,0,0.08)",
                   borderRadius: "24px",
                   padding: "26px",
@@ -393,7 +393,7 @@ function Cart() {
                   <p
                     style={{
                       margin: 0,
-                      color: "#666",
+                      color: "rgba(0,0,0,0.58)",
                       fontSize: "0.86rem",
                       lineHeight: 1.45,
                       fontWeight: 700,
@@ -409,7 +409,7 @@ function Cart() {
                     justifyContent: "space-between",
                     gap: "16px",
                     marginBottom: "14px",
-                    color: "#444",
+                    color: "var(--aska-text-primary, #444)",
                     fontWeight: 700,
                   }}
                 >
@@ -423,7 +423,7 @@ function Cart() {
                     justifyContent: "space-between",
                     gap: "16px",
                     marginBottom: "14px",
-                    color: "#444",
+                    color: "var(--aska-text-primary, #444)",
                     fontWeight: 700,
                   }}
                 >
@@ -439,7 +439,7 @@ function Cart() {
                     justifyContent: "space-between",
                     gap: "16px",
                     marginBottom: "20px",
-                    color: "#444",
+                    color: "var(--aska-text-primary, #444)",
                     fontWeight: 700,
                   }}
                 >
@@ -463,7 +463,7 @@ function Cart() {
                       justifyContent: "space-between",
                       gap: "16px",
                       marginBottom: "8px",
-                      color: "#111",
+                      color: "var(--aska-text-primary, #111)",
                       fontSize: "1.12rem",
                       fontWeight: 900,
                     }}
@@ -477,8 +477,8 @@ function Cart() {
                       style={{
                         width: "100%",
                         border: "none",
-                        background: "#111",
-                        color: "#fff",
+                        background: "var(--aska-bg-primary, #111)",
+                        color: "var(--aska-text-secondary, #fff)",
                         padding: "15px 18px",
                         cursor: "pointer",
                         fontWeight: 900,
@@ -495,8 +495,8 @@ function Cart() {
                       style={{
                         width: "100%",
                         border: "1px solid rgba(0,0,0,0.15)",
-                        background: "#fff",
-                        color: "#111",
+                        background: "var(--aska-card-bg, #fff)",
+                        color: "var(--aska-text-primary, #111)",
                         padding: "15px 18px",
                         cursor: "pointer",
                         fontWeight: 900,
@@ -513,6 +513,27 @@ function Cart() {
           )}
         </div>
       </section>
+
+<style>
+{`
+  :root {
+    --aska-card-bg: #ffffff;
+  }
+
+  button {
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease,
+      opacity 0.22s ease;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    opacity: 0.97;
+  }
+`}
+</style>
+
     </>
   );
 }
