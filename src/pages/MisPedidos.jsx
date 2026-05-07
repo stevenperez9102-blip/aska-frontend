@@ -289,7 +289,7 @@ function MisPedidos() {
             right: "24px",
             zIndex: 9998,
             background: "rgba(111, 84, 145, 0.96)",
-            color: "#fff",
+            color: "var(--aska-text-secondary, #fff)",
             padding: "14px 18px",
             borderRadius: "16px",
             boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
@@ -304,8 +304,8 @@ function MisPedidos() {
       <section
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(180deg, #060606 0%, #111 100%)",
-          color: "#fff",
+          background: "linear-gradient(180deg, var(--aska-bg-primary, #060606) 0%, var(--aska-card-dark, #111) 100%)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "38px 24px 60px",
         }}
       >
@@ -327,6 +327,7 @@ function MisPedidos() {
               style={{
                 fontSize: "clamp(2rem, 5vw, 3.6rem)",
                 lineHeight: 1.05,
+                fontFamily: "var(--aska-font-family-primary, inherit)",
                 margin: 0,
               }}
             >
@@ -349,7 +350,7 @@ function MisPedidos() {
           {!usuario ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -367,8 +368,8 @@ function MisPedidos() {
                       padding: "12px 18px",
                       fontWeight: 700,
                       cursor: "pointer",
-                      background: "#fff",
-                      color: "#111",
+                      background: "var(--aska-card-bg, #fff)",
+                      color: "var(--aska-text-primary, #111)",
                     }}
                   >
                     Ir a iniciar sesión
@@ -379,7 +380,7 @@ function MisPedidos() {
           ) : loading ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -390,7 +391,7 @@ function MisPedidos() {
           ) : pedidos.length === 0 ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -410,8 +411,8 @@ function MisPedidos() {
                       padding: "12px 18px",
                       fontWeight: 700,
                       cursor: "pointer",
-                      background: "#fff",
-                      color: "#111",
+                      background: "var(--aska-card-bg, #fff)",
+                      color: "var(--aska-text-primary, #111)",
                     }}
                   >
                     Ir al catálogo
@@ -431,6 +432,7 @@ function MisPedidos() {
                 return (
                   <article
                     key={pedido.id}
+                    className="aska-pedido-card"
                     style={{
                       background:
                         "linear-gradient(180deg, rgba(18,18,18,0.98) 0%, rgba(9,9,9,0.98) 100%)",
@@ -580,6 +582,7 @@ function MisPedidos() {
                       }}
                     >
                       <button
+                        className="aska-premium-button"
                         onClick={() => verDetalle(pedido.id)}
                         style={{
                           border: "none",
@@ -587,6 +590,8 @@ function MisPedidos() {
                           padding: "10px 16px",
                           fontWeight: 700,
                           cursor: "pointer",
+                          fontFamily: "var(--aska-font-family-secondary, inherit)",
+                          transition: "transform .22s ease, opacity .22s ease",
                           background: "rgba(255,255,255,0.08)",
                           color: "#f3f3f3",
                         }}
@@ -601,14 +606,15 @@ function MisPedidos() {
                         style={{ textDecoration: "none" }}
                       >
                         <button
+                          className="aska-premium-button"
                           style={{
                             border: "none",
                             borderRadius: "999px",
                             padding: "10px 16px",
                             fontWeight: 700,
                             cursor: "pointer",
-                            background: "#1f8f5f",
-                            color: "#fff",
+                            background: "var(--aska-success-color, #1f8f5f)",
+                            color: "var(--aska-text-secondary, #fff)",
                           }}
                         >
                           Seguimiento por WhatsApp
@@ -643,8 +649,9 @@ function MisPedidos() {
                             {detalles[pedido.id].map((item, index) => (
                               <div
                                 key={item.id || `${pedido.id}-${index}`}
+                                className="aska-detalle-grid"
                                 style={{
-                                  background: "#111",
+                                  background: "var(--aska-card-dark, #111)",
                                   border: "1px solid rgba(255,255,255,0.06)",
                                   borderRadius: "20px",
                                   padding: "16px",
@@ -745,6 +752,38 @@ function MisPedidos() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          :root {
+            --aska-card-dark: #111111;
+            --aska-success-color: #1f8f5f;
+          }
+
+          .aska-pedido-card {
+            transition:
+              transform 0.28s ease,
+              box-shadow 0.28s ease;
+          }
+
+          .aska-pedido-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 26px 70px rgba(0,0,0,0.24) !important;
+          }
+
+          .aska-premium-button:hover {
+            transform: translateY(-2px);
+            opacity: .97;
+          }
+
+          @media (max-width: 880px) {
+            .aska-detalle-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
