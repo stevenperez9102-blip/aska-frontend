@@ -61,14 +61,28 @@ function ProductCard({ product }) {
   const productForCart = {
     id: product.id,
     name: product.nombre,
+    nombre: product.nombre,
     price: product.precio,
+    precio: product.precio,
     image: selectedImage || product.imagen,
+    imagen: selectedImage || product.imagen,
     description: product.descripcion,
     category: product.categoria,
+    categoria: product.categoria,
+  };
+
+  const handleAddToCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    addToCart(productForCart);
   };
 
   return (
-    <div className="product-card">
+    <>
+      <div className="product-card">
       <div className="product-card-image-wrap">
         <img
           src={selectedImage}
@@ -78,11 +92,7 @@ function ProductCard({ product }) {
 
         <button
           className="product-overlay-cart"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            addToCart(productForCart);
-          }}
+          onClick={handleAddToCart}
           aria-label="Agregar al carrito"
         >
           <img src={cartLogo} alt="Agregar" />
@@ -141,61 +151,75 @@ function ProductCard({ product }) {
 
           <button
             className="add-to-cart-btn"
-            onClick={() => addToCart(productForCart)}
+            onClick={handleAddToCart}
             aria-label="Agregar al carrito"
           >
             <img src={cartLogo} alt="Agregar al carrito" />
           </button>
         </div>
       </div>
-    </div>
-  );
-}
-
+      </div>
 
       <style>
         {`
-        .product-card{
-          position:relative;
-        }
-        .product-card-image-wrap{
-          position:relative;
-        }
-        .product-overlay-cart{
-          position:absolute;
-          top:10px;
-          right:10px;
-          width:42px;
-          height:42px;
-          border-radius:50%;
-          border:none;
-          background:rgba(255,255,255,0.9);
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          cursor:pointer;
-          box-shadow:0 6px 20px rgba(0,0,0,0.2);
-          transition:all .25s ease;
-          z-index:2;
-        }
-        .product-overlay-cart img{
-          width:20px;
-          height:20px;
-        }
-        .product-overlay-cart:hover{
-          transform:scale(1.15);
-          background:#fff;
-        }
-
-        @media(max-width:768px){
-          .product-overlay-cart{
-            width:40px;
-            height:40px;
-            top:8px;
-            right:8px;
+          .product-card {
+            position: relative;
           }
-        }
+
+          .product-card-image-wrap {
+            position: relative;
+          }
+
+          .product-overlay-cart {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+            z-index: 2;
+          }
+
+          .product-overlay-cart img {
+            width: 20px;
+            height: 20px;
+          }
+
+          .product-overlay-cart:hover {
+            transform: scale(1.12);
+            background: #ffffff;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+          }
+
+          .add-to-cart-btn {
+            transition: transform 0.22s ease, opacity 0.22s ease;
+          }
+
+          .add-to-cart-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+          }
+
+          @media (max-width: 768px) {
+            .product-overlay-cart {
+              width: 40px;
+              height: 40px;
+              top: 8px;
+              right: 8px;
+            }
+          }
         `}
       </style>
+    </>
+  );
+}
+
 
 export default ProductCard;
