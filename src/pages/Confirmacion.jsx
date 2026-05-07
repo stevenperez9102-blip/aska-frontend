@@ -9,7 +9,7 @@ function Confirmacion() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#f5f5f5",
+          background: "var(--aska-bg-secondary, #f5f5f5)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -17,8 +17,9 @@ function Confirmacion() {
         }}
       >
         <div
+          className="aska-confirm-card"
           style={{
-            background: "#fff",
+            background: "var(--aska-card-bg, #fff)",
             borderRadius: "30px",
             padding: "40px 30px",
             maxWidth: "600px",
@@ -41,6 +42,7 @@ function Confirmacion() {
               fontSize: "clamp(2rem,5vw,3rem)",
               marginBottom: "10px",
               fontWeight: "900",
+              fontFamily: "var(--aska-font-family-primary, inherit)",
             }}
           >
             Pedido confirmado
@@ -48,10 +50,11 @@ function Confirmacion() {
 
           <p
             style={{
-              color: "#555",
+              color: "var(--aska-text-muted, #555)",
               lineHeight: "1.6",
               marginBottom: "25px",
               fontWeight: "500",
+              fontFamily: "var(--aska-font-family-secondary, inherit)",
             }}
           >
             Tu pedido ha sido registrado correctamente.
@@ -60,12 +63,12 @@ function Confirmacion() {
 
           <div
             style={{
-              background: "#f7f7f7",
+              background: "var(--aska-card-soft, #f7f7f7)",
               padding: "18px",
               borderRadius: "18px",
               marginBottom: "25px",
               fontSize: "0.95rem",
-              color: "#555",
+              color: "var(--aska-text-muted, #555)",
             }}
           >
             ✨ Cada pieza es preparada con dedicación y detalle para ti.
@@ -75,13 +78,16 @@ function Confirmacion() {
             <button
               style={{
                 border: "none",
-                background: "#111",
-                color: "#fff",
+                background: "var(--aska-bg-primary, #111)",
+                color: "var(--aska-text-secondary, #fff)",
                 padding: "14px 24px",
                 borderRadius: "999px",
                 fontWeight: "700",
                 cursor: "pointer",
                 marginBottom: "12px",
+                fontFamily: "var(--aska-font-family-secondary, inherit)",
+                boxShadow: "0 14px 34px rgba(0,0,0,.18)",
+                transition: "transform .22s ease, opacity .22s ease",
                 width: "100%",
               }}
             >
@@ -92,14 +98,16 @@ function Confirmacion() {
           <Link to="/mis-pedidos">
             <button
               style={{
-                border: "1px solid #111",
-                background: "#fff",
-                color: "#111",
+                border: "1px solid var(--aska-bg-primary, #111)",
+                background: "var(--aska-card-bg, #fff)",
+                color: "var(--aska-text-primary, #111)",
                 padding: "14px 24px",
                 borderRadius: "999px",
                 fontWeight: "700",
                 cursor: "pointer",
                 width: "100%",
+                fontFamily: "var(--aska-font-family-secondary, inherit)",
+                transition: "transform .22s ease, opacity .22s ease",
               }}
             >
               Ver mis pedidos
@@ -107,6 +115,31 @@ function Confirmacion() {
           </Link>
         </div>
       </section>
+
+      <style>
+        {`
+          :root{
+            --aska-card-soft:#f7f7f7;
+          }
+
+          .aska-confirm-card{
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease;
+          }
+
+          .aska-confirm-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 30px 70px rgba(0,0,0,.14) !important;
+          }
+
+          button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+        `}
+      </style>
+
     </>
   );
 }
