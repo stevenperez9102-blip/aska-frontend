@@ -30,8 +30,9 @@ function formatDay(value) {
 function metricCard(label, value, helper) {
   return (
     <div
+      className="aska-dashboard-metric-card"
       style={{
-        background: "linear-gradient(145deg, #111, #070707)",
+        background: "linear-gradient(145deg, var(--aska-card-dark, #111), var(--aska-card-dark-2, #070707))",
         border: "1px solid rgba(255,255,255,0.09)",
         borderRadius: "28px",
         padding: "24px",
@@ -57,7 +58,7 @@ function metricCard(label, value, helper) {
           margin: 0,
           fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
           lineHeight: 1,
-          color: "#fff",
+          color: "var(--aska-text-secondary, #fff)",
           fontWeight: 900,
         }}
       >
@@ -87,21 +88,23 @@ function topButton(active = false) {
     background: active
       ? "rgba(217, 200, 239, 0.12)"
       : "rgba(255,255,255,0.04)",
-    color: active ? "#f1e6ff" : "#f5f5f5",
+    color: active ? "var(--aska-accent-soft, #f1e6ff)" : "#f5f5f5",
     borderRadius: "999px",
     padding: "12px 18px",
     fontWeight: 800,
     cursor: "pointer",
     textTransform: "uppercase",
     letterSpacing: "0.08em",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
   };
 }
 
 function ChartCard({ title, subtitle, children }) {
   return (
     <div
+      className="aska-dashboard-chart-card"
       style={{
-        background: "#0f0f0f",
+        background: "var(--aska-card-dark-soft, #0f0f0f)",
         border: "1px solid rgba(255,255,255,0.08)",
         borderRadius: "28px",
         padding: "24px",
@@ -114,6 +117,7 @@ function ChartCard({ title, subtitle, children }) {
           fontSize: "1.25rem",
           textTransform: "uppercase",
           letterSpacing: "0.08em",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
           fontWeight: 900,
         }}
       >
@@ -161,8 +165,8 @@ function AdminDashboard() {
 
   const [cmsPreview, setCmsPreview] = useState({
     accent: "#c9c9c9",
-    background: "#050505",
-    text: "#ffffff",
+    background: "var(--aska-bg-primary, #050505)",
+    text: "var(--aska-text-secondary, #fff)fff",
     font: "Playfair Display",
   });
 
@@ -253,8 +257,8 @@ function AdminDashboard() {
         style={{
           minHeight: "100vh",
           background:
-            "radial-gradient(circle at top left, rgba(191,166,255,0.14), transparent 32%), #050505",
-          color: "#fff",
+            "radial-gradient(circle at top left, rgba(191,166,255,0.14), transparent 32%), var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "38px 24px 70px",
         }}
       >
@@ -316,7 +320,7 @@ function AdminDashboard() {
                 title="Desde"
                 style={{
                   background: "rgba(255,255,255,0.08)",
-                  color: "#fff",
+                  color: "var(--aska-text-secondary, #fff)",
                   border: "1px solid rgba(255,255,255,0.16)",
                   padding: "11px 12px",
                   borderRadius: "999px",
@@ -332,7 +336,7 @@ function AdminDashboard() {
                 title="Hasta"
                 style={{
                   background: "rgba(255,255,255,0.08)",
-                  color: "#fff",
+                  color: "var(--aska-text-secondary, #fff)",
                   border: "1px solid rgba(255,255,255,0.16)",
                   padding: "11px 12px",
                   borderRadius: "999px",
@@ -345,8 +349,8 @@ function AdminDashboard() {
                 type="button"
                 onClick={exportarExcel}
                 style={{
-                  background: "#fff",
-                  color: "#000",
+                  background: "var(--aska-text-secondary, #fff)",
+                  color: "var(--aska-text-primary, #000)",
                   padding: "12px 18px",
                   borderRadius: "999px",
                   border: "none",
@@ -354,6 +358,7 @@ function AdminDashboard() {
                   cursor: "pointer",
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
                 }}
               >
                 Exportar Excel
@@ -404,7 +409,7 @@ function AdminDashboard() {
                 borderRadius: "18px",
                 padding: "16px",
                 marginBottom: "24px",
-                color: "#fff",
+                color: "var(--aska-text-secondary, #fff)",
                 fontWeight: 700,
               }}
             >
@@ -435,8 +440,8 @@ function AdminDashboard() {
                   window.location.href = "/admin/pedidos";
                 }}
                 style={{
-                  background: "#fff",
-                  color: "#000",
+                  background: "var(--aska-text-secondary, #fff)",
+                  color: "var(--aska-text-primary, #000)",
                   padding: "8px 14px",
                   borderRadius: "999px",
                   border: "none",
@@ -453,7 +458,7 @@ function AdminDashboard() {
           <div
             style={{
               marginBottom: "30px",
-              background: "linear-gradient(145deg, #111, #070707)",
+              background: "linear-gradient(145deg, var(--aska-card-dark, #111), var(--aska-card-dark-2, #070707))",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: "30px",
               padding: "28px",
@@ -597,7 +602,7 @@ function AdminDashboard() {
           {loading ? (
             <div
               style={{
-                background: "#0f0f0f",
+                background: "var(--aska-card-dark-soft, #0f0f0f)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -654,7 +659,7 @@ function AdminDashboard() {
               {/* CARROS ABANDONADOS */}
               <div
                 style={{
-                  background: "#0f0f0f",
+                  background: "var(--aska-card-dark-soft, #0f0f0f)",
                   border: "1px solid rgba(255,255,255,0.08)",
                   borderRadius: "28px",
                   padding: "24px",
@@ -665,6 +670,7 @@ function AdminDashboard() {
                   margin: "0 0 12px",
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
                   fontWeight: 900
                 }}>
                   Carritos abandonados
@@ -708,8 +714,8 @@ function AdminDashboard() {
                           {wa && (
                             <a href={wa} target="_blank" rel="noreferrer">
                               <button style={{
-                                background: "#1f8f5f",
-                                color: "#fff",
+                                background: "var(--aska-success-color, #1f8f5f)",
+                                color: "var(--aska-text-secondary, #fff)",
                                 border: "none",
                                 borderRadius: "999px",
                                 padding: "10px 14px",
@@ -778,7 +784,7 @@ function AdminDashboard() {
                                 height: `${height}px`,
                                 borderRadius: "999px 999px 8px 8px",
                                 background:
-                                  "linear-gradient(180deg, #f1e6ff, #6f5491)",
+                                  "linear-gradient(180deg, var(--aska-accent-soft, #f1e6ff), var(--aska-accent-primary, #6f5491))",
                                 boxShadow:
                                   "0 12px 28px rgba(111,84,145,0.32)",
                               }}
@@ -855,7 +861,7 @@ function AdminDashboard() {
                                   height: "100%",
                                   borderRadius: "999px",
                                   background:
-                                    "linear-gradient(90deg, #f1e6ff, #6f5491)",
+                                    "linear-gradient(90deg, var(--aska-accent-soft, #f1e6ff), var(--aska-accent-primary, #6f5491))",
                                 }}
                               />
                             </div>
@@ -878,6 +884,7 @@ function AdminDashboard() {
               </div>
 
               <div
+                className="aska-dashboard-bottom-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "minmax(0, 0.85fr) minmax(0, 1.15fr)",
@@ -965,7 +972,7 @@ function AdminDashboard() {
                             </div>
 
                             <div style={{ textAlign: "right" }}>
-                              <strong style={{ color: "#f1e6ff" }}>
+                              <strong style={{ color: "var(--aska-accent-soft, #f1e6ff)" }}>
                                 {formatPrice(pedido.total)}
                               </strong>
                               <p
@@ -975,6 +982,7 @@ function AdminDashboard() {
                                   textTransform: "uppercase",
                                   fontSize: "0.75rem",
                                   letterSpacing: "0.08em",
+    fontFamily: "var(--aska-font-family-secondary, inherit)",
                                 }}
                               >
                                 {pedido.estado}
@@ -991,6 +999,59 @@ function AdminDashboard() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          :root{
+            --aska-card-dark:#111111;
+            --aska-card-dark-2:#070707;
+            --aska-card-dark-soft:#0f0f0f;
+            --aska-success-color:#1f8f5f;
+          }
+
+          .aska-dashboard-metric-card,
+          .aska-dashboard-chart-card{
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease,
+              border-color .28s ease;
+          }
+
+          .aska-dashboard-metric-card:hover,
+          .aska-dashboard-chart-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 28px 70px rgba(0,0,0,.24) !important;
+          }
+
+          button{
+            transition:
+              transform .22s ease,
+              opacity .22s ease,
+              box-shadow .22s ease;
+          }
+
+          button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+
+          input{
+            font-family:var(--aska-font-family-secondary, inherit);
+          }
+
+          input:focus{
+            border-color:var(--aska-accent-primary, #6f5491) !important;
+            box-shadow:0 0 0 3px rgba(111,84,145,.18);
+          }
+
+          @media (max-width:900px){
+            .aska-dashboard-bottom-grid{
+              grid-template-columns:1fr !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
