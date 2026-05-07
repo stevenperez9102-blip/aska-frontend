@@ -109,7 +109,14 @@ function Home() {
   }, []);
 
   const mediaUrl = config?.media_url || "";
+  const mediaMobileUrl = config?.media_mobile_url || "";
+  const mediaDesktopUrl = config?.media_desktop_url || "";
   const mediaTipo = config?.media_tipo || "imagen";
+
+  const responsiveMediaUrl =
+    window.innerWidth <= 768
+      ? mediaMobileUrl || mediaUrl
+      : mediaDesktopUrl || mediaUrl;
   const titulo = config?.titulo || "";
   const subtitulo = config?.subtitulo || "";
   const colorTexto = "#ffffff";
@@ -451,10 +458,10 @@ function Home() {
           background: mediaUrl ? "#000" : "#0b0b0b",
         }}
       >
-        {mediaUrl ? (
+        {responsiveMediaUrl ? (
           mediaTipo === "video" ? (
             <video
-              src={mediaUrl}
+              src={responsiveMediaUrl}
               autoPlay
               muted
               loop
@@ -465,11 +472,12 @@ function Home() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                objectPosition: "center center",
               }}
             />
           ) : (
             <img
-              src={mediaUrl}
+              src={responsiveMediaUrl}
               alt={titulo || "AŞKA"}
               style={{
                 position: "absolute",
@@ -477,6 +485,7 @@ function Home() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                objectPosition: "center center",
               }}
             />
           )
@@ -889,6 +898,11 @@ function Home() {
           }
 
           @media (max-width: 768px) {
+
+            video {
+              object-position: center center !important;
+            }
+
             .aska-home-product-layout {
               grid-template-columns: 1fr !important;
               gap: 18px !important;

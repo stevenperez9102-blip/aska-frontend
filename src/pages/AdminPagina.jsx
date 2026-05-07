@@ -52,6 +52,8 @@ function AdminPagina() {
   const [heroTarget, setHeroTarget] = useState("home");
   const [formData, setFormData] = useState({
     media_url: "",
+    media_mobile_url: "",
+    media_desktop_url: "",
     media_tipo: "imagen",
     titulo: "",
     subtitulo: "",
@@ -91,6 +93,8 @@ const [nuevoMetodo, setNuevoMetodo] = useState({
 
   const defaultHome = {
     media_url: "",
+    media_mobile_url: "",
+    media_desktop_url: "",
     media_tipo: "imagen",
     titulo: "AŞKA",
     subtitulo: "JOYERÍA ATEMPORAL",
@@ -113,6 +117,8 @@ const [nuevoMetodo, setNuevoMetodo] = useState({
 
   const defaultCatalog = {
     media_url: "",
+    media_mobile_url: "",
+    media_desktop_url: "",
     media_tipo: "imagen",
     titulo: "Catálogo",
     subtitulo:
@@ -136,6 +142,8 @@ const [nuevoMetodo, setNuevoMetodo] = useState({
 
   const defaultNosotras = {
     media_url: "",
+    media_mobile_url: "",
+    media_desktop_url: "",
     media_tipo: "imagen",
     titulo: "Nosotras",
     subtitulo: "Conoce la esencia detrás de AŞKA.",
@@ -164,6 +172,8 @@ const [nuevoMetodo, setNuevoMetodo] = useState({
     if (data) {
       setFormData({
         media_url: data.media_url || "",
+        media_mobile_url: data.media_mobile_url || "",
+        media_desktop_url: data.media_desktop_url || "",
         media_tipo: data.media_tipo || "imagen",
         titulo: data.titulo ?? defaultHome.titulo,
         subtitulo: data.subtitulo ?? defaultHome.subtitulo,
@@ -380,6 +390,56 @@ const cargarMetodos = async () => {
     } catch (error) {
       console.error("Error subiendo archivo:", error);
       setMensaje("Ocurrió un error al subir el archivo.");
+    } finally {
+      setSubiendo(false);
+    }
+  };
+
+
+  const handleResponsiveUpload = async (e, type = "desktop") => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setSubiendo(true);
+
+      const body = new FormData();
+      body.append("archivo", file);
+
+      const response = await fetch("https://aska-backend-nyx8.onrender.com/api/upload", {
+        method: "POST",
+        body,
+      });
+
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
+
+      if (!response.ok) {
+        setMensaje(data?.mensaje || "No se pudo subir el archivo.");
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        media_tipo: file.type.startsWith("video") ? "video" : "imagen",
+        ...(type === "mobile"
+          ? { media_mobile_url: data.url }
+          : { media_desktop_url: data.url }),
+      }));
+
+      setMensaje(
+        type === "mobile"
+          ? "Video mobile subido correctamente."
+          : "Video desktop subido correctamente."
+      );
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error subiendo archivo responsive.");
     } finally {
       setSubiendo(false);
     }
@@ -643,6 +703,42 @@ const cargarMetodos = async () => {
                     onChange={handleFileUpload}
                     style={inputStyle}
                   />
+
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                      gap: "14px",
+                      marginTop: "18px",
+                    }}
+                  >
+                    <div>
+                      <label style={{ display: "block", marginBottom: "8px", fontWeight: 600 }}>
+                        Video Desktop
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => handleResponsiveUpload(e, "desktop")}
+                        style={inputStyle}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", marginBottom: "8px", fontWeight: 600 }}>
+                        Video Mobile
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => handleResponsiveUpload(e, "mobile")}
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
 
                   <div style={{ marginTop: "10px" }}>
                     <button
