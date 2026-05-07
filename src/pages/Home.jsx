@@ -228,8 +228,8 @@ function Home() {
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
-          color: "#111111",
-          background: "#ffffff",
+          color: "var(--aska-text-primary, #111111)",
+          background: "var(--aska-card-bg, #ffffff)",
           border: "1px solid rgba(17,17,17,0.08)",
           boxShadow: large
             ? "0 28px 80px rgba(0,0,0,0.12)"
@@ -362,7 +362,7 @@ function Home() {
               fontSize: large ? "0.82rem" : "0.68rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              fontFamily: `"Playfair Display", Georgia, "Times New Roman", serif`,
+              fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
               fontWeight: 700,
             }}
           >
@@ -377,7 +377,7 @@ function Home() {
                 ? "clamp(1.65rem, 2.5vw, 2.7rem)"
                 : "clamp(1rem, 1.55vw, 1.35rem)",
               lineHeight: 1.05,
-              color: "#ffffff",
+              color: "var(--aska-text-secondary, #ffffff)",
             }}
           >
             {item.nombre}
@@ -386,10 +386,10 @@ function Home() {
           <p
             style={{
               margin: 0,
-              color: "#ffffff",
+              color: "var(--aska-text-secondary, #ffffff)",
               fontWeight: 800,
               fontSize: large ? "1.18rem" : "0.98rem",
-              fontFamily: `"Playfair Display", Georgia, "Times New Roman", serif`,
+              fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
             }}
           >
             {formatPrice(item.precio)}
@@ -563,8 +563,8 @@ function Home() {
 
       <section
         style={{
-          background: "#f8f6f2",
-          color: "#111111",
+          background: "var(--aska-bg-secondary, #f8f6f2)",
+          color: "var(--aska-text-primary, #111111)",
           padding: "46px 24px 0",
           borderTop: "1px solid rgba(17,17,17,0.08)",
         }}
@@ -589,9 +589,9 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
               }}
             >
               En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
@@ -604,9 +604,9 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
               }}
             >
               Cada joya y accesorio es tejido a mano. Creamos estilos contemporáneos que te dan fuerza y actitud.
@@ -619,9 +619,9 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
               }}
             >
               Somos una marca unisex que cree en el poder de los detalles para marcar la diferencia.
@@ -634,9 +634,9 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
               }}
             >
               AŞKA es mucho más que diseño, somos un taller liderado por mujeres artesanas.
@@ -648,9 +648,9 @@ function Home() {
                 fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
                 lineHeight: 1.58,
                 fontWeight: 300,
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
               }}
             >
               Nuestro sueño es empoderar mujeres, enseñándoles este arte como camino hacia la autonomía económica y una vida con propósito.
@@ -676,7 +676,7 @@ function Home() {
               borderRadius: "26px",
               border: "1px solid rgba(17,17,17,0.08)",
               boxShadow: "0 22px 70px rgba(0,0,0,0.12)",
-              background: "#ffffff",
+              background: "var(--aska-card-bg, #ffffff)",
             }}
           >
             <a
@@ -684,13 +684,13 @@ function Home() {
               target="_blank"
               rel="noreferrer"
               style={{
-                color: "#111111",
+                color: "var(--aska-text-primary, #111111)",
                 textDecoration: "underline",
                 textUnderlineOffset: "4px",
                 fontSize: "clamp(1.1rem, 1.55vw, 1.58rem)",
                 fontStyle: "italic",
                 fontWeight: 600,
-                fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
                 position: "relative",
                 zIndex: 2,
               }}
@@ -704,7 +704,7 @@ function Home() {
       <section
         style={{
           background:
-            "linear-gradient(180deg, #050505 0%, #080808 48%, #050505 100%)",
+            "linear-gradient(180deg, var(--aska-bg-primary, #050505) 0%, #080808 48%, var(--aska-bg-primary, #050505) 100%)",
           color: "#fff",
           padding: "80px 24px 100px",
         }}
@@ -753,7 +753,7 @@ function Home() {
                             letterSpacing: "0.16em",
                             textTransform: "uppercase",
                             fontSize: "0.78rem",
-                            fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                            fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
                           }}
                         >
                           Colección AŞKA
@@ -774,7 +774,7 @@ function Home() {
                       <Link
                         to={`/catalogo/${slugifyCategory(category)}`}
                         style={{
-                          color: "#111111",
+                          color: "var(--aska-text-primary, #111111)",
                           textDecoration: "none",
                           fontWeight: 900,
                           border: "1px solid rgba(17,17,17,0.14)",
@@ -782,7 +782,7 @@ function Home() {
                           padding: "12px 18px",
                           background: "rgba(255,255,255,0.82)",
                           boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
-                          fontFamily: `"Helvetica Neue", Arial, sans-serif`,
+                          fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
                         }}
                       >
                         Ver más
@@ -825,7 +825,12 @@ function Home() {
 
       <style>
         {`
-          html,
+          
+          :root {
+            --aska-card-bg: #ffffff;
+          }
+
+html,
           body,
           #root {
             max-width: 100%;
