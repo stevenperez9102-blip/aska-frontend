@@ -25,8 +25,10 @@ const inputStyle = {
   padding: "14px 16px",
   fontSize: "1rem",
   outline: "none",
-  background: "#111",
-  color: "#fff",
+  background: "var(--aska-card-dark-2, #111)",
+  color: "var(--aska-text-secondary, #fff)",
+  fontFamily: "var(--aska-font-family-secondary, inherit)",
+  transition: "border-color .22s ease, box-shadow .22s ease",
 };
 
 const heroOptions = [
@@ -96,6 +98,78 @@ const [cmsVisual, setCmsVisual] = useState({
   textColor: "#ffffff",
   fontFamily: "Playfair Display",
 });
+
+
+
+  const guardarCmsVisual = async () => {
+    try {
+      const payload = {
+        cms_accent_color: cmsVisual.accentColor,
+        cms_background_color: cmsVisual.backgroundColor,
+        cms_text_color: cmsVisual.textColor,
+        cms_font_family: cmsVisual.fontFamily,
+      };
+
+      await fetch("https://aska-backend-nyx8.onrender.com/api/admin/cms-visual", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      document.documentElement.style.setProperty(
+        "--aska-accent-primary",
+        cmsVisual.accentColor
+      );
+
+      document.documentElement.style.setProperty(
+        "--aska-bg-primary",
+        cmsVisual.backgroundColor
+      );
+
+      document.documentElement.style.setProperty(
+        "--aska-text-secondary",
+        cmsVisual.textColor
+      );
+
+      document.documentElement.style.setProperty(
+        "--aska-font-family-primary",
+        cmsVisual.fontFamily
+      );
+
+      document.documentElement.style.setProperty(
+        "--aska-font-family-secondary",
+        cmsVisual.fontFamily
+      );
+
+      setMensaje("✅ Branding CMS actualizado");
+    } catch (err) {
+      console.error(err);
+      setMensaje("❌ Error actualizando branding CMS");
+    }
+  };
+
+  const cargarCmsVisual = async () => {
+    try {
+      const res = await fetch(
+        "https://aska-backend-nyx8.onrender.com/api/admin/cms-visual"
+      );
+
+      const data = await res.json();
+
+      if (!data) return;
+
+      setCmsVisual({
+        accentColor: data.cms_accent_color || "#c9c9c9",
+        backgroundColor: data.cms_background_color || "#050505",
+        textColor: data.cms_text_color || "#ffffff",
+        fontFamily: data.cms_font_family || "Playfair Display",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
 
   const defaultHome = {
@@ -290,6 +364,7 @@ const cargarMetodos = async () => {
 
     cargar();
     cargarMetodos();
+    cargarCmsVisual();
   }, [heroTarget]);
 
   useEffect(() => {
@@ -594,7 +669,7 @@ const cargarMetodos = async () => {
             right: "24px",
             zIndex: 9998,
             background: "rgba(111, 84, 145, 0.96)",
-            color: "#fff",
+            color: "var(--aska-text-secondary, #fff)",
             padding: "14px 18px",
             borderRadius: "16px",
             boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
@@ -609,8 +684,8 @@ const cargarMetodos = async () => {
       <section
         style={{
           minHeight: "100vh",
-          background: "#050505",
-          color: "#fff",
+          background: "var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "38px 24px 60px",
         }}
       >
@@ -632,6 +707,7 @@ const cargarMetodos = async () => {
               style={{
                 fontSize: "clamp(2rem, 5vw, 3.6rem)",
                 lineHeight: 1.05,
+                fontFamily: "var(--aska-font-family-primary, inherit)",
                 margin: 0,
               }}
             >
@@ -665,6 +741,7 @@ const cargarMetodos = async () => {
           </div>
 
           <div
+            className="aska-admin-layout"
             style={{
               display: "grid",
               gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, 0.9fr)",
@@ -673,8 +750,9 @@ const cargarMetodos = async () => {
             }}
           >
             <div
+              className="aska-admin-card"
               style={{
-                background: "#0d0d0d",
+                background: "var(--aska-card-dark, #0d0d0d)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -756,7 +834,7 @@ const cargarMetodos = async () => {
                         borderRadius: "999px",
                         padding: "10px 16px",
                         background: "transparent",
-                        color: "#fff",
+                        color: "var(--aska-text-secondary, #fff)",
                         cursor: "pointer",
                         fontWeight: 700,
                       }}
@@ -789,7 +867,7 @@ const cargarMetodos = async () => {
                             borderRadius: "999px",
                             padding: "10px 16px",
                             background: "transparent",
-                            color: "#fff",
+                            color: "var(--aska-text-secondary, #fff)",
                             cursor: "pointer",
                             fontWeight: 700,
                           }}
@@ -1071,7 +1149,7 @@ const cargarMetodos = async () => {
                         height: "54px",
                         borderRadius: "14px",
                         border: "1px solid rgba(255,255,255,0.12)",
-                        background: "#111",
+                        background: "var(--aska-card-dark-2, #111)",
                       }}
                     />
                   </div>
@@ -1114,7 +1192,7 @@ const cargarMetodos = async () => {
                     borderRadius: "999px",
                     padding: "16px 26px",
                     background: "linear-gradient(135deg, #6f5491, #8a67b3)",
-                    color: "#fff",
+                    color: "var(--aska-text-secondary, #fff)",
                     fontWeight: 700,
                     cursor: "pointer",
                     width: "fit-content",
@@ -1130,7 +1208,7 @@ const cargarMetodos = async () => {
               style={{
                 position: "sticky",
                 top: "96px",
-                background: "#0d0d0d",
+                background: "var(--aska-card-dark, #0d0d0d)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 overflow: "hidden",
@@ -1343,7 +1421,7 @@ const cargarMetodos = async () => {
 <div
   style={{
     marginTop: "40px",
-    background: "#0d0d0d",
+    background: "var(--aska-card-dark, #0d0d0d)",
     padding: "28px",
     borderRadius: "28px",
     border: "1px solid rgba(255,255,255,0.08)",
@@ -1388,7 +1466,7 @@ const cargarMetodos = async () => {
           height: "54px",
           borderRadius: "14px",
           border: "1px solid rgba(255,255,255,0.12)",
-          background: "#111",
+          background: "var(--aska-card-dark-2, #111)",
         }}
       />
     </div>
@@ -1412,7 +1490,7 @@ const cargarMetodos = async () => {
           height: "54px",
           borderRadius: "14px",
           border: "1px solid rgba(255,255,255,0.12)",
-          background: "#111",
+          background: "var(--aska-card-dark-2, #111)",
         }}
       />
     </div>
@@ -1436,7 +1514,7 @@ const cargarMetodos = async () => {
           height: "54px",
           borderRadius: "14px",
           border: "1px solid rgba(255,255,255,0.12)",
-          background: "#111",
+          background: "var(--aska-card-dark-2, #111)",
         }}
       />
     </div>
@@ -1524,6 +1602,8 @@ const cargarMetodos = async () => {
 
       <button
         type="button"
+        onClick={guardarCmsVisual}
+        className="aska-cms-save-button"
         style={{
           marginTop: "24px",
           background: cmsVisual.accentColor,
@@ -1550,7 +1630,7 @@ const cargarMetodos = async () => {
 <div
   style={{
     marginTop: "40px",
-    background: "#0d0d0d",
+    background: "var(--aska-card-dark, #0d0d0d)",
     padding: "28px",
     borderRadius: "28px",
     border: "1px solid rgba(255,255,255,0.08)",
@@ -1610,8 +1690,8 @@ const cargarMetodos = async () => {
 
     <button
       style={{
-        background: "#6f5491",
-        color: "#fff",
+        background: "var(--aska-accent-primary, #6f5491)",
+        color: "var(--aska-text-secondary, #fff)",
         borderRadius: "999px",
         padding: "12px",
         border: "none",
@@ -1661,7 +1741,7 @@ const cargarMetodos = async () => {
           }}
           style={{
             background: "red",
-            color: "#fff",
+            color: "var(--aska-text-secondary, #fff)",
             border: "none",
             padding: "8px 12px",
             borderRadius: "999px",
@@ -1676,6 +1756,53 @@ const cargarMetodos = async () => {
 </div>
 
       </section>
+
+      <style>
+        {`
+          :root{
+            --aska-card-dark:#0d0d0d;
+            --aska-card-dark-2:#111111;
+          }
+
+          .aska-admin-card{
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease,
+              border-color .28s ease;
+          }
+
+          .aska-admin-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 28px 70px rgba(0,0,0,.22) !important;
+          }
+
+          button{
+            transition:
+              transform .22s ease,
+              opacity .22s ease,
+              box-shadow .22s ease;
+          }
+
+          button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+
+          input:focus,
+          textarea:focus,
+          select:focus{
+            border-color:var(--aska-accent-primary, #6f5491) !important;
+            box-shadow:0 0 0 3px rgba(111,84,145,.18);
+          }
+
+          @media (max-width:960px){
+            .aska-admin-layout{
+              grid-template-columns:1fr !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
