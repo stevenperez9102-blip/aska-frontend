@@ -308,6 +308,153 @@ function Register() {
           </p>
         </div>
       </section>
+
+      <style>
+        {`
+          .auth-page{
+            position:relative;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:40px 16px;
+            background: linear-gradient(
+              to bottom,
+              rgba(0,0,0,0.85) 40%,
+              var(--aska-bg-secondary, #f5f5f5) 100%
+            );
+          }
+
+          .auth-bg-video{
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            opacity:0.35;
+          }
+
+          .auth-overlay{
+            position:absolute;
+            inset:0;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+          }
+
+          .auth-container{
+            position:relative;
+            z-index:2;
+            width:100%;
+            max-width:460px;
+            background: color-mix(in srgb, var(--aska-card-bg, #ffffff) 8%, transparent);
+            backdrop-filter: blur(14px);
+            border-radius:24px;
+            padding:30px 24px;
+            border:1px solid rgba(255,255,255,0.15);
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+            color:var(--aska-text-secondary, #fff);
+          }
+
+          .auth-container h1{
+            font-size:2.2rem;
+            margin:8px 0 10px;
+            font-family:var(--aska-font-family-primary, inherit);
+          }
+
+          .auth-sub,
+          .auth-extra{
+            font-family:var(--aska-font-family-secondary, inherit);
+          }
+
+          .auth-sub{
+            font-size:0.92rem;
+            color:rgba(255,255,255,0.74);
+            margin-bottom:20px;
+            line-height:1.6;
+          }
+
+          .auth-group{
+            margin-bottom:14px;
+          }
+
+          .auth-group label{
+            font-size:0.82rem;
+            color:rgba(255,255,255,0.82);
+            font-weight:700;
+          }
+
+          .auth-group input{
+            width:100%;
+            padding:13px 15px;
+            border-radius:14px;
+            border:none;
+            margin-top:6px;
+            background:var(--aska-card-bg, #fff);
+            color:var(--aska-text-primary, #000);
+            font-size:0.95rem;
+            font-family:var(--aska-font-family-secondary, inherit);
+            box-sizing:border-box;
+          }
+
+          .password-field{
+            position:relative;
+          }
+
+          .password-toggle{
+            position:absolute;
+            right:10px;
+            top:50%;
+            transform:translateY(-50%);
+            background:none;
+            border:none;
+            cursor:pointer;
+            color:#333;
+          }
+
+          .auth-submit-button{
+            width:100%;
+            margin-top:18px;
+            padding:14px;
+            border-radius:999px;
+            border:none;
+            background:var(--aska-accent-primary, #fff);
+            color:var(--aska-text-primary, #000);
+            font-weight:700;
+            cursor:pointer;
+            font-family:var(--aska-font-family-secondary, inherit);
+            box-shadow:0 14px 34px rgba(0,0,0,0.18);
+            transition:transform .22s ease, opacity .22s ease;
+          }
+
+          .auth-submit-button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+
+          .auth-message{
+            margin-top:14px;
+            font-weight:700;
+          }
+
+          .auth-extra{
+            margin-top:12px;
+            font-size:0.84rem;
+            text-align:center;
+          }
+
+          .auth-extra a{
+            color:var(--aska-text-secondary, #fff);
+            text-decoration:none;
+          }
+
+          @media (max-width:768px){
+            .auth-container{
+              padding:24px 18px;
+              border-radius:18px;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
