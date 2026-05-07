@@ -2460,3 +2460,73 @@ select:focus {
   color: #ffffff !important;
 }
 
+
+
+
+/* ===== AŞKA VISUAL CMS VARIABLES ===== */
+:root {
+  --aska-font-family-primary: "Playfair Display", Georgia, "Times New Roman", serif;
+  --aska-font-family-secondary: "Helvetica Now", Helvetica, Arial, sans-serif;
+
+  --aska-bg-primary: #050505;
+  --aska-bg-secondary: #f8f6f2;
+
+  --aska-text-primary: #111111;
+  --aska-text-secondary: #ffffff;
+
+  --aska-accent-primary: #c9c9c9;
+  --aska-accent-secondary: #d6b36a;
+
+  --aska-navbar-background: rgba(5, 5, 5, 0.98);
+
+  --aska-card-radius: 26px;
+  --aska-button-radius: 999px;
+}
+
+/* ===== CMS GLOBAL OVERRIDES ===== */
+
+body {
+  font-family: var(--aska-font-family-primary) !important;
+  background: var(--aska-bg-secondary) !important;
+  color: var(--aska-text-primary) !important;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--aska-font-family-primary) !important;
+}
+
+button,
+input,
+textarea,
+select,
+.nav-link-item,
+.aska-nav-menu a,
+.aska-nav-menu button {
+  font-family: var(--aska-font-family-secondary) !important;
+}
+
+header,
+.navbar,
+.aska-navbar-inner {
+  background: var(--aska-navbar-background) !important;
+}
+
+.product-card,
+.product-detail-info,
+.checkout-form-card,
+.checkout-summary-card,
+.team-member,
+.admin-modal-card {
+  border-radius: var(--aska-card-radius) !important;
+}
+
+button,
+.product-main-button,
+.product-detail-cart-button,
+.checkout-submit-btn,
+.auth-submit-button {
+  border-radius: var(--aska-button-radius) !important;
+}
