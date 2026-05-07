@@ -44,6 +44,9 @@ function AdminRoute({ children }) {
 function App() {
   const [secretActive, setSecretActive] = useState(false);
 
+  const [cmsLoaded, setCmsLoaded] = useState(false);
+
+
   const [cmsVisual, setCmsVisual] = useState({
     accent: "#c9c9c9",
     background: "#050505",
@@ -75,6 +78,8 @@ function App() {
 
         setCmsVisual(visual);
 
+        setCmsLoaded(true);
+
         const root = document.documentElement;
 
         root.style.setProperty(
@@ -93,6 +98,11 @@ function App() {
         );
 
         root.style.setProperty(
+          "--aska-text-secondary",
+          visual.text
+        );
+
+        root.style.setProperty(
           "--aska-font-family-primary",
           visual.font
         );
@@ -101,8 +111,38 @@ function App() {
           "--aska-font-family-secondary",
           visual.font
         );
+
+        root.style.setProperty(
+          "--aska-card-bg",
+          "rgba(255,255,255,0.96)"
+        );
+
+        root.style.setProperty(
+          "--aska-card-dark",
+          "#0d0d0d"
+        );
+
+        root.style.setProperty(
+          "--aska-card-dark-2",
+          "#111111"
+        );
+
+        root.style.setProperty(
+          "--aska-card-soft",
+          "rgba(255,255,255,0.06)"
+        );
+
+        root.style.setProperty(
+          "--aska-success-color",
+          "#1f8f5f"
+        );
+
+        document.body.style.background = visual.background;
+        document.body.style.color = visual.text;
+        document.body.style.fontFamily = visual.font;
       } catch (error) {
         console.error("Error cargando CMS visual:", error);
+        setCmsLoaded(true);
       }
     };
 
@@ -140,7 +180,70 @@ function App() {
 
   return (
     <Router>
-      <div onClickCapture={handleSecretAreaClick}>
+
+      <style>
+        {`
+          :root{
+            --aska-accent-primary:#c9c9c9;
+            --aska-bg-primary:#050505;
+            --aska-text-primary:#ffffff;
+            --aska-text-secondary:#ffffff;
+            --aska-font-family-primary:'Playfair Display', serif;
+            --aska-font-family-secondary:'Playfair Display', serif;
+          }
+
+          *{
+            box-sizing:border-box;
+          }
+
+          html{
+            scroll-behavior:smooth;
+          }
+
+          body{
+            margin:0;
+            background:var(--aska-bg-primary, #050505);
+            color:var(--aska-text-secondary, #fff);
+            font-family:var(--aska-font-family-secondary, inherit);
+            transition:
+              background .32s ease,
+              color .32s ease;
+          }
+
+          button,
+          input,
+          textarea,
+          select{
+            font-family:var(--aska-font-family-secondary, inherit);
+          }
+
+          h1,
+          h2,
+          h3,
+          h4,
+          h5{
+            font-family:var(--aska-font-family-primary, inherit);
+          }
+
+          a{
+            color:inherit;
+            text-decoration:none;
+          }
+        `}
+      </style>
+
+
+      <div
+        onClickCapture={handleSecretAreaClick}
+        style={{
+          background: "var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
+          minHeight: "100vh",
+          opacity: cmsLoaded ? 1 : 0,
+          transition: "opacity .35s ease",
+          fontFamily: "var(--aska-font-family-secondary, inherit)",
+        }}
+      >
         {secretActive && (
           <div
             style={{
@@ -204,6 +307,7 @@ function App() {
                   margin: 0,
                   fontSize: "clamp(2.4rem, 7vw, 5.2rem)",
                   lineHeight: 1,
+                  fontFamily: "var(--aska-font-family-primary, inherit)",
                 }}
               >
                 ¿Estás listx para elevar tu estilo con AŞKA?⚡️
