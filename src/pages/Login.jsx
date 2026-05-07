@@ -232,7 +232,7 @@ function Login() {
           align-items:center;
           justify-content:center;
           padding:40px 16px;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.85) 40%, #f5f5f5 100%);
+          background: linear-gradient(to bottom, rgba(0,0,0,0.85) 40%, var(--aska-bg-secondary, #f5f5f5) 100%);
         }
         .auth-bg-video{
           position:absolute;
@@ -252,35 +252,38 @@ function Login() {
           z-index:2;
           width:100%;
           max-width:420px;
-          background: rgba(255,255,255,0.08);
+          background: color-mix(in srgb, var(--aska-card-bg, #ffffff) 8%, transparent);
           backdrop-filter: blur(14px);
           border-radius:20px;
           padding:28px 22px;
           border:1px solid rgba(255,255,255,0.15);
           box-shadow:0 20px 60px rgba(0,0,0,0.5);
-          color:#fff;
+          color:var(--aska-text-secondary, #fff);
         }
         .auth-container h1{
           font-size:2rem;
+          font-family:var(--aska-font-family-primary, inherit);
           margin:8px 0 10px;
         }
         .auth-sub{
           font-size:0.9rem;
+          font-family:var(--aska-font-family-secondary, inherit);
           color:rgba(255,255,255,0.7);
           margin-bottom:18px;
         }
         .auth-group label{
           font-size:0.8rem;
-          color:#ddd;
+          color:rgba(255,255,255,0.78);
         }
         .auth-group input{
           width:100%;
+          font-family:var(--aska-font-family-secondary, inherit);
           padding:12px 14px;
           border-radius:12px;
           border:none;
           margin-top:6px;
-          background:#fff;
-          color:#000;
+          background:var(--aska-card-bg, #fff);
+          color:var(--aska-text-primary, #000);
           font-size:0.9rem;
         }
         .password-field{
@@ -298,12 +301,15 @@ function Login() {
         }
         .auth-submit-button{
           width:100%;
+          font-family:var(--aska-font-family-secondary, inherit);
+          box-shadow:0 14px 34px rgba(0,0,0,0.18);
+          transition:transform .22s ease, opacity .22s ease, box-shadow .22s ease;
           margin-top:18px;
           padding:12px;
           border-radius:999px;
           border:none;
-          background:#fff;
-          color:#000;
+          background:var(--aska-card-bg, #fff);
+          color:var(--aska-text-primary, #000);
           font-weight:600;
           cursor:pointer;
         }
@@ -312,6 +318,12 @@ function Login() {
           font-size:0.8rem;
           text-align:center;
         }
+
+        .auth-submit-button:hover{
+          transform:translateY(-2px);
+          opacity:.97;
+        }
+
         @media (max-width:768px){
           .auth-container{
             padding:22px 16px;

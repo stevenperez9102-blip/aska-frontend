@@ -340,8 +340,8 @@ function Checkout() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#f5f5f5",
-          color: "#111",
+          background: "var(--aska-bg-secondary, #f5f5f5)",
+          color: "var(--aska-text-primary, #111)",
           padding: isMobile ? "28px 16px 60px" : "40px 24px 80px",
         }}
       >
@@ -356,7 +356,7 @@ function Checkout() {
         >
           <div
             style={{
-              background: "#fff",
+              background: "var(--aska-card-bg, #fff)",
               borderRadius: "24px",
               padding: "28px",
               boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
@@ -366,6 +366,7 @@ function Checkout() {
               style={{
                 fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 marginTop: 0,
+                fontFamily: "var(--aska-font-family-primary, inherit)",
                 marginBottom: "10px",
               }}
             >
@@ -374,7 +375,7 @@ function Checkout() {
 
             <p
               style={{
-                color: "#666",
+                color: "rgba(0,0,0,0.58)",
                 lineHeight: 1.6,
                 marginTop: 0,
                 marginBottom: "22px",
@@ -464,7 +465,7 @@ function Checkout() {
                   marginTop: "10px",
                   padding: "20px",
                   borderRadius: "22px",
-                  background: "#f7f7f7",
+                  background: "var(--aska-card-bg-soft, #f7f7f7)",
                   border: "1px solid rgba(0,0,0,0.08)",
                 }}
               >
@@ -482,7 +483,7 @@ function Checkout() {
                   style={{
                     margin: 0,
                     marginBottom: "16px",
-                    color: "#666",
+                    color: "rgba(0,0,0,0.58)",
                     lineHeight: 1.6,
                   }}
                 >
@@ -503,7 +504,7 @@ function Checkout() {
                     style={{
                       borderRadius: "16px",
                       padding: "14px",
-                      background: "#fff",
+                      background: "var(--aska-card-bg, #fff)",
                       border: "1px solid rgba(0,0,0,0.08)",
                     }}
                   >
@@ -512,7 +513,7 @@ function Checkout() {
                       style={{
                         margin: 0,
                         marginTop: "6px",
-                        color: "#666",
+                        color: "rgba(0,0,0,0.58)",
                         lineHeight: 1.5,
                       }}
                     >
@@ -531,7 +532,7 @@ function Checkout() {
                           alignItems: "center",
                           borderRadius: "18px",
                           padding: "16px",
-                          background: "#fff",
+                          background: "var(--aska-card-bg, #fff)",
                           border: "1px solid rgba(0,0,0,0.08)",
                         }}
                       >
@@ -555,8 +556,8 @@ function Checkout() {
                                   fontSize: "0.78rem",
                                   padding: "4px 8px",
                                   borderRadius: "999px",
-                                  background: "#111",
-                                  color: "#fff",
+                                  background: "var(--aska-bg-primary, #111)",
+                                  color: "var(--aska-text-secondary, #fff)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.08em",
                                 }}
@@ -595,7 +596,7 @@ function Checkout() {
                               objectFit: "cover",
                               borderRadius: "14px",
                               border: "1px solid rgba(0,0,0,0.08)",
-                              background: "#f3f3f3",
+                              background: "var(--aska-card-bg-soft, #f3f3f3)",
                             }}
                           />
                         )}
@@ -612,10 +613,12 @@ function Checkout() {
                   border: "none",
                   borderRadius: "999px",
                   padding: "14px 22px",
-                  background: "#111",
-                  color: "#fff",
+                  background: "var(--aska-bg-primary, #111)",
+                  color: "var(--aska-text-secondary, #fff)",
                   fontWeight: 700,
                   cursor: loading ? "not-allowed" : "pointer",
+                  fontFamily: "var(--aska-font-family-secondary, inherit)",
+                  boxShadow: "0 14px 34px rgba(0,0,0,0.16)",
                   marginTop: "4px",
                   opacity: loading ? 0.75 : 1,
                 }}
@@ -627,7 +630,7 @@ function Checkout() {
 
           <div
             style={{
-              background: "#fff",
+              background: "var(--aska-card-bg, #fff)",
               borderRadius: "24px",
               padding: "28px",
               boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
@@ -699,8 +702,8 @@ function Checkout() {
                       border: "none",
                       borderRadius: "999px",
                       padding: "10px 16px",
-                      background: "#111",
-                      color: "#fff",
+                      background: "var(--aska-bg-primary, #111)",
+                      color: "var(--aska-text-secondary, #fff)",
                       cursor: "pointer",
                     }}
                   >
@@ -709,7 +712,7 @@ function Checkout() {
                 </div>
 
                 {cuponAplicado && (
-                  <div style={{ marginTop: "10px", color: "#356f48", fontWeight: 600 }}>
+                  <div style={{ marginTop: "10px", color: "var(--aska-success-color, #356f48)", fontWeight: 600 }}>
                     Cupón aplicado: {cuponAplicado.codigo}
                   </div>
                 )}
@@ -732,7 +735,7 @@ function Checkout() {
                     display: "flex",
                     justifyContent: "space-between",
                     marginTop: "10px",
-                    color: "#555",
+                    color: "rgba(0,0,0,0.72)",
                   }}
                 >
                   <span>Envío:</span>
@@ -745,7 +748,7 @@ function Checkout() {
                       display: "flex",
                       justifyContent: "space-between",
                       marginTop: "10px",
-                      color: "#356f48",
+                      color: "var(--aska-success-color, #356f48)",
                       fontWeight: 700,
                     }}
                   >
@@ -772,9 +775,9 @@ function Checkout() {
                     marginTop: "20px",
                     padding: "16px",
                     borderRadius: "18px",
-                    background: "#f7f7f7",
+                    background: "var(--aska-card-bg-soft, #f7f7f7)",
                     border: "1px solid rgba(0,0,0,0.08)",
-                    color: "#555",
+                    color: "rgba(0,0,0,0.72)",
                     lineHeight: 1.55,
                   }}
                 >
@@ -787,6 +790,30 @@ function Checkout() {
           </div>
         </div>
       </section>
+
+<style>
+{`
+  :root {
+    --aska-card-bg: #ffffff;
+    --aska-card-bg-soft: #f7f7f7;
+    --aska-success-color: #356f48;
+    --aska-error-color: #9b243c;
+  }
+
+  button {
+    transition:
+      transform 0.22s ease,
+      opacity 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    opacity: 0.97;
+  }
+`}
+</style>
+
     </>
   );
 }
@@ -798,12 +825,15 @@ const inputStyle = {
   padding: "14px 16px",
   fontSize: "1rem",
   outline: "none",
+  fontFamily: "var(--aska-font-family-secondary, inherit)",
+  background: "var(--aska-card-bg, #ffffff)",
+  color: "var(--aska-text-primary, #111)",
 };
 
 const paymentTextStyle = {
   margin: 0,
   marginTop: "5px",
-  color: "#555",
+  color: "rgba(0,0,0,0.72)",
 };
 
 export default Checkout;
