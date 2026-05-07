@@ -139,14 +139,20 @@ function ProductCard({ product }) {
         </div>
       )}
 
-      <div className="product-card-body">
+      <div
+        className="product-card-body"
+        style={{
+          fontFamily: "var(--aska-font-family-secondary, inherit)",
+          color: "var(--aska-text-primary, inherit)"
+        }}
+      >
         <h3>{product.nombre}</h3>
         <p className="product-card-price">{formatPrice(product.precio)}</p>
         <p className="product-card-description">{product.descripcion}</p>
 
         <div className="product-actions">
           <Link to={`/producto/${product.id}`} className="product-link-button">
-            <button className="product-main-button">Ver producto</button>
+            <button className="product-main-button" style={{ fontFamily: "var(--aska-font-family-secondary, inherit)" }}>Ver producto</button>
           </Link>
 
           <button
@@ -163,10 +169,19 @@ function ProductCard({ product }) {
       <style>
         {`
           .product-card {
+            background: var(--aska-card-bg, rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 26px;
+            overflow: hidden;
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease,
+              border-color .28s ease;
             position: relative;
           }
 
           .product-card-image-wrap {
+            overflow:hidden;
             position: relative;
           }
 
@@ -178,7 +193,7 @@ function ProductCard({ product }) {
             height: 42px;
             border-radius: 50%;
             border: none;
-            background: rgba(255, 255, 255, 0.92);
+            background: color-mix(in srgb, var(--aska-card-bg, #ffffff) 88%, transparent);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -195,17 +210,60 @@ function ProductCard({ product }) {
 
           .product-overlay-cart:hover {
             transform: scale(1.12);
-            background: #ffffff;
+            background: var(--aska-card-bg, #ffffff);
             box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
           }
 
           .add-to-cart-btn {
+            background: var(--aska-accent-primary, #111);
+            color: var(--aska-text-secondary, #fff);
+            border-radius: 999px;
+            box-shadow: 0 10px 28px rgba(0,0,0,.18);
             transition: transform 0.22s ease, opacity 0.22s ease;
           }
 
           .add-to-cart-btn:hover {
             transform: translateY(-2px) scale(1.04);
           }
+
+
+          .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 70px rgba(0,0,0,.20);
+            border-color: rgba(255,255,255,.12);
+          }
+
+          .product-card-main-image {
+            transition: transform .45s ease;
+          }
+
+          .product-card:hover .product-card-main-image {
+            transform: scale(1.04);
+          }
+
+          .product-main-button,
+          .add-to-cart-btn {
+            transition:
+              transform .22s ease,
+              opacity .22s ease,
+              box-shadow .22s ease;
+          }
+
+          .product-main-button:hover,
+          .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            opacity: .97;
+          }
+
+          .product-card h3{
+            font-family: var(--aska-font-family-primary, inherit);
+          }
+
+          .product-card-price{
+            color: var(--aska-accent-primary, #6f5491);
+            font-weight: 800;
+          }
+
 
           @media (max-width: 768px) {
             .product-overlay-cart {
