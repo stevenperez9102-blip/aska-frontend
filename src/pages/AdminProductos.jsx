@@ -34,8 +34,10 @@ const fieldStyle = {
   padding: "14px 16px",
   fontSize: "1rem",
   outline: "none",
-  background: "#111",
-  color: "#fff",
+  background: "var(--aska-card-dark, #111)",
+  color: "var(--aska-text-secondary, #fff)",
+  fontFamily: "var(--aska-font-family-secondary, inherit)",
+  transition: "border-color .22s ease, box-shadow .22s ease",
 };
 
 const categoryOptions = [
@@ -487,7 +489,7 @@ function AdminProductos() {
             right: "24px",
             zIndex: 9998,
             background: "rgba(111, 84, 145, 0.96)",
-            color: "#fff",
+            color: "var(--aska-text-secondary, #fff)",
             padding: "14px 18px",
             borderRadius: "16px",
             boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
@@ -502,8 +504,8 @@ function AdminProductos() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#050505",
-          color: "#fff",
+          background: "var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "38px 24px 60px",
         }}
       >
@@ -525,6 +527,7 @@ function AdminProductos() {
               style={{
                 fontSize: "clamp(2rem, 5vw, 3.6rem)",
                 lineHeight: 1.05,
+                fontFamily: "var(--aska-font-family-primary, inherit)",
                 margin: 0,
               }}
             >
@@ -566,7 +569,7 @@ function AdminProductos() {
           >
             <div
               style={{
-                background: "#0d0d0d",
+                background: "var(--aska-card-dark-2, #0d0d0d)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -738,7 +741,7 @@ function AdminProductos() {
                               right: "-8px",
                               border: "none",
                               background: "#7a2f43",
-                              color: "#fff",
+                              color: "var(--aska-text-secondary, #fff)",
                               width: "28px",
                               height: "28px",
                               borderRadius: "50%",
@@ -779,8 +782,8 @@ function AdminProductos() {
                       border: "none",
                       borderRadius: "999px",
                       padding: "14px 22px",
-                      background: "#6f5491",
-                      color: "#fff",
+                      background: "var(--aska-accent-primary, #6f5491)",
+                      color: "var(--aska-text-secondary, #fff)",
                       fontWeight: 700,
                       cursor: "pointer",
                     }}
@@ -801,7 +804,7 @@ function AdminProductos() {
                         borderRadius: "999px",
                         padding: "14px 22px",
                         background: "transparent",
-                        color: "#fff",
+                        color: "var(--aska-text-secondary, #fff)",
                         fontWeight: 700,
                         cursor: "pointer",
                       }}
@@ -815,7 +818,7 @@ function AdminProductos() {
 
             <div
               style={{
-                background: "#0d0d0d",
+                background: "var(--aska-card-dark-2, #0d0d0d)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -834,8 +837,9 @@ function AdminProductos() {
                   productos.map((producto) => (
                     <article
                       key={producto.id}
+                      className="aska-admin-product-card"
                       style={{
-                        background: "#111",
+                        background: "var(--aska-card-dark, #111)",
                         border: "1px solid rgba(255,255,255,0.06)",
                         borderRadius: "22px",
                         padding: "18px",
@@ -852,7 +856,7 @@ function AdminProductos() {
                           height: "110px",
                           objectFit: "cover",
                           borderRadius: "16px",
-                          background: "#050505",
+                          background: "var(--aska-bg-primary, #050505)",
                         }}
                       />
 
@@ -929,7 +933,7 @@ function AdminProductos() {
 
             <div
               style={{
-                background: "#0d0d0d",
+                background: "var(--aska-card-dark-2, #0d0d0d)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "28px",
                 padding: "28px",
@@ -948,8 +952,9 @@ function AdminProductos() {
                   papelera.map((producto) => (
                     <article
                       key={producto.id}
+                      className="aska-admin-product-card"
                       style={{
-                        background: "#111",
+                        background: "var(--aska-card-dark, #111)",
                         border: "1px solid rgba(255,255,255,0.06)",
                         borderRadius: "22px",
                         padding: "18px",
@@ -966,7 +971,7 @@ function AdminProductos() {
                           height: "110px",
                           objectFit: "cover",
                           borderRadius: "16px",
-                          background: "#050505",
+                          background: "var(--aska-bg-primary, #050505)",
                         }}
                       />
 
@@ -1042,6 +1047,53 @@ function AdminProductos() {
           </div>
         </div>
       </section>
+
+      <style>
+        {`
+          :root{
+            --aska-card-dark:#111111;
+            --aska-card-dark-2:#0d0d0d;
+          }
+
+          .aska-admin-product-card{
+            transition:
+              transform .28s ease,
+              box-shadow .28s ease,
+              border-color .28s ease;
+          }
+
+          .aska-admin-product-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 28px 70px rgba(0,0,0,.24) !important;
+          }
+
+          button{
+            transition:
+              transform .22s ease,
+              opacity .22s ease,
+              box-shadow .22s ease;
+          }
+
+          button:hover{
+            transform:translateY(-2px);
+            opacity:.97;
+          }
+
+          input:focus,
+          textarea:focus,
+          select:focus{
+            border-color:var(--aska-accent-primary, #6f5491) !important;
+            box-shadow:0 0 0 3px rgba(111,84,145,.18);
+          }
+
+          @media (max-width:820px){
+            .aska-admin-product-card{
+              grid-template-columns:1fr !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
