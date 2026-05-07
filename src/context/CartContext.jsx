@@ -120,17 +120,28 @@ export function CartProvider({ children }) {
     // Microinteracciones
     setLastAddedId(normalized.id);
     setCartPulse(true);
-    setTimeout(() => setCartPulse(false), 380);
+
+    const pulseTimeout = setTimeout(() => {
+      setCartPulse(false);
+    }, 380);
 
     // Toast más rico
     const name = normalized.name || normalized.nombre || "Producto";
-    setToastMessage(`“${name}” agregado al carrito`);
-    setTimeout(() => setToastMessage(""), 2200);
+    setToastMessage(`Tu ítem ha sido agregado al carrito 🛍️`);
+
+    const toastTimeout = setTimeout(() => {
+      setToastMessage("");
+    }, 2400);
 
     // Notificar a la UI (Navbar badge, etc.)
     window.dispatchEvent(new Event("cart-updated"));
 
     setIsCartOpen(true);
+
+    return () => {
+      clearTimeout(pulseTimeout);
+      clearTimeout(toastTimeout);
+    };
   };
 
   const removeFromCart = (id) => {
