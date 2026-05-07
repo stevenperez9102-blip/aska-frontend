@@ -135,8 +135,8 @@ function Nosotras() {
         <section
           style={{
             minHeight: "100vh",
-            background: "#050505",
-            color: "#fff",
+            background: "var(--aska-bg-primary, #050505)",
+            color: "var(--aska-text-secondary, #fff)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -233,6 +233,7 @@ function Nosotras() {
             }}
           >
             <h1
+              className="aska-nosotras-title"
               style={{
                 margin: 0,
                 fontSize: `${hero.titulo_font_size}px`,
@@ -264,8 +265,8 @@ function Nosotras() {
 
       <section
         style={{
-          background: "#050505",
-          color: "#fff",
+          background: "var(--aska-bg-primary, #050505)",
+          color: "var(--aska-text-secondary, #fff)",
           padding: "56px 24px 80px",
         }}
       >
@@ -279,7 +280,7 @@ function Nosotras() {
         >
           <div
             style={{
-              background: "#0d0d0d",
+              background: "var(--aska-card-dark, #0d0d0d)",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: "28px",
               padding: "32px",
@@ -291,6 +292,7 @@ function Nosotras() {
                 marginTop: 0,
                 marginBottom: "18px",
                 fontSize: "2rem",
+                fontFamily: "var(--aska-font-family-primary, inherit)",
               }}
             >
               AŞKA
@@ -303,6 +305,7 @@ function Nosotras() {
                 lineHeight: 1.9,
                 whiteSpace: "pre-line",
                 fontSize: "1.04rem",
+                fontFamily: "var(--aska-font-family-secondary, inherit)",
               }}
             >
               {hero.descripcion}
@@ -319,8 +322,9 @@ function Nosotras() {
             {teamCards.map((item) => (
               <div
                 key={item.nombre}
+                className="aska-nosotras-card"
                 style={{
-                  background: "#0d0d0d",
+                  background: "var(--aska-card-dark, #0d0d0d)",
                   border: "1px solid rgba(255,255,255,0.08)",
                   borderRadius: "28px",
                   overflow: "hidden",
@@ -334,7 +338,7 @@ function Nosotras() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: "#111",
+                    background: "var(--aska-card-dark-2, #111)",
                     overflow: "hidden",
                   }}
                 >
@@ -456,8 +460,9 @@ function Nosotras() {
                 return (
                   <div
                     key={bloque.id}
+                    className="aska-nosotras-card"
                     style={{
-                      background: "#0d0d0d",
+                      background: "var(--aska-card-dark, #0d0d0d)",
                       border: "1px solid rgba(255,255,255,0.08)",
                       borderRadius: "28px",
                       overflow: "hidden",
@@ -483,6 +488,33 @@ function Nosotras() {
           )}
         </div>
       </section>
+
+      <style>
+        {`
+          :root {
+            --aska-card-dark: #0d0d0d;
+            --aska-card-dark-2: #111111;
+          }
+
+          .aska-nosotras-card {
+            transition:
+              transform 0.28s ease,
+              box-shadow 0.28s ease;
+          }
+
+          .aska-nosotras-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 70px rgba(0,0,0,0.24) !important;
+          }
+
+          @media (max-width:768px){
+            .aska-nosotras-title{
+              font-size: clamp(2.2rem, 9vw, 4rem) !important;
+            }
+          }
+        `}
+      </style>
+
     </>
   );
 }
