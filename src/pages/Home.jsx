@@ -223,8 +223,8 @@ function Home() {
         style={{
           position: "relative",
           display: "block",
-          height: large ? "560px" : "268px",
-          minHeight: large ? "520px" : "250px",
+          height: large ? "620px" : "320px",
+          minHeight: large ? "580px" : "290px",
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
@@ -303,15 +303,17 @@ function Home() {
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: "50%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
-                background: "rgba(0,0,0,0.6)",
+                background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.8rem" : "1.45rem",
+                fontSize: large ? "1.45rem" : "1.15rem",
+                fontWeight: 900,
+                lineHeight: 1,
                 cursor: "pointer",
                 zIndex: 3,
                 backdropFilter: "blur(8px)",
@@ -326,15 +328,17 @@ function Home() {
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: "50%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
-                background: "rgba(0,0,0,0.6)",
+                background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.8rem" : "1.45rem",
+                fontSize: large ? "1.45rem" : "1.15rem",
+                fontWeight: 900,
+                lineHeight: 1,
                 cursor: "pointer",
                 zIndex: 3,
                 backdropFilter: "blur(8px)",
@@ -350,10 +354,19 @@ function Home() {
             position: "absolute",
             left: large ? "26px" : "16px",
             right: large ? "26px" : "16px",
-            bottom: large ? "24px" : "16px",
+            bottom: large ? "26px" : "18px",
+            paddingRight: large ? "22px" : "12px",
             zIndex: 4,
           }}
         >
+          <div
+            style={{
+              background: "linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.38))",
+              backdropFilter: "blur(4px)",
+              borderRadius: "18px",
+              padding: large ? "14px" : "10px",
+            }}
+          >
           <p
             style={{
               margin: 0,
@@ -376,7 +389,9 @@ function Home() {
               fontSize: large
                 ? "clamp(1.65rem, 2.5vw, 2.7rem)"
                 : "clamp(1rem, 1.55vw, 1.35rem)",
-              lineHeight: 1.05,
+              lineHeight: 1.12,
+              wordBreak: "break-word",
+              maxWidth: "92%",
               color: "var(--aska-text-secondary, #ffffff)",
             }}
           >
@@ -423,7 +438,9 @@ function Home() {
             border: active
               ? "1px solid #d8d8d8"
               : "1px solid rgba(255,255,255,0.14)",
-            opacity: active ? 1 : 0.68,
+            opacity: active ? 1 : 0.78,
+            backdropFilter: "blur(8px)",
+            transition: "all .22s ease",
           }}
         >
           <img
@@ -441,6 +458,7 @@ function Home() {
               })}
             </div>
           )}
+          </div>
         </div>
       </Link>
     );
@@ -451,11 +469,16 @@ function Home() {
       <Navbar />
 
       <section
+        className="aska-hero-section"
         style={{
           position: "relative",
-          minHeight: "53vh",
+          minHeight: window.innerWidth <= 768 ? "78vh" : "92vh",
+          maxHeight: window.innerWidth <= 768 ? "92vh" : "1080px",
           overflow: "hidden",
           background: mediaUrl ? "#000" : "#0b0b0b",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {responsiveMediaUrl ? (
@@ -471,8 +494,11 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
-                objectPosition: "center center",
+                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
+                objectPosition: window.innerWidth <= 768
+                  ? "center center"
+                  : "center top",
+                background: "#000",
               }}
             />
           ) : (
@@ -484,8 +510,9 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
                 objectPosition: "center center",
+                background: "#000",
               }}
             />
           )
@@ -902,9 +929,30 @@ html,
             text-shadow: 0 2px 18px rgba(0,0,0,0.5);
           }
 
+
+          @media (min-width: 769px) {
+
+            .aska-hero-section video{
+              object-fit: contain !important;
+              object-position:center top !important;
+              background:#000;
+            }
+
+            .aska-hero-section img{
+              object-fit: contain !important;
+              background:#000;
+            }
+          }
+
           @media (max-width: 768px) {
 
+            .aska-hero-section{
+              min-height:78vh !important;
+              max-height:92vh !important;
+            }
+
             video {
+              object-fit: cover !important;
               object-position: center center !important;
             }
 
