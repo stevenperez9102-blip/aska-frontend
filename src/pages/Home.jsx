@@ -223,8 +223,8 @@ function Home() {
         style={{
           position: "relative",
           display: "block",
-          height: large ? "560px" : "250px",
-          minHeight: large ? "520px" : "230px",
+          height: large ? "620px" : "320px",
+          minHeight: large ? "580px" : "290px",
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
@@ -303,7 +303,7 @@ function Home() {
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: "32%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
@@ -328,7 +328,7 @@ function Home() {
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: "32%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
@@ -362,8 +362,9 @@ function Home() {
           <div
             style={{
               background: "linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.38))",
-                            borderRadius: "18px",
-              padding: large ? "10px" : "6px",
+              backdropFilter: "blur(4px)",
+              borderRadius: "18px",
+              padding: large ? "14px" : "10px",
             }}
           >
           <p
@@ -386,8 +387,8 @@ function Home() {
               margin: 0,
               marginBottom: large ? "10px" : "6px",
               fontSize: large
-                ? "clamp(1.5rem, 2vw, 2.2rem)"
-                : "clamp(0.92rem, 1.1vw, 1.08rem)",
+                ? "clamp(1.65rem, 2.5vw, 2.7rem)"
+                : "clamp(1rem, 1.55vw, 1.35rem)",
               lineHeight: 1.12,
               wordBreak: "break-word",
               maxWidth: "92%",
@@ -471,13 +472,9 @@ function Home() {
         className="aska-hero-section"
         style={{
           position: "relative",
-          minHeight: window.innerWidth <= 768 ? "78vh" : "92vh",
-          maxHeight: window.innerWidth <= 768 ? "92vh" : "1080px",
+          minHeight: "53vh",
           overflow: "hidden",
           background: mediaUrl ? "#000" : "#0b0b0b",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         {responsiveMediaUrl ? (
@@ -493,8 +490,10 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 28%",
+                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
+                objectPosition: window.innerWidth <= 768
+                  ? "center center"
+                  : "center top",
                 background: "#000",
               }}
             />
@@ -507,7 +506,7 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
                 objectPosition: "center center",
                 background: "#000",
               }}
@@ -927,26 +926,8 @@ html,
           }
 
 
-          @media (min-width: 769px) {
-
-            .aska-hero-section video{
-              object-fit: contain !important;
-              object-position:center top !important;
-              background:#000;
-            }
-
-            .aska-hero-section img{
-              object-fit: contain !important;
-              background:#000;
-            }
-          }
 
           @media (max-width: 768px) {
-
-            .aska-hero-section{
-              min-height:78vh !important;
-              max-height:92vh !important;
-            }
 
             video {
               object-fit: cover !important;
