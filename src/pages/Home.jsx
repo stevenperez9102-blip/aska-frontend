@@ -290,7 +290,7 @@ function Home() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(0,0,0,0.02) 35%, rgba(0,0,0,0.74) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0.00) 58%, rgba(0,0,0,0.28) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -367,12 +367,7 @@ function Home() {
             zIndex: 4,
           }}
         >
-          <div
-            style={{
-              padding: 0,
-            }}
-          >
-          <p
+<p
             style={{
               margin: 0,
               marginBottom: large ? "8px" : "5px",
@@ -462,7 +457,6 @@ function Home() {
               })}
             </div>
           )}
-          </div>
         </div>
       </Link>
     );
