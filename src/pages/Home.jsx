@@ -223,8 +223,8 @@ function Home() {
         style={{
           position: "relative",
           display: "block",
-          height: large ? "620px" : "320px",
-          minHeight: large ? "580px" : "290px",
+          height: large ? "560px" : "250px",
+          minHeight: large ? "520px" : "230px",
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
@@ -303,7 +303,7 @@ function Home() {
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: large ? "42%" : "38%",
+                top: "32%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
@@ -328,7 +328,7 @@ function Home() {
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: large ? "42%" : "38%",
+                top: "32%",
                 transform: "translateY(-50%)",
                 width: large ? "46px" : "38px",
                 height: large ? "46px" : "38px",
@@ -362,9 +362,8 @@ function Home() {
           <div
             style={{
               background: "linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.38))",
-              backdropFilter: "blur(4px)",
-              borderRadius: "18px",
-              padding: large ? "14px" : "10px",
+                            borderRadius: "18px",
+              padding: large ? "10px" : "6px",
             }}
           >
           <p
@@ -387,8 +386,8 @@ function Home() {
               margin: 0,
               marginBottom: large ? "10px" : "6px",
               fontSize: large
-                ? "clamp(1.65rem, 2.5vw, 2.7rem)"
-                : "clamp(1rem, 1.55vw, 1.35rem)",
+                ? "clamp(1.5rem, 2vw, 2.2rem)"
+                : "clamp(0.92rem, 1.1vw, 1.08rem)",
               lineHeight: 1.12,
               wordBreak: "break-word",
               maxWidth: "92%",
@@ -494,10 +493,8 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
-                objectPosition: window.innerWidth <= 768
-                  ? "center center"
-                  : "center top",
+                objectFit: "cover",
+                objectPosition: "center 28%",
                 background: "#000",
               }}
             />
@@ -510,7 +507,7 @@ function Home() {
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: window.innerWidth <= 768 ? "cover" : "contain",
+                objectFit: "cover",
                 objectPosition: "center center",
                 background: "#000",
               }}
