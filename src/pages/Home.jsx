@@ -299,24 +299,28 @@ function Home() {
           <>
             <button
               type="button"
-              onClick={(event) => handlePrevImage(event, item)}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                handlePrevImage(event, item);
+              }}
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: large ? "42%" : "38%",
+                top: "32%",
                 transform: "translateY(-50%)",
-                width: large ? "46px" : "38px",
-                height: large ? "46px" : "38px",
+                width: large ? "38px" : "30px",
+                height: large ? "38px" : "30px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
                 background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.45rem" : "1.15rem",
+                fontSize: large ? "1.1rem" : "0.9rem",
                 fontWeight: 900,
                 lineHeight: 1,
                 cursor: "pointer",
-                zIndex: 3,
-                backdropFilter: "blur(8px)",
+                zIndex: 40,
+                pointerEvents: "auto",
               }}
             >
               ‹
@@ -324,24 +328,28 @@ function Home() {
 
             <button
               type="button"
-              onClick={(event) => handleNextImage(event, item)}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                handleNextImage(event, item);
+              }}
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: large ? "42%" : "38%",
+                top: "32%",
                 transform: "translateY(-50%)",
-                width: large ? "46px" : "38px",
-                height: large ? "46px" : "38px",
+                width: large ? "38px" : "30px",
+                height: large ? "38px" : "30px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
                 background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.45rem" : "1.15rem",
+                fontSize: large ? "1.1rem" : "0.9rem",
                 fontWeight: 900,
                 lineHeight: 1,
                 cursor: "pointer",
-                zIndex: 3,
-                backdropFilter: "blur(8px)",
+                zIndex: 40,
+                pointerEvents: "auto",
               }}
             >
               ›
@@ -354,17 +362,14 @@ function Home() {
             position: "absolute",
             left: large ? "26px" : "16px",
             right: large ? "26px" : "16px",
-            bottom: large ? "26px" : "18px",
+            bottom: large ? "18px" : "12px",
             paddingRight: large ? "22px" : "12px",
             zIndex: 4,
           }}
         >
           <div
             style={{
-              background: "linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.38))",
-              backdropFilter: "blur(4px)",
-              borderRadius: "18px",
-              padding: large ? "14px" : "10px",
+              padding: 0,
             }}
           >
           <p
@@ -387,8 +392,8 @@ function Home() {
               margin: 0,
               marginBottom: large ? "10px" : "6px",
               fontSize: large
-                ? "clamp(1.65rem, 2.5vw, 2.7rem)"
-                : "clamp(1rem, 1.55vw, 1.35rem)",
+                ? "clamp(1.2rem, 1.5vw, 1.8rem)"
+                : "clamp(0.72rem, 0.92vw, 0.92rem)",
               lineHeight: 1.12,
               wordBreak: "break-word",
               maxWidth: "92%",
@@ -438,9 +443,8 @@ function Home() {
             border: active
               ? "1px solid #d8d8d8"
               : "1px solid rgba(255,255,255,0.14)",
-            opacity: active ? 1 : 0.78,
-            backdropFilter: "blur(8px)",
-            transition: "all .22s ease",
+            opacity: active ? 1 : 0.58,
+            transition: "all .18s ease",
           }}
         >
           <img
