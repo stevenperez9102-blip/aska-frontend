@@ -223,8 +223,8 @@ function Home() {
         style={{
           position: "relative",
           display: "block",
-          height: large ? "560px" : "268px",
-          minHeight: large ? "520px" : "250px",
+          height: large ? "620px" : "320px",
+          minHeight: large ? "580px" : "290px",
           borderRadius: large ? "30px" : "24px",
           overflow: "hidden",
           textDecoration: "none",
@@ -303,20 +303,21 @@ function Home() {
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: "34%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
-                width: large ? "44px" : "34px",
-                height: large ? "44px" : "34px",
+                width: large ? "46px" : "38px",
+                height: large ? "46px" : "38px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
                 background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.25rem" : "1rem",
+                fontSize: large ? "1.45rem" : "1.15rem",
                 fontWeight: 900,
                 lineHeight: 1,
                 cursor: "pointer",
                 zIndex: 3,
-                  }}
+                backdropFilter: "blur(8px)",
+              }}
             >
               ‹
             </button>
@@ -327,20 +328,21 @@ function Home() {
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: "34%",
+                top: large ? "42%" : "38%",
                 transform: "translateY(-50%)",
-                width: large ? "44px" : "34px",
-                height: large ? "44px" : "34px",
+                width: large ? "46px" : "38px",
+                height: large ? "46px" : "38px",
                 borderRadius: "999px",
                 border: "1px solid rgba(255,255,255,0.14)",
                 background: "rgba(8,8,8,0.78)",
                 color: "#fff",
-                fontSize: large ? "1.25rem" : "1rem",
+                fontSize: large ? "1.45rem" : "1.15rem",
                 fontWeight: 900,
                 lineHeight: 1,
                 cursor: "pointer",
                 zIndex: 3,
-                  }}
+                backdropFilter: "blur(8px)",
+              }}
             >
               ›
             </button>
@@ -359,9 +361,10 @@ function Home() {
         >
           <div
             style={{
-              background: "linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.42))",
-              borderRadius: "16px",
-              padding: large ? "10px" : "7px",
+              background: "linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.38))",
+              backdropFilter: "blur(4px)",
+              borderRadius: "18px",
+              padding: large ? "14px" : "10px",
             }}
           >
           <p
@@ -369,7 +372,7 @@ function Home() {
               margin: 0,
               marginBottom: large ? "8px" : "5px",
               color: "rgba(230,230,230,0.86)",
-              fontSize: large ? "0.78rem" : "0.62rem",
+              fontSize: large ? "0.82rem" : "0.68rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
               fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
@@ -384,8 +387,8 @@ function Home() {
               margin: 0,
               marginBottom: large ? "10px" : "6px",
               fontSize: large
-                ? "clamp(1.42rem, 2vw, 2.15rem)"
-                : "clamp(0.82rem, 1vw, 1rem)",
+                ? "clamp(1.65rem, 2.5vw, 2.7rem)"
+                : "clamp(1rem, 1.55vw, 1.35rem)",
               lineHeight: 1.12,
               wordBreak: "break-word",
               maxWidth: "92%",
@@ -400,7 +403,7 @@ function Home() {
               margin: 0,
               color: "var(--aska-text-secondary, #ffffff)",
               fontWeight: 800,
-              fontSize: large ? "1.05rem" : "0.82rem",
+              fontSize: large ? "1.18rem" : "0.98rem",
               fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
             }}
           >
@@ -425,8 +428,8 @@ function Home() {
           type="button"
           onClick={(event) => handleThumbnailClick(event, item.id, index)}
           style={{
-            width: large ? "58px" : "38px",
-            height: large ? "48px" : "34px",
+            width: large ? "64px" : "46px",
+            height: large ? "52px" : "40px",
             borderRadius: "12px",
             overflow: "hidden",
             padding: 0,
@@ -436,6 +439,7 @@ function Home() {
               ? "1px solid #d8d8d8"
               : "1px solid rgba(255,255,255,0.14)",
             opacity: active ? 1 : 0.78,
+            backdropFilter: "blur(8px)",
             transition: "all .22s ease",
           }}
         >
@@ -476,6 +480,7 @@ function Home() {
         {responsiveMediaUrl ? (
           mediaTipo === "video" ? (
             <video
+              className="aska-hero-media"
               src={responsiveMediaUrl}
               autoPlay
               muted
@@ -492,6 +497,7 @@ function Home() {
             />
           ) : (
             <img
+              className="aska-hero-media"
               src={responsiveMediaUrl}
               alt={titulo || "AŞKA"}
               style={{
@@ -918,10 +924,29 @@ html,
           }
 
 
+          .aska-hero-section {
+            width: 100%;
+          }
+
+          .aska-hero-section .aska-hero-media {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-width: 100% !important;
+            min-height: 100% !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            display: block !important;
+            background: #000 !important;
+          }
+
+
+
 
           @media (max-width: 768px) {
 
-            video {
+            .aska-hero-section .aska-hero-media {
               object-fit: cover !important;
               object-position: center center !important;
             }
