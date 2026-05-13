@@ -707,9 +707,22 @@ function AdminProductos() {
                     type="file"
                     accept="image/*"
                     multiple
+                    disabled={subiendo}
                     onChange={handleMultipleImagesUpload}
                     style={fieldStyle}
                   />
+
+                  {subiendo && (
+                    <p
+                      style={{
+                        marginTop: "10px",
+                        color: "#cdb4ff",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Subiendo imágenes...
+                    </p>
+                  )}
 
                   {form.imagenes.length > 0 && (
                     <div
