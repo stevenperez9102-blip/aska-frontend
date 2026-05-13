@@ -55,6 +55,58 @@ async function safeJson(response) {
   }
 }
 
+
+async function comprimirImagenAntesDeSubir(file) {
+  const maxSizeBytes = 4 * 1024 * 1024;
+  const maxDimension = 2000;
+
+  if (!file || !file.type?.startsWith("image/")) {
+    return file;
+  }
+
+  if (file.size <= maxSizeBytes && file.type !== "image/png") {
+    return file;
+  }
+
+  const imageBitmap = await createImageBitmap(file);
+
+  let width = imageBitmap.width;
+  let height = imageBitmap.height;
+
+  if (width > height && width > maxDimension) {
+    height = Math.round((height * maxDimension) / width);
+    width = maxDimension;
+  } else if (height >= width && height > maxDimension) {
+    width = Math.round((width * maxDimension) / height);
+    height = maxDimension;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(imageBitmap, 0, 0, width, height);
+
+  const blob = await new Promise((resolve) => {
+    canvas.toBlob(resolve, "image/jpeg", 0.82);
+  });
+
+  if (!blob) {
+    return file;
+  }
+
+  return new File(
+    [blob],
+    file.name.replace(/\.[^.]+$/, "") + ".jpg",
+    {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    }
+  );
+}
+
+
 function AdminProductos() {
   const initialForm = {
     id: null,
@@ -213,8 +265,10 @@ function AdminProductos() {
   };
 
   const subirImagenPrincipal = async (file) => {
+    const archivoOptimizado = await comprimirImagenAntesDeSubir(file);
+
     const body = new FormData();
-    body.append("archivo", file);
+    body.append("archivo", archivoOptimizado);
 
     const response = await fetch("https://aska-backend-nyx8.onrender.com/api/upload", {
       method: "POST",
@@ -280,24 +334,46 @@ function AdminProductos() {
   };
 
   const handleMultipleImagesUpload = async (e) => {
-    const files = e.target.files;
-    if (!files?.length) return;
+    const files = Array.from(e.target.files || []);
+
+    if (!files.length) return;
 
     try {
       setSubiendo(true);
-      const data = await subirImagenesMultiples(files);
 
-      if (!data?.urls?.length) {
-        setMensaje("No se pudieron subir las imágenes.");
-        return;
+      const uploadedUrls = [];
+
+      for (const file of files) {
+        const archivoOptimizado = await comprimirImagenAntesDeSubir(file);
+
+        const body = new FormData();
+        body.append("archivo", archivoOptimizado);
+
+        const response = await fetch(
+          "https://aska-backend-nyx8.onrender.com/api/upload",
+          {
+            method: "POST",
+            body,
+          }
+        );
+
+        const data = await safeJson(response);
+
+        if (!response.ok || !data?.url) {
+          throw new Error(
+            data?.mensaje || `Error subiendo ${file.name}`
+          );
+        }
+
+        uploadedUrls.push(data.url);
       }
 
       setForm((prev) => ({
         ...prev,
-        imagenes: [...prev.imagenes, ...data.urls],
+        imagenes: [...prev.imagenes, ...uploadedUrls],
       }));
 
-      setMensaje("Imágenes adicionales subidas correctamente.");
+      setMensaje("Imágenes optimizadas y subidas correctamente.");
     } catch (error) {
       console.error("Error subiendo imágenes múltiples:", error);
       setMensaje(error.message || "Error subiendo imágenes adicionales.");
@@ -672,6 +748,7 @@ function AdminProductos() {
                   <input
                     type="file"
                     accept="image/*"
+                    disabled={subiendo}
                     onChange={handleMainImageUpload}
                     style={fieldStyle}
                   />
@@ -720,7 +797,7 @@ function AdminProductos() {
                         fontWeight: 600,
                       }}
                     >
-                      Subiendo imágenes...
+                      Optimizando y subiendo imágenes...
                     </p>
                   )}
 
