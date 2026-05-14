@@ -2530,3 +2530,75 @@ button,
 .auth-submit-button {
   border-radius: var(--aska-button-radius) !important;
 }
+
+
+
+/* ===== AŞKA LUXURY REDESIGN V1 - HOME/NAV ONLY ===== */
+:root {
+  --aska-bg-secondary: #f8f3f0;
+  --aska-ink: #111111;
+  --aska-soft-ink: rgba(17,17,17,.62);
+}
+
+body {
+  background: var(--aska-bg-secondary) !important;
+}
+
+.aska-hero-section {
+  margin-top: 0 !important;
+}
+
+.aska-hero-section h1,
+.aska-hero-section p {
+  text-shadow: 0 12px 44px rgba(0,0,0,.40);
+}
+
+.aska-lux-products-section {
+  position: relative;
+}
+
+.aska-lux-products-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 6%, rgba(255,255,255,.55), transparent 28%),
+    radial-gradient(circle at 84% 16%, rgba(17,17,17,.08), transparent 32%);
+  pointer-events: none;
+}
+
+.aska-lux-products-section > div {
+  position: relative;
+  z-index: 2;
+}
+
+.aska-home-category-section h3 {
+  color: #111111 !important;
+}
+
+.aska-home-category-section p {
+  color: rgba(17,17,17,.52) !important;
+}
+
+.aska-home-product-layout > a,
+.aska-home-secondary-grid > a {
+  color: #fff !important;
+}
+
+@media (max-width: 768px) {
+  .aska-hero-section {
+    min-height: 72svh !important;
+  }
+
+  .aska-home-product-layout > a,
+  .aska-home-secondary-grid > a {
+    min-height: 360px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .aska-home-product-layout > a,
+  .aska-home-secondary-grid > a {
+    height: 390px !important;
+  }
+}

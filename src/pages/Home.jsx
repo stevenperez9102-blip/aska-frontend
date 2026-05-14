@@ -223,9 +223,9 @@ function Home() {
         style={{
           position: "relative",
           display: "block",
-          height: large ? "620px" : "320px",
-          minHeight: large ? "580px" : "290px",
-          borderRadius: large ? "30px" : "24px",
+          height: large ? "560px" : "300px",
+          minHeight: large ? "520px" : "280px",
+          borderRadius: large ? "32px" : "26px",
           overflow: "hidden",
           textDecoration: "none",
           color: "var(--aska-text-primary, #111111)",
@@ -290,7 +290,7 @@ function Home() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(0,0,0,0.00) 58%, rgba(0,0,0,0.28) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0.00) 46%, rgba(0,0,0,0.46) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -307,7 +307,7 @@ function Home() {
               style={{
                 position: "absolute",
                 left: large ? "18px" : "12px",
-                top: "32%",
+                top: "42%",
                 transform: "translateY(-50%)",
                 width: large ? "38px" : "30px",
                 height: large ? "38px" : "30px",
@@ -336,7 +336,7 @@ function Home() {
               style={{
                 position: "absolute",
                 right: large ? "18px" : "12px",
-                top: "32%",
+                top: "42%",
                 transform: "translateY(-50%)",
                 width: large ? "38px" : "30px",
                 height: large ? "38px" : "30px",
@@ -372,7 +372,7 @@ function Home() {
               margin: 0,
               marginBottom: large ? "8px" : "5px",
               color: "rgba(230,230,230,0.86)",
-              fontSize: large ? "0.82rem" : "0.68rem",
+              fontSize: large ? "0.74rem" : "0.58rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
               fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
@@ -387,8 +387,8 @@ function Home() {
               margin: 0,
               marginBottom: large ? "10px" : "6px",
               fontSize: large
-                ? "clamp(1.2rem, 1.5vw, 1.8rem)"
-                : "clamp(0.72rem, 0.92vw, 0.92rem)",
+                ? "clamp(1.18rem, 1.55vw, 1.72rem)"
+                : "clamp(0.74rem, 0.92vw, 0.98rem)",
               lineHeight: 1.12,
               wordBreak: "break-word",
               maxWidth: "92%",
@@ -403,7 +403,7 @@ function Home() {
               margin: 0,
               color: "var(--aska-text-secondary, #ffffff)",
               fontWeight: 800,
-              fontSize: large ? "1.18rem" : "0.98rem",
+              fontSize: large ? "1.02rem" : "0.82rem",
               fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
             }}
           >
@@ -428,8 +428,8 @@ function Home() {
           type="button"
           onClick={(event) => handleThumbnailClick(event, item.id, index)}
           style={{
-            width: large ? "64px" : "46px",
-            height: large ? "52px" : "40px",
+            width: large ? "54px" : "34px",
+            height: large ? "46px" : "30px",
             borderRadius: "12px",
             overflow: "hidden",
             padding: 0,
@@ -467,12 +467,15 @@ function Home() {
       <Navbar />
 
       <section
-        className="aska-hero-section"
+        className="aska-hero-section aska-lux-hero"
         style={{
           position: "relative",
-          minHeight: "53vh",
+          minHeight: "calc(100svh - 96px)",
           overflow: "hidden",
           background: mediaUrl ? "#000" : "#0b0b0b",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {responsiveMediaUrl ? (
@@ -490,7 +493,7 @@ function Home() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center center",
+                objectPosition: "center 38%",
               }}
             />
           ) : (
@@ -504,7 +507,7 @@ function Home() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center center",
+                objectPosition: "center 38%",
               }}
             />
           )
@@ -514,7 +517,8 @@ function Home() {
           style={{
             position: "absolute",
             inset: 0,
-            background: `rgba(0,0,0,${overlayOpacidad})`,
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0.22), rgba(0,0,0,0.10) 42%, rgba(0,0,0,0.22)), linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.38))",
             zIndex: 1,
           }}
         />
@@ -529,7 +533,7 @@ function Home() {
               top: `${logoPosY}%`,
               transform: "translate(-50%, -50%)",
               width: `${overlayLogoWidth}px`,
-              maxWidth: "92vw",
+              maxWidth: "min(72vw, 620px)",
               objectFit: "contain",
               display: "block",
               zIndex: 4,
@@ -553,7 +557,7 @@ function Home() {
             <h1
               style={{
                 margin: 0,
-                fontSize: `${tituloFontSize}px`,
+                fontSize: `clamp(3.6rem, ${tituloFontSize / 10}vw, ${tituloFontSize}px)`,
                 lineHeight: 0.96,
                 color: colorTexto,
                 fontFamily: fuenteTexto,
@@ -567,7 +571,7 @@ function Home() {
               style={{
                 margin: 0,
                 marginTop: "-4px",
-                fontSize: `${subtituloFontSize}px`,
+                fontSize: `clamp(1.2rem, ${subtituloFontSize / 14}vw, ${subtituloFontSize}px)`,
                 lineHeight: 1.15,
                 color: colorTexto,
                 fontFamily: fuenteTexto,
@@ -581,32 +585,59 @@ function Home() {
       </section>
 
       <section
+        className="aska-lux-intro"
         style={{
           background: "var(--aska-bg-secondary, #f8f6f2)",
           color: "var(--aska-text-primary, #111111)",
-          padding: "46px 24px 0",
+          padding: "clamp(72px, 8vw, 118px) 24px 76px",
           borderTop: "1px solid rgba(17,17,17,0.08)",
         }}
       >
         <div
           style={{
-            maxWidth: "1160px",
+            maxWidth: "1280px",
             margin: "0 auto",
             textAlign: "center",
           }}
         >
           <div
             style={{
-              maxWidth: "930px",
+              maxWidth: "980px",
               margin: "0 auto",
             }}
           >
             <p
               style={{
+                margin: "0 0 16px",
+                color: "rgba(17,17,17,0.48)",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                fontSize: "0.76rem",
+                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
+                fontWeight: 800,
+              }}
+            >
+              Joyería artesanal contemporánea
+            </p>
+
+            <h2
+              style={{
+                margin: "0 auto 28px",
+                maxWidth: "920px",
+                fontSize: "clamp(2.4rem, 5vw, 5.2rem)",
+                lineHeight: 0.94,
+                letterSpacing: "0.035em",
+                color: "var(--aska-text-primary, #111111)",
+              }}
+            >
+              Piezas con fuerza, historia y presencia.
+            </h2>
+            <p
+              style={{
                 margin: 0,
                 marginBottom: "14px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
+                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
+                lineHeight: 1.82,
                 fontWeight: 300,
                 color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
@@ -620,8 +651,8 @@ function Home() {
               style={{
                 margin: 0,
                 marginBottom: "14px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
+                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
+                lineHeight: 1.82,
                 fontWeight: 300,
                 color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
@@ -635,8 +666,8 @@ function Home() {
               style={{
                 margin: 0,
                 marginBottom: "24px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
+                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
+                lineHeight: 1.82,
                 fontWeight: 300,
                 color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
@@ -650,8 +681,8 @@ function Home() {
               style={{
                 margin: 0,
                 marginBottom: "12px",
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
+                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
+                lineHeight: 1.82,
                 fontWeight: 300,
                 color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
@@ -664,8 +695,8 @@ function Home() {
             <p
               style={{
                 margin: 0,
-                fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
-                lineHeight: 1.58,
+                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
+                lineHeight: 1.82,
                 fontWeight: 300,
                 color: "var(--aska-text-primary, #111111)",
                 letterSpacing: "0.003em",
@@ -723,9 +754,9 @@ function Home() {
       <section
         style={{
           background:
-            "linear-gradient(180deg, var(--aska-bg-primary, #050505) 0%, #080808 48%, var(--aska-bg-primary, #050505) 100%)",
-          color: "#fff",
-          padding: "80px 24px 100px",
+            "linear-gradient(180deg, var(--aska-bg-secondary, #f8f6f2) 0%, #efe7e4 48%, var(--aska-bg-secondary, #f8f6f2) 100%)",
+          color: "#111111",
+          padding: "clamp(68px, 7vw, 108px) 24px 120px",
         }}
       >
         <div className="aska-home-products-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
@@ -738,7 +769,7 @@ function Home() {
               No hay productos disponibles.
             </p>
           ) : (
-            <div className="aska-home-categories-grid" style={{ display: "grid", gap: "76px" }}>
+            <div className="aska-home-categories-grid" style={{ display: "grid", gap: "86px" }}>
               {categories.map((category) => {
                 const preview = products
                   .filter(
@@ -942,7 +973,54 @@ html,
 
 
 
+
+          .aska-lux-hero {
+            min-height: calc(100svh - 96px) !important;
+          }
+
+          .aska-lux-hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 22%;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.28));
+            pointer-events: none;
+            z-index: 2;
+          }
+
+          .aska-lux-intro p {
+            text-wrap: pretty;
+          }
+
+          .aska-home-category-section h3,
+          .aska-home-category-section p {
+            color: #111111 !important;
+          }
+
+          .aska-home-product-layout > a,
+          .aska-home-secondary-grid > a {
+            background: #050505 !important;
+            color: #ffffff !important;
+          }
+
+          .aska-home-product-layout button,
+          .aska-home-secondary-grid button {
+            touch-action: manipulation;
+          }
+
+          @media (min-width: 769px) {
+            .aska-hero-section .aska-hero-media {
+              object-position: center 38% !important;
+            }
+          }
+
           @media (max-width: 768px) {
+
+            .aska-lux-hero {
+              min-height: 72svh !important;
+            }
 
             .aska-hero-section .aska-hero-media {
               object-fit: cover !important;

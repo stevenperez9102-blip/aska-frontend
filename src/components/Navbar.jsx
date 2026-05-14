@@ -269,9 +269,9 @@ function Navbar() {
           position: "sticky",
           top: 0,
           zIndex: 9999,
-          background: "var(--aska-navbar-bg, rgba(10,10,10,0.95))",
-          backdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          background: "var(--aska-navbar-bg, rgba(8,8,8,0.92))",
+          backdropFilter: "blur(14px)",
+          borderBottom: "1px solid rgba(255,255,255,0.10)",
         }}
       >
         <div
@@ -280,7 +280,7 @@ function Navbar() {
             width: "100%",
             maxWidth: "none",
             margin: "0",
-            padding: "0 120px 0 0",
+            padding: "0 108px 0 0",
             minHeight: "96px",
             display: "flex",
             alignItems: "center",
@@ -614,10 +614,10 @@ function Navbar() {
           .aska-nav-menu {
             display: flex;
             align-items: center;
-            gap: 34px;
+            gap: 38px;
             position: relative;
             margin-left: auto;
-            transform: translateY(-8px);
+            transform: translateY(0);
           }
 
           .aska-catalog-wrapper {
@@ -683,7 +683,7 @@ function Navbar() {
 
           .aska-navbar-cart {
             position: absolute;
-            top: calc(50% - 8px);
+            top: 50%;
             right: 24px;
             transform: translateY(-50%);
             z-index: 10002;
@@ -815,18 +815,51 @@ function Navbar() {
             min-width: 210px;
             margin-left: 0;
             overflow: visible;
-            transform: translateY(-8px);
+            transform: translateY(0);
           }
 
           .aska-brand-logo-img {
             display: block;
-            height: 92px;
+            height: 78px;
             width: auto;
             object-fit: contain;
-            transform: scale(2.45) translateX(-12px);
+            transform: scale(2.05) translateX(-10px);
             transform-origin: left center;
           }
 
+
+
+          .aska-nav-menu > a,
+          .aska-nav-menu > div > a {
+            position: relative;
+          }
+
+          .aska-nav-menu > a::after,
+          .aska-nav-menu > div > a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -10px;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform .28s ease;
+            opacity: .72;
+          }
+
+          .aska-nav-menu > a:hover::after,
+          .aska-nav-menu > div > a:hover::after {
+            transform: scaleX(1);
+          }
+
+          .aska-catalog-menu,
+          .aska-purchases-menu {
+            border-radius: 18px !important;
+            background: rgba(10,10,10,0.94) !important;
+            backdrop-filter: blur(16px);
+          }
 
           /* AŞKA NAVBAR MARCA FINAL */
           .aska-nav-menu a,
