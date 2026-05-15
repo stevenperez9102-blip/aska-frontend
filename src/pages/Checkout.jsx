@@ -340,9 +340,9 @@ function Checkout() {
       <section
         style={{
           minHeight: "100vh",
-          background: "var(--aska-bg-secondary, #f5f5f5)",
+          background: "linear-gradient(180deg, #f8f3f0 0%, #efe7e4 48%, #f8f3f0 100%)",
           color: "var(--aska-text-primary, #111)",
-          padding: isMobile ? "28px 16px 60px" : "40px 24px 80px",
+          padding: isMobile ? "72px 16px 80px" : "110px 28px 120px",
         }}
       >
         <div
@@ -351,23 +351,23 @@ function Checkout() {
             margin: "0 auto",
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr",
-            gap: "24px",
+            gap: "clamp(26px, 4vw, 54px)",
           }}
         >
           <div
             style={{
               background: "var(--aska-card-bg, #fff)",
-              borderRadius: "24px",
-              padding: "28px",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+              borderRadius: "36px",
+              padding: "clamp(28px, 4vw, 54px)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.08)",
             }}
           >
             <h1
               style={{
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontSize: "clamp(3.2rem, 8vw, 6rem)",
                 marginTop: 0,
                 fontFamily: "var(--aska-font-family-primary, inherit)",
-                marginBottom: "10px",
+                marginBottom: "16px",
               }}
             >
               Finalizar compra
@@ -463,8 +463,8 @@ function Checkout() {
               <div
                 style={{
                   marginTop: "10px",
-                  padding: "20px",
-                  borderRadius: "22px",
+                  padding: "28px",
+                  borderRadius: "28px",
                   background: "var(--aska-card-bg-soft, #f7f7f7)",
                   border: "1px solid rgba(0,0,0,0.08)",
                 }}
@@ -473,7 +473,7 @@ function Checkout() {
                   style={{
                     margin: 0,
                     marginBottom: "8px",
-                    fontSize: "1.35rem",
+                    fontSize: "2rem",
                   }}
                 >
                   Métodos de pago
@@ -612,10 +612,12 @@ function Checkout() {
                 style={{
                   border: "none",
                   borderRadius: "999px",
-                  padding: "14px 22px",
+                  padding: "16px 24px",
                   background: "var(--aska-bg-primary, #111)",
                   color: "var(--aska-text-secondary, #fff)",
-                  fontWeight: 700,
+                  fontWeight: 600,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
                   cursor: loading ? "not-allowed" : "pointer",
                   fontFamily: "var(--aska-font-family-secondary, inherit)",
                   boxShadow: "0 14px 34px rgba(0,0,0,0.16)",
@@ -631,13 +633,13 @@ function Checkout() {
           <div
             style={{
               background: "var(--aska-card-bg, #fff)",
-              borderRadius: "24px",
-              padding: "28px",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+              borderRadius: "36px",
+              padding: "clamp(28px, 4vw, 54px)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.08)",
               alignSelf: "start",
             }}
           >
-            <h2 style={{ marginTop: 0, marginBottom: "18px" }}>Resumen</h2>
+            <h2 style={{ marginTop: 0, marginBottom: "24px", fontSize: "2rem", fontWeight: 500, letterSpacing: "-0.04em" }}>Resumen</h2>
 
             {cart.length === 0 ? (
               <p>Tu carrito está vacío.</p>
@@ -810,6 +812,44 @@ function Checkout() {
   button:hover {
     transform: translateY(-2px);
     opacity: 0.97;
+  }
+
+  section::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 8%, rgba(255,255,255,0.74), transparent 28%),
+      radial-gradient(circle at 88% 12%, rgba(17,17,17,0.08), transparent 34%);
+    z-index: 0;
+  }
+
+  section > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  button {
+    border-radius: 999px !important;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  input {
+    background: rgba(255,255,255,0.72) !important;
+    backdrop-filter: blur(12px);
+  }
+
+  img {
+    transition:
+      transform .72s cubic-bezier(.22,.61,.36,1),
+      filter .72s ease;
+  }
+
+  img:hover {
+    transform: scale(1.03);
+    filter: contrast(1.04);
   }
 `}
 </style>
