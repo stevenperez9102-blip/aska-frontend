@@ -470,7 +470,7 @@ function Home() {
         className="aska-hero-section aska-lux-hero"
         style={{
           position: "relative",
-          minHeight: "calc(100svh - 96px)",
+          minHeight: "100svh",
           overflow: "hidden",
           background: mediaUrl ? "#000" : "#0b0b0b",
           display: "flex",
@@ -975,7 +975,7 @@ html,
 
 
           .aska-lux-hero {
-            min-height: calc(100svh - 96px) !important;
+            min-height: 100svh !important;
           }
 
           .aska-lux-hero::after {

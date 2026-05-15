@@ -283,6 +283,7 @@ function Navbar() {
       )}
 
       <header
+        className={`aska-site-header ${scrolled ? "is-scrolled" : "is-transparent"}`}
         style={{
           position: "fixed",
           top: 0,
@@ -291,7 +292,7 @@ function Navbar() {
           zIndex: 9999,
           background: scrolled
             ? "rgba(5,5,5,0.92)"
-            : "linear-gradient(180deg, rgba(0,0,0,0.58), rgba(0,0,0,0.08), transparent)",
+            : "transparent",
           backdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
           borderBottom: scrolled
             ? "1px solid rgba(255,255,255,0.08)"
@@ -313,6 +314,7 @@ function Navbar() {
             justifyContent: "space-between",
             gap: "18px",
             position: "relative",
+            background: "transparent",
           }}
         >
           <button
@@ -586,7 +588,29 @@ function Navbar() {
           }
 
 
+
+          .aska-site-header.is-transparent {
+            background: transparent !important;
+          }
+
+          .aska-site-header.is-transparent .aska-navbar-inner {
+            background: transparent !important;
+            box-shadow: none !important;
+          }
+
+          .aska-site-header.is-scrolled .aska-navbar-inner {
+            background: transparent !important;
+          }
+
+          .aska-site-header {
+            transition:
+              background .35s ease,
+              backdrop-filter .35s ease,
+              border-color .35s ease;
+          }
+
           .aska-navbar-inner {
+            background: transparent !important;
             transition:
               min-height .35s ease,
               padding .35s ease;

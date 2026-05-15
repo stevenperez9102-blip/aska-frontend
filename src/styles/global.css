@@ -2602,3 +2602,9 @@ body {
     height: 390px !important;
   }
 }
+
+.aska-navbar-inner {
+  transition:
+    min-height .35s ease,
+    padding .35s ease;
+}
