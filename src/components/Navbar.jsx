@@ -20,6 +20,7 @@ function Navbar() {
   const [secretActive, setSecretActive] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartLuxPulse, setCartLuxPulse] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
@@ -53,6 +54,23 @@ function Navbar() {
     setShowCatalogMenu(false);
     setShowPurchasesMenu(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroHeight = window.innerHeight * 0.82;
+      setScrolled(window.scrollY > heroHeight);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     document.body.style.overflowX = "hidden";
@@ -266,12 +284,20 @@ function Navbar() {
 
       <header
         style={{
-          position: "sticky",
+          position: "fixed",
           top: 0,
+          left: 0,
+          right: 0,
           zIndex: 9999,
-          background: "var(--aska-navbar-bg, rgba(8,8,8,0.92))",
-          backdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(255,255,255,0.10)",
+          background: scrolled
+            ? "rgba(5,5,5,0.92)"
+            : "linear-gradient(180deg, rgba(0,0,0,0.58), rgba(0,0,0,0.08), transparent)",
+          backdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
+          borderBottom: scrolled
+            ? "1px solid rgba(255,255,255,0.08)"
+            : "1px solid transparent",
+          transition:
+            "background .35s ease, backdrop-filter .35s ease, border-color .35s ease",
         }}
       >
         <div
@@ -559,6 +585,12 @@ function Navbar() {
             --aska-font-family: inherit;
           }
 
+
+          .aska-navbar-inner {
+            transition:
+              min-height .35s ease,
+              padding .35s ease;
+          }
 
           @keyframes askaFall {
             0% {
