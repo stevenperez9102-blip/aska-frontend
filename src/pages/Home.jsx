@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { CartContext } from "../context/CartContext";
 
 function formatPrice(value) {
   return new Intl.NumberFormat("es-CO", {
@@ -46,11 +47,45 @@ function getProductImages(product) {
   return images;
 }
 
+function BagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M7.2 8.4V7.2C7.2 4.6 9.3 2.5 12 2.5C14.7 2.5 16.8 4.6 16.8 7.2V8.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.5 8.4H18.5L19.4 21.5H4.6L5.5 8.4Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function Home() {
+  const { addToCart } = useContext(CartContext);
+
   const [config, setConfig] = useState(null);
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [selectedImages, setSelectedImages] = useState({});
+  const [addedProduct, setAddedProduct] = useState(null);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [drawerTab, setDrawerTab] = useState("add");
+
+  const railRefs = useRef({});
+  const dragRef = useRef({
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+    key: "",
+  });
 
   useEffect(() => {
     const cargarConfig = async () => {
@@ -96,6 +131,7 @@ function Home() {
             initialSelected[product.id] = 0;
           }
         });
+
         setSelectedImages(initialSelected);
       } catch (error) {
         console.error("Error cargando productos en home:", error);
@@ -113,17 +149,16 @@ function Home() {
   const mediaDesktopUrl = config?.media_desktop_url || "";
   const mediaTipo = config?.media_tipo || "imagen";
 
-  const responsiveMediaUrl =
-    window.innerWidth <= 768
-      ? mediaMobileUrl || mediaUrl
-      : mediaDesktopUrl || mediaUrl;
+  const isMobileViewport =
+    typeof window !== "undefined" && window.innerWidth <= 768;
+
+  const responsiveMediaUrl = isMobileViewport
+    ? mediaMobileUrl || mediaUrl
+    : mediaDesktopUrl || mediaUrl;
+
   const titulo = config?.titulo || "";
   const subtitulo = config?.subtitulo || "";
   const colorTexto = "#ffffff";
-  const overlayOpacidad =
-    config?.overlay_opacidad !== null && config?.overlay_opacidad !== undefined
-      ? Number(config.overlay_opacidad)
-      : 0.2;
   const fuenteTexto = config?.fuente_texto || "Georgia, serif";
 
   const overlayLogoUrl = config?.overlay_logo_url || "";
@@ -170,7 +205,73 @@ function Home() {
     });
   }, [products]);
 
-  const handleThumbnailClick = (event, productId, index) => {
+  const featuredProducts = useMemo(() => products.slice(0, 8), [products]);
+
+  const campaignProducts = useMemo(() => {
+    const withImages = products.filter((item) => getProductImages(item).length > 0);
+    return {
+      first: withImages[0] || products[0] || null,
+      second: withImages[1] || products[1] || null,
+      third: withImages[2] || products[2] || null,
+    };
+  }, [products]);
+
+  const cartCount = useMemo(() => {
+    try {
+      const carritoGuardado = JSON.parse(
+        localStorage.getItem("carrito") ||
+          localStorage.getItem("cart") ||
+          localStorage.getItem("cartItems") ||
+          "[]"
+      );
+
+      if (!Array.isArray(carritoGuardado)) return 0;
+
+      return carritoGuardado.reduce(
+        (total, item) =>
+          total + Number(item?.cantidad || item?.quantity || item?.qty || 1),
+        0
+      );
+    } catch {
+      return 0;
+    }
+  }, [addedProduct, cartDrawerOpen]);
+
+  const productToCartPayload = (item) => {
+    const images = getProductImages(item);
+    const selected = selectedImages[item.id] ?? 0;
+    const image = images[selected] || images[0] || item.imagen || "";
+
+    return {
+      id: item.id,
+      name: item.nombre,
+      nombre: item.nombre,
+      price: Number(item.precio || 0),
+      precio: Number(item.precio || 0),
+      image,
+      imagen: image,
+      description: item.descripcion || "",
+      category: item.categoria || "",
+      categoria: item.categoria || "",
+    };
+  };
+
+  const handleAddProduct = (event, item) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!item) return;
+
+    const payload = productToCartPayload(item);
+    addToCart(payload);
+    setAddedProduct(payload);
+    setCartDrawerOpen(true);
+    setDrawerTab("add");
+
+    window.dispatchEvent(new Event("cart-updated"));
+  };
+
+  const selectImage = (event, productId, index) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -180,285 +281,172 @@ function Home() {
     }));
   };
 
-  const handlePrevImage = (event, product) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const scrollRail = (key, direction) => {
+    const rail = railRefs.current[key];
+    if (!rail) return;
 
-    const images = getProductImages(product);
-    if (images.length <= 1) return;
-
-    setSelectedImages((prev) => {
-      const current = prev[product.id] ?? 0;
-      return {
-        ...prev,
-        [product.id]: (current - 1 + images.length) % images.length,
-      };
+    rail.scrollBy({
+      left: direction * Math.min(rail.clientWidth * 0.86, 760),
+      behavior: "smooth",
     });
   };
 
-  const handleNextImage = (event, product) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleRailMouseDown = (event, key) => {
+    const rail = railRefs.current[key];
+    if (!rail) return;
 
-    const images = getProductImages(product);
-    if (images.length <= 1) return;
+    dragRef.current = {
+      isDown: true,
+      startX: event.pageX - rail.offsetLeft,
+      scrollLeft: rail.scrollLeft,
+      key,
+    };
 
-    setSelectedImages((prev) => {
-      const current = prev[product.id] ?? 0;
-      return {
-        ...prev,
-        [product.id]: (current + 1) % images.length,
-      };
-    });
+    rail.classList.add("is-dragging");
   };
 
-  const ProductCover = ({ item, large = false }) => {
-    const itemImages = getProductImages(item).slice(0, 4);
-    const currentIndex = selectedImages[item.id] ?? 0;
-    const currentImage = itemImages[currentIndex] || itemImages[0] || item.imagen || "";
+  const handleRailMouseLeave = (key) => {
+    const rail = railRefs.current[key];
+    if (rail) rail.classList.remove("is-dragging");
+    dragRef.current.isDown = false;
+  };
+
+  const handleRailMouseUp = (key) => {
+    const rail = railRefs.current[key];
+    if (rail) rail.classList.remove("is-dragging");
+    dragRef.current.isDown = false;
+  };
+
+  const handleRailMouseMove = (event, key) => {
+    const rail = railRefs.current[key];
+    if (!rail || !dragRef.current.isDown || dragRef.current.key !== key) return;
+
+    event.preventDefault();
+
+    const x = event.pageX - rail.offsetLeft;
+    const walk = (x - dragRef.current.startX) * 1.15;
+    rail.scrollLeft = dragRef.current.scrollLeft - walk;
+  };
+
+  const CampaignTile = ({ product, title, label, wide = false }) => {
+    const image = product ? getProductImages(product)[0] || product.imagen : "";
 
     return (
       <Link
-        to={`/producto/${item.id}`}
-        style={{
-          position: "relative",
-          display: "block",
-          height: large ? "560px" : "300px",
-          minHeight: large ? "520px" : "280px",
-          borderRadius: large ? "32px" : "26px",
-          overflow: "hidden",
-          textDecoration: "none",
-          color: "var(--aska-text-primary, #111111)",
-          background: "var(--aska-card-bg, #ffffff)",
-          border: "1px solid rgba(17,17,17,0.08)",
-          boxShadow: large
-            ? "0 28px 80px rgba(0,0,0,0.12)"
-            : "0 18px 48px rgba(0,0,0,0.10)",
-          transition:
-            "transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translateY(-6px)";
-          e.currentTarget.style.borderColor = "rgba(143,143,143,0.35)";
-          e.currentTarget.style.boxShadow = large
-            ? "0 34px 96px rgba(0,0,0,0.18)"
-            : "0 24px 60px rgba(0,0,0,0.14)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.borderColor = "rgba(17,17,17,0.08)";
-          e.currentTarget.style.boxShadow = large
-            ? "0 28px 80px rgba(0,0,0,0.12)"
-            : "0 18px 48px rgba(0,0,0,0.10)";
-        }}
+        to={product ? `/producto/${product.id}` : "/catalogo"}
+        className={`aska-campaign-tile ${wide ? "is-wide" : ""}`}
       >
-        {currentImage ? (
-          <img
-            src={currentImage}
-            alt={item.nombre}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-              transition: "transform 0.45s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.045)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-          />
+        {image ? (
+          <img src={image} alt={product?.nombre || title} />
         ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "grid",
-              placeItems: "center",
-              color: "rgba(255,255,255,0.38)",
-              background: "#eeeeee",
-            }}
-          >
-            Sin imagen
-          </div>
+          <div className="aska-campaign-placeholder">AŞKA</div>
         )}
 
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.00) 46%, rgba(0,0,0,0.46) 100%)",
-            pointerEvents: "none",
-          }}
-        />
+        <div className="aska-campaign-gradient" />
 
-        {itemImages.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                handlePrevImage(event, item);
-              }}
-              style={{
-                position: "absolute",
-                left: large ? "18px" : "12px",
-                top: "42%",
-                transform: "translateY(-50%)",
-                width: large ? "38px" : "30px",
-                height: large ? "38px" : "30px",
-                borderRadius: "999px",
-                border: "1px solid rgba(255,255,255,0.14)",
-                background: "rgba(8,8,8,0.78)",
-                color: "#fff",
-                fontSize: large ? "1.1rem" : "0.9rem",
-                fontWeight: 900,
-                lineHeight: 1,
-                cursor: "pointer",
-                zIndex: 40,
-                pointerEvents: "auto",
-              }}
-            >
-              ‹
-            </button>
+        <div className="aska-campaign-content">
+          <p>{label}</p>
+          <h2>{title}</h2>
+          <span>
+            <BagIcon />
+            Shop the look
+          </span>
+        </div>
+      </Link>
+    );
+  };
 
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                handleNextImage(event, item);
-              }}
-              style={{
-                position: "absolute",
-                right: large ? "18px" : "12px",
-                top: "42%",
-                transform: "translateY(-50%)",
-                width: large ? "38px" : "30px",
-                height: large ? "38px" : "30px",
-                borderRadius: "999px",
-                border: "1px solid rgba(255,255,255,0.14)",
-                background: "rgba(8,8,8,0.78)",
-                color: "#fff",
-                fontSize: large ? "1.1rem" : "0.9rem",
-                fontWeight: 900,
-                lineHeight: 1,
-                cursor: "pointer",
-                zIndex: 40,
-                pointerEvents: "auto",
-              }}
-            >
-              ›
-            </button>
-          </>
-        )}
+  const ProductRailCard = ({ item }) => {
+    const images = getProductImages(item).slice(0, 4);
+    const currentIndex = selectedImages[item.id] ?? 0;
+    const currentImage = images[currentIndex] || images[0] || item.imagen || "";
 
-        <div
-          style={{
-            position: "absolute",
-            left: large ? "26px" : "16px",
-            right: large ? "26px" : "16px",
-            bottom: large ? "18px" : "12px",
-            paddingRight: large ? "22px" : "12px",
-            zIndex: 4,
-          }}
-        >
-<p
-            style={{
-              margin: 0,
-              marginBottom: large ? "8px" : "5px",
-              color: "rgba(230,230,230,0.86)",
-              fontSize: large ? "0.74rem" : "0.58rem",
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
-              fontWeight: 700,
-            }}
+    return (
+      <article className="aska-rail-card">
+        <Link to={`/producto/${item.id}`} className="aska-rail-media">
+          {currentImage ? (
+            <img src={currentImage} alt={item.nombre} />
+          ) : (
+            <div className="aska-rail-empty">Sin imagen</div>
+          )}
+
+          <button
+            type="button"
+            className="aska-rail-add"
+            onClick={(event) => handleAddProduct(event, item)}
           >
-            {item.categoria}
-          </p>
+            Add +
+          </button>
+        </Link>
 
-          <h4
-            style={{
-              margin: 0,
-              marginBottom: large ? "10px" : "6px",
-              fontSize: large
-                ? "clamp(1.18rem, 1.55vw, 1.72rem)"
-                : "clamp(0.74rem, 0.92vw, 0.98rem)",
-              lineHeight: 1.12,
-              wordBreak: "break-word",
-              maxWidth: "92%",
-              color: "var(--aska-text-secondary, #ffffff)",
-            }}
-          >
-            {item.nombre}
-          </h4>
+        <div className="aska-rail-info">
+          <Link to={`/producto/${item.id}`}>
+            <h3>{item.nombre}</h3>
+          </Link>
 
-          <p
-            style={{
-              margin: 0,
-              color: "var(--aska-text-secondary, #ffffff)",
-              fontWeight: 800,
-              fontSize: large ? "1.02rem" : "0.82rem",
-              fontFamily: `var(--aska-font-family-primary, "Playfair Display")`,
-            }}
-          >
-            {formatPrice(item.precio)}
-          </p>
+          <p>{formatPrice(item.precio)}</p>
 
-          {itemImages.length > 1 && (
-  <div
-    style={{
-      display: "flex",
-      gap: "8px",
-      marginTop: large ? "16px" : "10px",
-      flexWrap: "wrap",
-    }}
-  >
-    {itemImages.map((img, index) => {
-      const active = currentIndex === index;
+          {item.categoria && <span>{item.categoria}</span>}
 
-      return (
-        <button
-          key={`${img}-${index}`}
-          type="button"
-          onClick={(event) => handleThumbnailClick(event, item.id, index)}
-          style={{
-            width: large ? "54px" : "34px",
-            height: large ? "46px" : "30px",
-            borderRadius: "12px",
-            overflow: "hidden",
-            padding: 0,
-            cursor: "pointer",
-            background: "#111",
-            border: active
-              ? "1px solid #d8d8d8"
-              : "1px solid rgba(255,255,255,0.14)",
-            opacity: active ? 1 : 0.58,
-            transition: "all .18s ease",
-          }}
-        >
-          <img
-            src={img}
-            alt={`${item.nombre} miniatura ${index + 1}`}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-                    />
-                  </button>
-                );
-              })}
+          {images.length > 1 && (
+            <div className="aska-rail-swatches">
+              {images.map((img, index) => (
+                <button
+                  key={`${item.id}-${index}`}
+                  type="button"
+                  className={currentIndex === index ? "active" : ""}
+                  onClick={(event) => selectImage(event, item.id, index)}
+                  aria-label={`Ver imagen ${index + 1} de ${item.nombre}`}
+                >
+                  <img src={img} alt="" aria-hidden="true" />
+                </button>
+              ))}
             </div>
           )}
         </div>
-      </Link>
+      </article>
+    );
+  };
+
+  const ProductRail = ({ category, items }) => {
+    const key = slugifyCategory(category);
+
+    return (
+      <section className="aska-product-rail-section">
+        <div className="aska-rail-header">
+          <div>
+            <p>Picked just for you</p>
+            <h2>{category}</h2>
+          </div>
+
+          <div className="aska-rail-controls">
+            <Link to={`/catalogo/${slugifyCategory(category)}`}>Ver más</Link>
+
+            <button type="button" onClick={() => scrollRail(key, -1)} aria-label="Anterior">
+              ‹
+            </button>
+
+            <button type="button" onClick={() => scrollRail(key, 1)} aria-label="Siguiente">
+              ›
+            </button>
+          </div>
+        </div>
+
+        <div
+          ref={(node) => {
+            railRefs.current[key] = node;
+          }}
+          className="aska-product-rail"
+          onMouseDown={(event) => handleRailMouseDown(event, key)}
+          onMouseLeave={() => handleRailMouseLeave(key)}
+          onMouseUp={() => handleRailMouseUp(key)}
+          onMouseMove={(event) => handleRailMouseMove(event, key)}
+        >
+          {items.map((item) => (
+            <ProductRailCard key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
     );
   };
 
@@ -487,81 +475,45 @@ function Home() {
               muted
               loop
               playsInline
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 38%",
-              }}
             />
           ) : (
             <img
               className="aska-hero-media"
               src={responsiveMediaUrl}
               alt={titulo || "AŞKA"}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 38%",
-              }}
             />
           )
         ) : null}
 
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.22), rgba(0,0,0,0.10) 42%, rgba(0,0,0,0.22)), linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.38))",
-            zIndex: 1,
-          }}
-        />
+        <div className="aska-hero-overlay" />
 
         {mostrarLogo && overlayLogoUrl && (
           <img
             src={overlayLogoUrl}
             alt="AŞKA"
+            className="aska-hero-logo"
             style={{
-              position: "absolute",
               left: `${logoPosX}%`,
               top: `${logoPosY}%`,
-              transform: "translate(-50%, -50%)",
               width: `${overlayLogoWidth}px`,
-              maxWidth: "min(72vw, 620px)",
-              objectFit: "contain",
-              display: "block",
-              zIndex: 4,
             }}
           />
         )}
 
         {mostrarTexto && (
           <div
+            className="aska-hero-copy"
             style={{
-              position: "absolute",
               left: `${textoPosX}%`,
               top: `${textoPosY}%`,
-              transform: "translate(-50%, -50%)",
-              zIndex: 5,
               textAlign: textoAlign,
-              padding: "8px 12px",
-              width: "min(90vw, 1100px)",
             }}
           >
             <h1
               style={{
-                margin: 0,
                 fontSize: `clamp(3.6rem, ${tituloFontSize / 10}vw, ${tituloFontSize}px)`,
-                lineHeight: 0.96,
                 color: colorTexto,
                 fontFamily: fuenteTexto,
-                letterSpacing: "0.01em",
               }}
             >
               {titulo}
@@ -569,13 +521,9 @@ function Home() {
 
             <p
               style={{
-                margin: 0,
-                marginTop: "-4px",
                 fontSize: `clamp(1.2rem, ${subtituloFontSize / 14}vw, ${subtituloFontSize}px)`,
-                lineHeight: 1.15,
                 color: colorTexto,
                 fontFamily: fuenteTexto,
-                whiteSpace: "nowrap",
               }}
             >
               {subtitulo}
@@ -584,303 +532,170 @@ function Home() {
         )}
       </section>
 
-      <section
-        className="aska-lux-intro"
-        style={{
-          background: "var(--aska-bg-secondary, #f8f6f2)",
-          color: "var(--aska-text-primary, #111111)",
-          padding: "clamp(72px, 8vw, 118px) 24px 76px",
-          borderTop: "1px solid rgba(17,17,17,0.08)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1280px",
-            margin: "0 auto",
-            textAlign: "center",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "980px",
-              margin: "0 auto",
-            }}
-          >
-            <p
-              style={{
-                margin: "0 0 16px",
-                color: "rgba(17,17,17,0.48)",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                fontSize: "0.76rem",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-                fontWeight: 800,
-              }}
-            >
-              Joyería artesanal contemporánea
-            </p>
-
-            <h2
-              style={{
-                margin: "0 auto 28px",
-                maxWidth: "920px",
-                fontSize: "clamp(2.4rem, 5vw, 5.2rem)",
-                lineHeight: 0.94,
-                letterSpacing: "0.035em",
-                color: "var(--aska-text-primary, #111111)",
-              }}
-            >
-              Piezas con fuerza, historia y presencia.
-            </h2>
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "14px",
-                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
-                lineHeight: 1.82,
-                fontWeight: 300,
-                color: "var(--aska-text-primary, #111111)",
-                letterSpacing: "0.003em",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-              }}
-            >
-              En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "14px",
-                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
-                lineHeight: 1.82,
-                fontWeight: 300,
-                color: "var(--aska-text-primary, #111111)",
-                letterSpacing: "0.003em",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-              }}
-            >
-              Cada joya y accesorio es tejido a mano. Creamos estilos contemporáneos que te dan fuerza y actitud.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "24px",
-                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
-                lineHeight: 1.82,
-                fontWeight: 300,
-                color: "var(--aska-text-primary, #111111)",
-                letterSpacing: "0.003em",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-              }}
-            >
-              Somos una marca unisex que cree en el poder de los detalles para marcar la diferencia.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                marginBottom: "12px",
-                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
-                lineHeight: 1.82,
-                fontWeight: 300,
-                color: "var(--aska-text-primary, #111111)",
-                letterSpacing: "0.003em",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-              }}
-            >
-              AŞKA es mucho más que diseño, somos un taller liderado por mujeres artesanas.
-            </p>
-
-            <p
-              style={{
-                margin: 0,
-                fontSize: "clamp(1.02rem, 1.18vw, 1.22rem)",
-                lineHeight: 1.82,
-                fontWeight: 300,
-                color: "var(--aska-text-primary, #111111)",
-                letterSpacing: "0.003em",
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-              }}
-            >
-              Nuestro sueño es empoderar mujeres, enseñándoles este arte como camino hacia la autonomía económica y una vida con propósito.
-            </p>
-          </div>
-
-          <div
-            style={{
-              marginTop: "34px",
-              borderTop: "1px solid rgba(17,17,17,0.10)",
-            }}
-          />
-
-          <div
-            style={{
-              position: "relative",
-              marginTop: "14px",
-              minHeight: "112px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              borderRadius: "26px",
-              border: "1px solid rgba(17,17,17,0.08)",
-              boxShadow: "0 22px 70px rgba(0,0,0,0.12)",
-              background: "var(--aska-card-bg, #ffffff)",
-            }}
-          >
-            <a
-              href="https://www.instagram.com/aska_bogota?igsh=ZXYzNnc1OHczOGMy"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: "var(--aska-text-primary, #111111)",
-                textDecoration: "underline",
-                textUnderlineOffset: "4px",
-                fontSize: "clamp(1.1rem, 1.55vw, 1.58rem)",
-                fontStyle: "italic",
-                fontWeight: 600,
-                fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-                position: "relative",
-                zIndex: 2,
-              }}
-            >
-              Síguenos en Instagram @aska_bogota
-            </a>
-          </div>
+      <section className="aska-editorial-intro">
+        <div>
+          <p>Joyería artesanal contemporánea</p>
+          <h2>Piezas con fuerza, historia y presencia.</h2>
+          <span>
+            En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
+            Cada joya y accesorio es tejido a mano para acompañar una forma de vestir con carácter.
+          </span>
         </div>
       </section>
 
-      <section
-        style={{
-          background:
-            "linear-gradient(180deg, var(--aska-bg-secondary, #f8f6f2) 0%, #efe7e4 48%, var(--aska-bg-secondary, #f8f6f2) 100%)",
-          color: "#111111",
-          padding: "clamp(68px, 7vw, 108px) 24px 120px",
-        }}
-      >
-        <div className="aska-home-products-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
-          {loadingProducts ? (
-            <p style={{ color: "rgba(255,255,255,0.68)" }}>
-              Cargando productos...
-            </p>
-          ) : categories.length === 0 ? (
-            <p style={{ color: "rgba(255,255,255,0.68)" }}>
-              No hay productos disponibles.
-            </p>
-          ) : (
-            <div className="aska-home-categories-grid" style={{ display: "grid", gap: "86px" }}>
-              {categories.map((category) => {
-                const preview = products
-                  .filter(
-                    (p) =>
-                      String(p.categoria || "").toLowerCase() ===
-                      String(category || "").toLowerCase()
-                  )
-                  .slice(0, 5);
+      <section className="aska-campaign-grid">
+        <CampaignTile
+          product={campaignProducts.first}
+          title="Just add presence"
+          label="AŞKA campaign"
+          wide
+        />
 
-                const mainProduct = preview[0];
-                const secondaryProducts = preview.slice(1, 5);
+        <CampaignTile
+          product={campaignProducts.second}
+          title="Signs of power"
+          label="New statement pieces"
+        />
+
+        <CampaignTile
+          product={campaignProducts.third}
+          title="Body jewelry"
+          label="Shop the look"
+        />
+      </section>
+
+      <section className="aska-home-products-editorial">
+        {loadingProducts ? (
+          <p className="aska-home-loading">Cargando productos...</p>
+        ) : categories.length === 0 ? (
+          <p className="aska-home-loading">No hay productos disponibles.</p>
+        ) : (
+          <>
+            {categories.map((category) => {
+              const items = products
+                .filter(
+                  (p) =>
+                    String(p.categoria || "").toLowerCase() ===
+                    String(category || "").toLowerCase()
+                )
+                .slice(0, 10);
+
+              if (!items.length) return null;
+
+              return <ProductRail key={category} category={category} items={items} />;
+            })}
+          </>
+        )}
+      </section>
+
+      <section className="aska-home-footer-editorial">
+        <div>
+          <h2>AŞKA</h2>
+          <p>
+            Taller liderado por mujeres artesanas. Piezas unisex hechas para destacar textura,
+            presencia y actitud.
+          </p>
+        </div>
+
+        <a
+          href="https://www.instagram.com/aska_bogota?igsh=ZXYzNnc1OHczOGMy"
+          target="_blank"
+          rel="noreferrer"
+        >
+          @aska_bogota
+        </a>
+      </section>
+
+      <a
+        href="https://wa.me/573001234567"
+        target="_blank"
+        rel="noreferrer"
+        className="aska-whatsapp-button"
+        aria-label="Escribir a AŞKA por WhatsApp"
+      >
+        WhatsApp
+      </a>
+
+      {cartDrawerOpen && (
+        <div className="aska-cart-drawer-backdrop" onClick={() => setCartDrawerOpen(false)}>
+          <aside className="aska-cart-drawer" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="aska-cart-drawer-close"
+              onClick={() => setCartDrawerOpen(false)}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+
+            <h2>Added to your cart</h2>
+
+            {addedProduct && (
+              <div className="aska-cart-drawer-product">
+                {addedProduct.image ? (
+                  <img src={addedProduct.image} alt={addedProduct.name} />
+                ) : (
+                  <div />
+                )}
+
+                <div>
+                  <h3>{addedProduct.name}</h3>
+                  <p>{formatPrice(addedProduct.price)}</p>
+                  {addedProduct.category && <span>{addedProduct.category}</span>}
+                </div>
+              </div>
+            )}
+
+            <Link to="/cart" className="aska-cart-drawer-main">
+              View all items in cart ({cartCount || 1})
+            </Link>
+
+            <div className="aska-cart-drawer-tabs">
+              <button
+                type="button"
+                className={drawerTab === "add" ? "active" : ""}
+                onClick={() => setDrawerTab("add")}
+              >
+                Add on
+              </button>
+              <button
+                type="button"
+                className={drawerTab === "style" ? "active" : ""}
+                onClick={() => setDrawerTab("style")}
+              >
+                Style with
+              </button>
+            </div>
+
+            <div className="aska-cart-drawer-suggestions">
+              {featuredProducts.slice(0, 4).map((item) => {
+                const image = getProductImages(item)[0] || item.imagen || "";
 
                 return (
-                  <section key={category} className="aska-home-category-section">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "end",
-                        gap: "16px",
-                        marginBottom: "24px",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <div>
-                        <p
-                          style={{
-                            margin: 0,
-                            marginBottom: "8px",
-                            color: "#8f8f8f",
-                            letterSpacing: "0.16em",
-                            textTransform: "uppercase",
-                            fontSize: "0.78rem",
-                            fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-                          }}
-                        >
-                          Colección AŞKA
-                        </p>
-
-                        <h3
-                          style={{
-                            margin: 0,
-                            fontSize: "clamp(1.8rem, 3.4vw, 3rem)",
-                            lineHeight: 1,
-                            letterSpacing: "0.02em",
-                          }}
-                        >
-                          {category}
-                        </h3>
-                      </div>
-
-                      <Link
-                        to={`/catalogo/${slugifyCategory(category)}`}
-                        style={{
-                          color: "var(--aska-text-primary, #111111)",
-                          textDecoration: "none",
-                          fontWeight: 900,
-                          border: "1px solid rgba(17,17,17,0.14)",
-                          borderRadius: "999px",
-                          padding: "12px 18px",
-                          background: "rgba(255,255,255,0.82)",
-                          boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
-                          fontFamily: `var(--aska-font-family-secondary, "Helvetica Neue")`,
-                        }}
-                      >
-                        Ver más
-                      </Link>
+                  <div key={item.id} className="aska-cart-drawer-suggestion">
+                    <img src={image} alt={item.nombre} />
+                    <div>
+                      <h3>{item.nombre}</h3>
+                      <p>{formatPrice(item.precio)}</p>
+                      <button type="button" onClick={(event) => handleAddProduct(event, item)}>
+                        Add +
+                      </button>
                     </div>
-
-                    {mainProduct ? (
-                      <div
-                        className="aska-home-product-layout"
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "minmax(0, 1.25fr) minmax(0, 1fr)",
-                          gap: "24px",
-                          alignItems: "stretch",
-                        }}
-                      >
-                        <ProductCover item={mainProduct} large />
-
-                        <div
-                          className="aska-home-secondary-grid"
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                            gap: "18px",
-                          }}
-                        >
-                          {secondaryProducts.map((item) => (
-                            <ProductCover key={item.id} item={item} />
-                          ))}
-                        </div>
-                      </div>
-                    ) : null}
-                  </section>
+                  </div>
                 );
               })}
             </div>
-          )}
+          </aside>
         </div>
-      </section>
+      )}
 
       <style>
         {`
-          
           :root {
             --aska-card-bg: #ffffff;
           }
 
-html,
+          html,
           body,
           #root {
             max-width: 100%;
@@ -891,91 +706,58 @@ html,
             box-sizing: border-box;
           }
 
-          .aska-home-products-wrap,
-          .aska-home-categories-grid,
-          .aska-home-category-section,
-          .aska-home-product-layout,
-          .aska-home-secondary-grid {
-            max-width: 100%;
-            min-width: 0;
-          }
-
-
-          .aska-home-category-section {
-            position: relative;
-          }
-
-          .aska-home-category-section::before {
-            content: "";
-            display: block;
-            width: 72px;
-            height: 1px;
-            margin-bottom: 26px;
-            background: linear-gradient(90deg, rgba(17,17,17,0.55), rgba(17,17,17,0));
-          }
-
-          .aska-home-category-section h3 {
-            color: #111111 !important;
-            text-shadow: none !important;
-          }
-
-          .aska-home-category-section a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 36px rgba(0,0,0,0.12) !important;
-          }
-
-          .aska-home-product-layout > a,
-          .aska-home-secondary-grid > a {
-            isolation: isolate;
-          }
-
-          .aska-home-product-layout > a::after,
-          .aska-home-secondary-grid > a::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 42%);
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            z-index: 5;
-          }
-
-          .aska-home-product-layout > a:hover::after,
-          .aska-home-secondary-grid > a:hover::after {
-            opacity: 1;
-          }
-
-          .aska-home-product-layout h4,
-          .aska-home-secondary-grid h4 {
-            text-shadow: 0 2px 18px rgba(0,0,0,0.5);
-          }
-
-
           .aska-hero-section {
             width: 100%;
           }
 
-          .aska-hero-section .aska-hero-media {
+          .aska-hero-media {
             position: absolute !important;
             inset: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            min-width: 100% !important;
-            min-height: 100% !important;
             object-fit: cover !important;
             object-position: center center !important;
             display: block !important;
             background: #000 !important;
+            filter: contrast(1.04) saturate(.96);
           }
 
+          .aska-hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+              linear-gradient(90deg, rgba(0,0,0,0.22), rgba(0,0,0,0.08) 42%, rgba(0,0,0,0.22)),
+              linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.42));
+          }
 
+          .aska-hero-logo {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            max-width: min(72vw, 620px);
+            object-fit: contain;
+            display: block;
+            z-index: 4;
+          }
 
+          .aska-hero-copy {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            padding: 8px 12px;
+            width: min(90vw, 1100px);
+          }
 
+          .aska-hero-copy h1 {
+            margin: 0;
+            line-height: .96;
+            letter-spacing: .01em;
+          }
 
-          .aska-lux-hero {
-            min-height: 100svh !important;
+          .aska-hero-copy p {
+            margin: -4px 0 0;
+            line-height: 1.15;
+            white-space: nowrap;
           }
 
           .aska-lux-hero::after {
@@ -985,76 +767,676 @@ html,
             right: 0;
             bottom: 0;
             height: 22%;
-            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.28));
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.32));
             pointer-events: none;
             z-index: 2;
           }
 
-          .aska-lux-intro p {
-            text-wrap: pretty;
+          .aska-editorial-intro {
+            background: #ffffff;
+            color: #111111;
+            padding: clamp(82px, 8vw, 136px) clamp(20px, 5vw, 72px);
           }
 
-          .aska-home-category-section h3,
-          .aska-home-category-section p {
-            color: #111111 !important;
+          .aska-editorial-intro > div {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+            gap: clamp(32px, 6vw, 100px);
+            align-items: end;
           }
 
-          .aska-home-product-layout > a,
-          .aska-home-secondary-grid > a {
-            background: #050505 !important;
-            color: #ffffff !important;
+          .aska-editorial-intro p,
+          .aska-rail-header p {
+            margin: 0;
+            color: rgba(17,17,17,.54);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .22em;
+            text-transform: uppercase;
           }
 
-          .aska-home-product-layout button,
-          .aska-home-secondary-grid button {
-            touch-action: manipulation;
+          .aska-editorial-intro h2 {
+            margin: 0;
+            font-size: clamp(3.4rem, 8vw, 8rem);
+            line-height: .82;
+            letter-spacing: -.078em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
           }
 
-          @media (min-width: 769px) {
-            .aska-hero-section .aska-hero-media {
-              object-position: center 38% !important;
+          .aska-editorial-intro span {
+            display: block;
+            max-width: 720px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: clamp(1rem, 1.42vw, 1.28rem);
+            line-height: 1.82;
+            font-weight: 300;
+            color: rgba(17,17,17,.68);
+          }
+
+          .aska-campaign-grid {
+            background: #ffffff;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0;
+            padding: 0 clamp(18px, 4vw, 52px) clamp(78px, 8vw, 128px);
+          }
+
+          .aska-campaign-tile {
+            position: relative;
+            min-height: 650px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            color: #ffffff;
+            text-decoration: none;
+            background: #080808;
+          }
+
+          .aska-campaign-tile.is-wide {
+            min-height: 720px;
+          }
+
+          .aska-campaign-tile img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: contrast(1.03) saturate(.94);
+            transform: scale(1.01);
+            transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s ease;
+          }
+
+          .aska-campaign-tile:hover img {
+            transform: scale(1.06);
+            filter: contrast(1.08) saturate(1.02);
+          }
+
+          .aska-campaign-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-size: clamp(5rem, 10vw, 12rem);
+            letter-spacing: -.08em;
+            color: rgba(255,255,255,.24);
+          }
+
+          .aska-campaign-gradient {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(180deg, transparent 42%, rgba(0,0,0,.62));
+          }
+
+          .aska-campaign-content {
+            position: relative;
+            z-index: 2;
+            padding: clamp(24px, 4vw, 50px);
+          }
+
+          .aska-campaign-content p {
+            margin: 0 0 12px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.72);
+          }
+
+          .aska-campaign-content h2 {
+            margin: 0 0 22px;
+            max-width: 640px;
+            font-size: clamp(2.6rem, 5.4vw, 6.8rem);
+            line-height: .86;
+            letter-spacing: -.065em;
+            text-transform: uppercase;
+            font-weight: 500 !important;
+          }
+
+          .aska-campaign-content span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 34px;
+            padding: 0 12px;
+            background: rgba(255,255,255,.92);
+            color: #111111;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+          }
+
+          .aska-campaign-content svg {
+            width: 15px;
+            height: 15px;
+          }
+
+          .aska-home-products-editorial {
+            background: #ffffff;
+            color: #111111;
+            padding: clamp(68px, 7vw, 110px) 0 clamp(84px, 8vw, 130px);
+          }
+
+          .aska-home-loading {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+            color: rgba(17,17,17,.62);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-product-rail-section {
+            margin-bottom: clamp(74px, 8vw, 132px);
+          }
+
+          .aska-product-rail-section:last-child {
+            margin-bottom: 0;
+          }
+
+          .aska-rail-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 0 clamp(22px, 5vw, 84px) 30px;
+          }
+
+          .aska-rail-header h2 {
+            margin: 8px 0 0;
+            font-size: clamp(2.4rem, 5.2vw, 6.4rem);
+            line-height: .82;
+            letter-spacing: -.07em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+          }
+
+          .aska-rail-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .aska-rail-controls a,
+          .aska-rail-controls button {
+            height: 38px;
+            min-width: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(17,17,17,.18);
+            background: transparent;
+            color: #111111;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            cursor: pointer;
+          }
+
+          .aska-product-rail {
+            display: flex;
+            gap: 22px;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scroll-snap-type: x mandatory;
+            padding: 0 clamp(22px, 5vw, 84px) 18px;
+            cursor: grab;
+            scrollbar-width: thin;
+          }
+
+          .aska-product-rail.is-dragging {
+            cursor: grabbing;
+            user-select: none;
+          }
+
+          .aska-rail-card {
+            flex: 0 0 clamp(220px, 20vw, 330px);
+            scroll-snap-align: start;
+            color: #111111;
+          }
+
+          .aska-rail-media {
+            position: relative;
+            display: block;
+            aspect-ratio: 4 / 5;
+            background: #f3f0ed;
+            overflow: hidden;
+            color: inherit;
+            text-decoration: none;
+          }
+
+          .aska-rail-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .72s cubic-bezier(.22,.61,.36,1), filter .72s ease;
+            filter: contrast(1.01) saturate(.96);
+          }
+
+          .aska-rail-card:hover .aska-rail-media img {
+            transform: scale(1.045);
+            filter: contrast(1.05) saturate(1.02);
+          }
+
+          .aska-rail-empty {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: rgba(17,17,17,.42);
+          }
+
+          .aska-rail-add {
+            position: absolute;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            border: none;
+            background: rgba(255,255,255,.90);
+            color: #111111;
+            padding: 8px 14px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .24s ease, transform .24s ease;
+          }
+
+          .aska-rail-add:hover {
+            background: #ffffff;
+            transform: translateX(-50%) translateY(-2px);
+          }
+
+          .aska-rail-info {
+            padding: 16px 0 0;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-rail-info h3 {
+            margin: 0 0 8px;
+            color: #4f4f4f;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .92rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+            line-height: 1.24;
+            text-transform: uppercase;
+          }
+
+          .aska-rail-info p {
+            margin: 0 0 12px;
+            color: #111111;
+            font-size: .95rem;
+            font-weight: 500;
+          }
+
+          .aska-rail-info span {
+            display: block;
+            margin-bottom: 12px;
+            color: rgba(17,17,17,.54);
+            font-size: .82rem;
+            line-height: 1.42;
+          }
+
+          .aska-rail-swatches {
+            display: flex;
+            gap: 8px;
+          }
+
+          .aska-rail-swatches button {
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            border: 1px solid rgba(17,17,17,.14);
+            background: transparent;
+            cursor: pointer;
+            opacity: .62;
+          }
+
+          .aska-rail-swatches button.active {
+            opacity: 1;
+            border-color: rgba(17,17,17,.68);
+          }
+
+          .aska-rail-swatches img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          .aska-home-footer-editorial {
+            background: #c9c0bd;
+            color: #111111;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 32px;
+            padding: clamp(42px, 5vw, 74px) clamp(24px, 5vw, 84px);
+            border-top: 1px solid rgba(17,17,17,.18);
+          }
+
+          .aska-home-footer-editorial h2 {
+            margin: 0 0 14px;
+            font-size: clamp(2.2rem, 5vw, 5rem);
+            line-height: .86;
+            letter-spacing: -.07em;
+          }
+
+          .aska-home-footer-editorial p {
+            margin: 0;
+            max-width: 720px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(17,17,17,.70);
+          }
+
+          .aska-home-footer-editorial a {
+            align-self: end;
+            color: #111111;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(17,17,17,.42);
+            padding-bottom: 5px;
+          }
+
+          .aska-whatsapp-button {
+            position: fixed;
+            right: 26px;
+            bottom: 26px;
+            z-index: 9998;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #050505;
+            color: #ffffff;
+            display: grid;
+            place-items: center;
+            text-decoration: none;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            box-shadow: 0 20px 54px rgba(0,0,0,.28);
+          }
+
+          .aska-cart-drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            background: rgba(0,0,0,.54);
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .aska-cart-drawer {
+            position: relative;
+            width: min(760px, 94vw);
+            height: 100vh;
+            overflow-y: auto;
+            background: #ffffff;
+            color: #111111;
+            padding: clamp(28px, 5vw, 58px);
+            box-shadow: -28px 0 80px rgba(0,0,0,.22);
+          }
+
+          .aska-cart-drawer-close {
+            position: absolute;
+            right: 28px;
+            top: 24px;
+            border: none;
+            background: transparent;
+            color: #111111;
+            font-size: 2.4rem;
+            line-height: 1;
+            cursor: pointer;
+          }
+
+          .aska-cart-drawer h2 {
+            margin: 0 0 70px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            font-weight: 600;
+          }
+
+          .aska-cart-drawer-product {
+            display: grid;
+            grid-template-columns: 190px 1fr;
+            gap: 28px;
+            align-items: start;
+            margin-bottom: 46px;
+          }
+
+          .aska-cart-drawer-product img,
+          .aska-cart-drawer-product > div:first-child {
+            width: 190px;
+            height: 230px;
+            background: #f4f4f4;
+            object-fit: cover;
+          }
+
+          .aska-cart-drawer-product h3 {
+            margin: 0 0 14px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: #5a5a5a;
+            font-size: 1.32rem;
+            line-height: 1.25;
+            text-transform: uppercase;
+            font-weight: 500;
+          }
+
+          .aska-cart-drawer-product p {
+            margin: 0 0 24px;
+            font-size: 1.08rem;
+          }
+
+          .aska-cart-drawer-product span {
+            color: rgba(17,17,17,.62);
+            font-size: 1rem;
+            line-height: 1.5;
+          }
+
+          .aska-cart-drawer-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+            margin-bottom: 54px;
+            background: #050505;
+            color: #ffffff;
+            text-decoration: none;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .94rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+          }
+
+          .aska-cart-drawer-tabs {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid rgba(17,17,17,.24);
+            margin-bottom: 28px;
+          }
+
+          .aska-cart-drawer-tabs button {
+            border: none;
+            background: transparent;
+            color: rgba(17,17,17,.62);
+            padding: 0 0 16px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 1.08rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+          }
+
+          .aska-cart-drawer-tabs button.active {
+            color: #111111;
+            border-bottom-color: #111111;
+          }
+
+          .aska-cart-drawer-suggestions {
+            display: grid;
+            gap: 22px;
+          }
+
+          .aska-cart-drawer-suggestion {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 24px;
+            align-items: start;
+          }
+
+          .aska-cart-drawer-suggestion img {
+            width: 150px;
+            height: 180px;
+            object-fit: cover;
+            background: #f4f4f4;
+          }
+
+          .aska-cart-drawer-suggestion h3 {
+            margin: 0 0 8px;
+            color: #5a5a5a;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            font-weight: 500;
+          }
+
+          .aska-cart-drawer-suggestion p {
+            margin: 0 0 18px;
+          }
+
+          .aska-cart-drawer-suggestion button {
+            border: none;
+            background: #f3f0ed;
+            color: #111111;
+            padding: 8px 14px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .84rem;
+            text-transform: uppercase;
+            cursor: pointer;
+          }
+
+          @media (max-width: 920px) {
+            .aska-editorial-intro > div,
+            .aska-home-footer-editorial {
+              grid-template-columns: 1fr;
+            }
+
+            .aska-campaign-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .aska-campaign-tile,
+            .aska-campaign-tile.is-wide {
+              min-height: 560px;
             }
           }
 
           @media (max-width: 768px) {
-
             .aska-lux-hero {
               min-height: 72svh !important;
             }
 
-            .aska-hero-section .aska-hero-media {
-              object-fit: cover !important;
+            .aska-hero-media {
               object-position: center center !important;
             }
 
-            .aska-home-product-layout {
-              grid-template-columns: 1fr !important;
-              gap: 18px !important;
+            .aska-hero-copy p {
+              white-space: normal;
             }
 
-            .aska-home-secondary-grid {
-              grid-template-columns: 1fr !important;
-              gap: 18px !important;
+            .aska-editorial-intro {
+              padding: 68px 18px;
             }
 
-            .aska-home-categories-grid {
-              gap: 54px !important;
+            .aska-editorial-intro h2 {
+              font-size: clamp(3rem, 16vw, 5.4rem);
             }
-          }
 
-          @media (max-width: 480px) {
-            .aska-home-products-wrap {
+            .aska-campaign-grid {
+              padding: 0 0 58px;
+            }
+
+            .aska-campaign-tile,
+            .aska-campaign-tile.is-wide {
+              min-height: 520px;
+            }
+
+            .aska-rail-header {
+              align-items: flex-start;
+              flex-direction: column;
+            }
+
+            .aska-rail-controls {
               width: 100%;
+              justify-content: space-between;
             }
 
-            .aska-home-product-layout,
-            .aska-home-secondary-grid {
-              width: 100%;
+            .aska-rail-card {
+              flex-basis: 72vw;
+            }
+
+            .aska-cart-drawer {
+              width: 100vw;
+              padding: 34px 22px;
+            }
+
+            .aska-cart-drawer h2 {
+              margin-bottom: 42px;
+            }
+
+            .aska-cart-drawer-product,
+            .aska-cart-drawer-suggestion {
+              grid-template-columns: 112px 1fr;
+              gap: 18px;
+            }
+
+            .aska-cart-drawer-product img,
+            .aska-cart-drawer-product > div:first-child {
+              width: 112px;
+              height: 142px;
+            }
+
+            .aska-cart-drawer-suggestion img {
+              width: 112px;
+              height: 142px;
+            }
+
+            .aska-whatsapp-button {
+              right: 18px;
+              bottom: 18px;
+              width: 58px;
+              height: 58px;
             }
           }
         `}
       </style>
-
     </>
   );
 }
