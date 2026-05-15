@@ -139,7 +139,7 @@ function ProductDetail() {
             minHeight: "100vh",
             background: "var(--aska-bg-secondary, #f5f5f5)",
             padding: "120px 24px 60px",
-            color: "var(--aska-text-primary, #111)",
+            color: "#ffffff",
           }}
         >
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -176,11 +176,11 @@ function ProductDetail() {
           <div
             className="aska-product-gallery-card"
             style={{
-              background: "var(--aska-card-bg, #ffffff)",
+              background: "rgba(10,10,10,0.96)",
               borderRadius: "34px",
-              border: "1px solid rgba(17,17,17,0.08)",
+              border: "1px solid rgba(255,255,255,0.08)",
               padding: "16px",
-              boxShadow: "0 30px 90px rgba(0,0,0,0.10)",
+              boxShadow: "0 40px 120px rgba(0,0,0,0.42)",
             }}
           >
             <p
@@ -335,25 +335,25 @@ function ProductDetail() {
           <aside
             className="aska-product-info-card"
             style={{
-              background: "var(--aska-card-bg, #ffffff)",
+              background: "rgba(10,10,10,0.96)",
               borderRadius: "34px",
-              border: "1px solid rgba(17,17,17,0.08)",
+              border: "1px solid rgba(255,255,255,0.08)",
               padding: "clamp(34px, 4vw, 56px)",
-              boxShadow: "0 30px 90px rgba(0,0,0,0.10)",
+              boxShadow: "0 40px 120px rgba(0,0,0,0.42)",
               position: "sticky",
               top: "108px",
-              color: "var(--aska-text-primary, #111)",
+              color: "#ffffff",
             }}
           >
             <h1
               style={{
                 margin: 0,
                 marginBottom: "18px",
-                fontSize: "clamp(2.8rem, 5.2vw, 5.8rem)",
+                fontSize: "clamp(2.4rem, 4.4vw, 4.8rem)",
                 lineHeight: 0.88,
                 letterSpacing: "-0.065em",
                 fontFamily: "var(--aska-font-family-primary, inherit)",
-                color: "var(--aska-text-primary, #111)",
+                color: "#ffffff",
               }}
             >
               {producto.nombre}
@@ -366,11 +366,11 @@ function ProductDetail() {
                 fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
                 fontWeight: 500,
                 letterSpacing: "0.04em",
-                color: "var(--aska-text-primary, #111)",
+                color: "#ffffff",
                 fontFamily: "var(--aska-font-family-primary, inherit)",
               }}
             >
-              {formatPrice(producto.precio)}
+              {"COP " + formatPrice(producto.precio).replace("COP","").trim()}
             </p>
 
             <p
@@ -382,7 +382,7 @@ function ProductDetail() {
                 fontSize: "1.02rem",
               }}
             >
-              {producto.descripcion}
+              {producto.descripcion || "Pieza diseñada para presencia brutalista, siluetas oscuras y expresión editorial."}
             </p>
 
             {producto?.categoria?.toLowerCase().includes("corporal") ? (
@@ -439,7 +439,7 @@ function ProductDetail() {
                 boxShadow: "0 14px 36px rgba(0,0,0,0.18)",
               }}
             >
-              Agregar al carrito
+              AÑADIR PIEZA
             </button>
 
             <a
@@ -465,8 +465,146 @@ function ProductDetail() {
         </div>
       </section>
 
+      
+      <section
+        style={{
+          marginTop: "72px",
+          padding: "0 24px 80px",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1320px",
+            margin: "0 auto",
+          }}
+        >
+          <p
+            style={{
+              margin: "0 0 12px",
+              color: "rgba(255,255,255,.42)",
+              fontSize: ".72rem",
+              letterSpacing: ".24em",
+              textTransform: "uppercase",
+              fontFamily: "var(--aska-font-family-secondary, inherit)",
+            }}
+          >
+            También podría interesarte
+          </p>
+
+          <h2
+            style={{
+              margin: 0,
+              color: "#ffffff",
+              fontSize: "clamp(2rem,4vw,4.2rem)",
+              letterSpacing: "-.06em",
+              lineHeight: ".92",
+              marginBottom: "28px",
+            }}
+          >
+            MÁS PIEZAS
+            <br />
+            EDITORIALES
+          </h2>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+              gap: "18px",
+            }}
+          >
+            {imagenesProducto.slice(0,3).map((img,index)=>(
+              <div
+                key={index}
+                style={{
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                  background: "#111111",
+                  border: "1px solid rgba(255,255,255,.08)",
+                }}
+              >
+                <img
+                  src={img}
+                  alt={`Editorial ${index + 1}`}
+                  style={{
+                    width: "100%",
+                    height: "420px",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
       <style>
         {`
+
+          .aska-product-detail-page {
+            position: relative;
+            overflow: hidden;
+          }
+
+          .aska-product-detail-page::before {
+            content: "";
+            position: absolute;
+            inset: -10%;
+            background:
+              radial-gradient(circle at 12% 8%, rgba(255,255,255,.08), transparent 28%),
+              radial-gradient(circle at 82% 14%, rgba(255,255,255,.05), transparent 30%);
+            pointer-events: none;
+          }
+
+          .aska-product-gallery-card,
+          .aska-product-info-card {
+            backdrop-filter: blur(18px);
+          }
+
+          .aska-product-gallery-card {
+            overflow: hidden;
+          }
+
+          .aska-product-image-frame {
+            border: 1px solid rgba(255,255,255,.08);
+          }
+
+          .aska-product-info-card h1 {
+            text-transform: uppercase;
+            text-wrap: balance;
+          }
+
+          .aska-product-info-card::before {
+            color: rgba(255,255,255,.42) !important;
+          }
+
+          .aska-product-gallery-card > p {
+            color: rgba(255,255,255,.46) !important;
+          }
+
+          .aska-product-info-card p {
+            color: rgba(255,255,255,.72);
+          }
+
+          .aska-product-thumbs button {
+            background: rgba(255,255,255,.04) !important;
+            border: 1px solid rgba(255,255,255,.08) !important;
+          }
+
+          .aska-add-to-cart-button {
+            background: #ffffff !important;
+            color: #0b0b0b !important;
+            font-weight: 700 !important;
+            letter-spacing: .22em !important;
+          }
+
+          .aska-add-to-cart-button:hover {
+            transform: translateY(-3px);
+          }
+
+
           :root {
             --aska-card-bg: #111111;
           }
@@ -618,6 +756,8 @@ function ProductDetail() {
 
             .aska-add-to-cart-button {
               width: 100% !important;
+              position: sticky;
+              bottom: 10px;
               min-width: 0 !important;
             }
 
