@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import mwakiAudio from "./assets/audio/mwaki.mp3";
+import ritmoAudio from "./assets/audio/ritmo.mp3";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Confirmacion from "./pages/Confirmacion";
 
@@ -43,6 +45,9 @@ function AdminRoute({ children }) {
 
 function App() {
   const [secretActive, setSecretActive] = useState(false);
+  const [musicMuted, setMusicMuted] = useState(false);
+  const [musicPlaying, setMusicPlaying] = useState(true);
+  const [currentTrack, setCurrentTrack] = useState(0);
 
   const [cmsLoaded, setCmsLoaded] = useState(false);
 
@@ -57,6 +62,20 @@ function App() {
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
+  const audioRef = useRef(null);
+
+  const tracks = [
+    {
+      title: "Mwaki",
+      artist: "Zerb",
+      src: mwakiAudio,
+    },
+    {
+      title: "Ritmo",
+      artist: "Raffa FL",
+      src: ritmoAudio,
+    },
+  ];
 
 
   useEffect(() => {
@@ -156,6 +175,24 @@ function App() {
     cargarCmsVisual();
   }, []);
 
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    audioRef.current.volume = 0.34;
+    audioRef.current.muted = musicMuted;
+
+    if (musicPlaying) {
+      audioRef.current.play().catch(() => {});
+    } else {
+      audioRef.current.pause();
+    }
+  }, [musicMuted, musicPlaying, currentTrack]);
+
+  const handleNextTrack = () => {
+    setCurrentTrack((prev) => (prev + 1) % tracks.length);
+  };
+
   const handleSecretAreaClick = (e) => {
     const isLogoZone = e.clientX <= 150 && e.clientY <= 95;
     const text = String(e.target?.textContent || "").toLowerCase();
@@ -238,6 +275,76 @@ function App() {
             color:inherit;
             text-decoration:none;
           }
+
+          .aska-music-player{
+            position:fixed;
+            left:24px;
+            bottom:24px;
+            z-index:99999;
+            min-width:290px;
+            padding:16px 18px;
+            background:rgba(8,8,8,0.82);
+            border:1px solid rgba(255,255,255,0.12);
+            backdrop-filter:blur(20px) saturate(120%);
+            -webkit-backdrop-filter:blur(20px) saturate(120%);
+            color:#ffffff;
+            box-shadow:0 24px 70px rgba(0,0,0,0.28);
+          }
+
+          .aska-music-player-info span{
+            display:block;
+            margin-bottom:6px;
+            color:rgba(255,255,255,0.48);
+            font-size:0.62rem;
+            font-weight:700;
+            letter-spacing:0.18em;
+            text-transform:uppercase;
+          }
+
+          .aska-music-player-info strong{
+            display:block;
+            font-size:1rem;
+            font-weight:600;
+            letter-spacing:0.04em;
+          }
+
+          .aska-music-player-info small{
+            display:block;
+            margin-top:3px;
+            color:rgba(255,255,255,0.58);
+            font-size:0.78rem;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+          }
+
+          .aska-music-player-controls{
+            display:flex;
+            gap:10px;
+            margin-top:14px;
+          }
+
+          .aska-music-player-controls button{
+            min-height:34px;
+            padding:0 12px;
+            border:none;
+            background:rgba(255,255,255,0.08);
+            color:#ffffff;
+            cursor:pointer;
+            font-size:0.66rem;
+            font-weight:700;
+            letter-spacing:0.14em;
+            text-transform:uppercase;
+            transition:
+              background .24s ease,
+              transform .24s ease;
+          }
+
+          .aska-music-player-controls button:hover{
+            background:rgba(255,255,255,0.16);
+            transform:translateY(-1px);
+          }
+
+
         `}
       </style>
 
@@ -353,6 +460,48 @@ function App() {
             </style>
           </div>
         )}
+
+
+        <audio
+          ref={audioRef}
+          src={tracks[currentTrack].src}
+          autoPlay
+          onEnded={handleNextTrack}
+        />
+
+        <div className="aska-music-player">
+          <div className="aska-music-player-info">
+            <span>Now playing</span>
+            <strong>{tracks[currentTrack].title}</strong>
+            <small>{tracks[currentTrack].artist}</small>
+          </div>
+
+          <div className="aska-music-player-controls">
+            <button
+              type="button"
+              onClick={() => setMusicPlaying((prev) => !prev)}
+              aria-label={musicPlaying ? "Pausar música" : "Reproducir música"}
+            >
+              {musicPlaying ? "Pause" : "Play"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleNextTrack}
+              aria-label="Siguiente canción"
+            >
+              Next
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMusicMuted((prev) => !prev)}
+              aria-label={musicMuted ? "Activar sonido" : "Silenciar"}
+            >
+              {musicMuted ? "Muted" : "Sound"}
+            </button>
+          </div>
+        </div>
 
         <Routes>
           <Route path="/" element={<Home />} />
