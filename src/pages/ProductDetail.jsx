@@ -158,8 +158,8 @@ function ProductDetail() {
         className="aska-product-detail-page"
         style={{
           minHeight: "100vh",
-          background: "var(--aska-bg-secondary, #f3f3f3)",
-          padding: "42px 24px 60px",
+          background: "linear-gradient(180deg, #f8f3f0 0%, #efe7e4 48%, #f8f3f0 100%)",
+          padding: "clamp(96px, 9vw, 132px) 24px clamp(72px, 8vw, 118px)",
         }}
       >
         <div
@@ -168,8 +168,8 @@ function ProductDetail() {
             maxWidth: "1320px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, 0.9fr)",
-            gap: "32px",
+            gridTemplateColumns: "minmax(0, 1.18fr) minmax(340px, 0.82fr)",
+            gap: "clamp(28px, 4vw, 64px)",
             alignItems: "start",
           }}
         >
@@ -177,10 +177,10 @@ function ProductDetail() {
             className="aska-product-gallery-card"
             style={{
               background: "var(--aska-card-bg, #ffffff)",
-              borderRadius: "26px",
-              border: "1px solid rgba(0,0,0,0.08)",
-              padding: "18px",
-              boxShadow: "0 18px 45px rgba(0,0,0,0.08)",
+              borderRadius: "34px",
+              border: "1px solid rgba(17,17,17,0.08)",
+              padding: "16px",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.10)",
             }}
           >
             <p
@@ -201,10 +201,10 @@ function ProductDetail() {
               style={{
                 position: "relative",
                 width: "100%",
-                height: "520px",
-                minHeight: "380px",
-                background: "#f8f8f8",
-                borderRadius: "22px",
+                height: "clamp(520px, 62vw, 740px)",
+                minHeight: "420px",
+                background: "#f4eee9",
+                borderRadius: "28px",
                 overflow: "hidden",
                 display: "flex",
                 alignItems: "center",
@@ -332,10 +332,10 @@ function ProductDetail() {
             className="aska-product-info-card"
             style={{
               background: "var(--aska-card-bg, #ffffff)",
-              borderRadius: "26px",
-              border: "1px solid rgba(0,0,0,0.08)",
-              padding: "40px",
-              boxShadow: "0 18px 45px rgba(0,0,0,0.08)",
+              borderRadius: "34px",
+              border: "1px solid rgba(17,17,17,0.08)",
+              padding: "clamp(34px, 4vw, 56px)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.10)",
               position: "sticky",
               top: "108px",
               color: "var(--aska-text-primary, #111)",
@@ -345,8 +345,9 @@ function ProductDetail() {
               style={{
                 margin: 0,
                 marginBottom: "18px",
-                fontSize: "clamp(2.2rem, 4vw, 3.8rem)",
-                lineHeight: 1.02,
+                fontSize: "clamp(2.8rem, 5.2vw, 5.8rem)",
+                lineHeight: 0.88,
+                letterSpacing: "-0.065em",
                 fontFamily: "var(--aska-font-family-primary, inherit)",
                 color: "var(--aska-text-primary, #111)",
               }}
@@ -358,8 +359,9 @@ function ProductDetail() {
               style={{
                 margin: 0,
                 marginBottom: "22px",
-                fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                fontWeight: 700,
+                fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
                 color: "var(--aska-text-primary, #111)",
                 fontFamily: "var(--aska-font-family-primary, inherit)",
               }}
@@ -373,7 +375,7 @@ function ProductDetail() {
                 marginBottom: "28px",
                 color: "var(--aska-text-primary, #2b2b2b)",
                 lineHeight: 1.8,
-                fontSize: "1.05rem",
+                fontSize: "1.02rem",
               }}
             >
               {producto.descripcion}
@@ -420,9 +422,11 @@ function ProductDetail() {
                 background: "var(--aska-bg-primary, #0b0b0b)",
                 color: "var(--aska-text-secondary, #fff)",
                 borderRadius: "0",
-                padding: "18px 28px",
-                fontSize: "1rem",
-                fontWeight: 700,
+                padding: "17px 30px",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
                 cursor: "pointer",
                 minWidth: "240px",
                 transition: "transform .22s ease, opacity .22s ease, background .22s ease",
@@ -481,6 +485,81 @@ function ProductDetail() {
           .aska-product-thumbs {
             max-width: 100%;
             min-width: 0;
+          }
+
+
+
+          .aska-product-detail-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+              radial-gradient(circle at 12% 8%, rgba(255,255,255,0.70), transparent 28%),
+              radial-gradient(circle at 86% 12%, rgba(17,17,17,0.08), transparent 34%);
+            z-index: 0;
+          }
+
+          .aska-product-detail-grid {
+            position: relative;
+            z-index: 1;
+          }
+
+          .aska-product-gallery-card > p {
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-weight: 600;
+            color: rgba(17,17,17,0.46) !important;
+          }
+
+          .aska-product-image-frame img {
+            filter: contrast(1.02) saturate(0.96);
+            transition:
+              transform .72s cubic-bezier(.22,.61,.36,1),
+              filter .72s ease;
+          }
+
+          .aska-product-image-frame:hover img {
+            transform: scale(1.018);
+            filter: contrast(1.05) saturate(1.02);
+          }
+
+          .aska-product-info-card::before {
+            content: "AŞKA PIECE";
+            display: block;
+            margin-bottom: 18px;
+            color: rgba(17,17,17,0.42);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+          }
+
+          .aska-product-info-card p {
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-add-to-cart-button {
+            width: 100%;
+            margin-top: 8px;
+            box-shadow: none !important;
+          }
+
+          .aska-add-to-cart-button:hover {
+            background: #1a1a1a !important;
+            box-shadow: 0 20px 46px rgba(0,0,0,0.18) !important;
+          }
+
+          .aska-product-thumbs button {
+            transition:
+              transform .24s ease,
+              opacity .24s ease,
+              border-color .24s ease;
+          }
+
+          .aska-product-thumbs button:hover {
+            transform: translateY(-2px);
+            opacity: .92;
           }
 
           @media (max-width: 768px) {
