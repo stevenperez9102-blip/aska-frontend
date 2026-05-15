@@ -426,8 +426,8 @@ function MisPedidos() {
                 const estadoPago = normalizarEstadoPago(pedido.estado_pago);
 
                 const wa = `https://wa.me/573125183100?text=${encodeURIComponent(
-                  `Hola AŞKA, quiero hacer seguimiento a mi pedido #${pedido.id}. Estado actual: ${pedido.estado}. Pago: ${estadoPago}.`
-                )}`;
+  `Hola AŞKA, quiero hacer seguimiento a mi pedido #${pedido.id}. Estado actual: ${pedido.estado_pago}`
+)}`;
 
                 return (
                   <article
