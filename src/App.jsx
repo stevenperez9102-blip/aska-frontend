@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import mwakiAudio from "./assets/audio/mwaki.mp3";
-import ritmoAudio from "./assets/audio/ritmo.mp3";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Confirmacion from "./pages/Confirmacion";
 
@@ -46,7 +44,7 @@ function AdminRoute({ children }) {
 function App() {
   const [secretActive, setSecretActive] = useState(false);
   const [musicMuted, setMusicMuted] = useState(false);
-  const [musicPlaying, setMusicPlaying] = useState(true);
+  const [musicPlaying, setMusicPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
 
   const [cmsLoaded, setCmsLoaded] = useState(false);
@@ -68,12 +66,12 @@ function App() {
     {
       title: "Mwaki",
       artist: "Zerb",
-      src: mwakiAudio,
+      src: "/audio/mwaki.mp3",
     },
     {
       title: "Ritmo",
       artist: "Raffa FL",
-      src: ritmoAudio,
+      src: "/audio/ritmo.mp3",
     },
   ];
 
@@ -179,11 +177,13 @@ function App() {
   useEffect(() => {
     if (!audioRef.current) return;
 
-    audioRef.current.volume = 0.34;
+    audioRef.current.volume = 0.32;
     audioRef.current.muted = musicMuted;
 
     if (musicPlaying) {
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => {
+        setMusicPlaying(false);
+      });
     } else {
       audioRef.current.pause();
     }
@@ -191,6 +191,7 @@ function App() {
 
   const handleNextTrack = () => {
     setCurrentTrack((prev) => (prev + 1) % tracks.length);
+    setMusicPlaying(true);
   };
 
   const handleSecretAreaClick = (e) => {
@@ -344,6 +345,20 @@ function App() {
             transform:translateY(-1px);
           }
 
+          @media (max-width:768px){
+            .aska-music-player{
+              left:14px;
+              bottom:14px;
+              min-width:auto;
+              width:calc(100vw - 28px);
+              padding:13px 14px;
+            }
+
+            .aska-music-player-controls{
+              flex-wrap:wrap;
+            }
+          }
+
 
         `}
       </style>
@@ -465,7 +480,6 @@ function App() {
         <audio
           ref={audioRef}
           src={tracks[currentTrack].src}
-          autoPlay
           onEnded={handleNextTrack}
         />
 
