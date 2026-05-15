@@ -9,23 +9,37 @@ function Confirmacion() {
       <section
         style={{
           minHeight: "100vh",
-          background: "var(--aska-bg-secondary, #f5f5f5)",
+          background: "#050505",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           padding: "40px 20px",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
         <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at center, rgba(255,255,255,.08), transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        <div
           className="aska-confirm-card"
           style={{
-            background: "var(--aska-card-bg, #fff)",
+            background: "rgba(12,12,12,0.92)",
             borderRadius: "30px",
             padding: "40px 30px",
             maxWidth: "600px",
             width: "100%",
             textAlign: "center",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.1)",
+            boxShadow: "0 30px 90px rgba(0,0,0,0.42)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            backdropFilter: "blur(18px)",
           }}
         >
           <div
@@ -34,7 +48,7 @@ function Confirmacion() {
               marginBottom: "20px",
             }}
           >
-            💎
+            ✦
           </div>
 
           <h1
@@ -42,23 +56,25 @@ function Confirmacion() {
               fontSize: "clamp(2rem,5vw,3rem)",
               marginBottom: "10px",
               fontWeight: "900",
+              letterSpacing: "-0.06em",
+              lineHeight: ".92",
               fontFamily: "var(--aska-font-family-primary, inherit)",
             }}
           >
-            Pedido confirmado
+            PEDIDO CONFIRMADO
           </h1>
 
           <p
             style={{
-              color: "var(--aska-text-muted, #555)",
+              color: "rgba(255,255,255,0.68)",
               lineHeight: "1.6",
               marginBottom: "25px",
               fontWeight: "500",
               fontFamily: "var(--aska-font-family-secondary, inherit)",
             }}
           >
-            Tu pedido ha sido registrado correctamente.
-            En cuanto el pago sea confirmado, comenzaremos a preparar tu pieza AŞKA.
+            Tu pieza está siendo preparada por AŞKA.
+            Pronto recibirás la confirmación y seguimiento de tu pedido.
           </p>
 
           <div
@@ -68,7 +84,7 @@ function Confirmacion() {
               borderRadius: "18px",
               marginBottom: "25px",
               fontSize: "0.95rem",
-              color: "var(--aska-text-muted, #555)",
+              color: "rgba(255,255,255,0.68)",
             }}
           >
             ✨ Cada pieza es preparada con dedicación y detalle para ti.
@@ -91,7 +107,7 @@ function Confirmacion() {
                 width: "100%",
               }}
             >
-              Seguir comprando
+              VOLVER AL CATÁLOGO
             </button>
           </Link>
 
@@ -99,7 +115,7 @@ function Confirmacion() {
             <button
               style={{
                 border: "1px solid var(--aska-bg-primary, #111)",
-                background: "var(--aska-card-bg, #fff)",
+                background: "rgba(12,12,12,0.92)",
                 color: "var(--aska-text-primary, #111)",
                 padding: "14px 24px",
                 borderRadius: "999px",
@@ -110,9 +126,28 @@ function Confirmacion() {
                 transition: "transform .22s ease, opacity .22s ease",
               }}
             >
-              Ver mis pedidos
+              SEGUIR MI PEDIDO
             </button>
           </Link>
+
+          <a
+            href={`https://wa.me/573125183100?text=${encodeURIComponent(
+              "Hola ASKA, necesito ayuda con mi pedido."
+            )}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "block",
+              marginTop: "18px",
+              color: "rgba(255,255,255,0.62)",
+              textDecoration: "none",
+              letterSpacing: ".08em",
+              fontSize: ".88rem",
+              fontFamily: "var(--aska-font-family-secondary, inherit)",
+            }}
+          >
+            Hablar con ASKA
+          </a>
         </div>
       </section>
 
@@ -124,8 +159,8 @@ function Confirmacion() {
 
           .aska-confirm-card{
             transition:
-              transform .28s ease,
-              box-shadow .28s ease;
+              transform .42s cubic-bezier(.22,.61,.36,1),
+              box-shadow .42s ease;
           }
 
           .aska-confirm-card:hover{
@@ -134,7 +169,7 @@ function Confirmacion() {
           }
 
           button:hover{
-            transform:translateY(-2px);
+            transform:translateY(-3px);
             opacity:.97;
           }
         `}
