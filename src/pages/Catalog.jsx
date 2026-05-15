@@ -935,7 +935,7 @@ function Catalog() {
             width: 100%;
             text-decoration: none;
             color: #ffffff;
-            border-radius: 22px;
+            border-radius: 28px;
             overflow: hidden;
             background: #050505;
             border: 1px solid rgba(17,17,17,0.10);
@@ -1117,7 +1117,7 @@ function Catalog() {
             font-size: 1.4rem;
             line-height: 1;
             cursor: pointer;
-            opacity: 0;
+            opacity: 1;
             transition:
               opacity .28s ease,
               background .28s ease,
@@ -1262,7 +1262,7 @@ function Catalog() {
             right: 18px;
             top: 18px;
             z-index: 7;
-            min-height: 38px;
+            min-height: 46px;
             padding: 0 13px;
             border: 1px solid rgba(255,255,255,0.38);
             border-radius: 999px;
@@ -1272,7 +1272,7 @@ function Catalog() {
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            opacity: 0;
+            opacity: 1;
             transform: translateY(-6px);
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             font-size: 0.7rem;
@@ -1339,7 +1339,7 @@ function Catalog() {
 
           @keyframes askaToastReveal {
             from {
-              opacity: 0;
+              opacity: 1;
               transform: translateY(14px);
             }
             to {
@@ -1683,27 +1683,29 @@ function Catalog() {
           }
 
           .aska-catalog-rail-top button {
-            width: 38px;
-            height: 38px;
+            width: 46px;
+            height: 46px;
             border-radius: 999px;
             border: 1px solid rgba(17,17,17,.14);
-            background: rgba(255,255,255,.76);
+            background: rgba(255,255,255,.96);
             color: #111111;
             cursor: pointer;
-            font-size: 1.24rem;
+            font-size: 1.6rem;
             line-height: 1;
-            box-shadow: 0 12px 28px rgba(0,0,0,.08);
+            box-shadow: 0 18px 38px rgba(0,0,0,.18);
           }
 
           .aska-catalog-product-rail {
             display: flex !important;
             gap: clamp(18px, 2vw, 28px);
-            overflow-x: auto;
+            overflow-x: auto !important;
             overflow-y: hidden;
             scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
             overscroll-behavior-x: contain;
             padding: 0 0 18px;
             scrollbar-width: thin;
+            padding-bottom: 24px;
           }
 
           .aska-catalog-rail-item {
@@ -1962,8 +1964,8 @@ function Catalog() {
 
             .aska-editorial-thumb,
             .aska-editorial-card.is-featured .aska-editorial-thumb {
-              width: 38px;
-              height: 38px;
+              width: 46px;
+              height: 46px;
             }
           }
         `}
