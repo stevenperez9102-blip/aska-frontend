@@ -37,6 +37,34 @@ function ClassicBagIcon() {
   );
 }
 
+
+function SearchIcon() {
+  return (
+    <svg
+      className="aska-search-icon-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="10.8"
+        cy="10.8"
+        r="6.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.45"
+      />
+      <path
+        d="M15.4 15.4L21 21"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,6 +76,9 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartLuxPulse, setCartLuxPulse] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchProducts, setSearchProducts] = useState([]);
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
@@ -71,6 +102,27 @@ function Navbar() {
       )
     : 0;
 
+
+  const searchResults = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+
+    if (!term) return [];
+
+    return searchProducts
+      .filter((item) => {
+        const nombre = String(item?.nombre || "").toLowerCase();
+        const categoria = String(item?.categoria || "").toLowerCase();
+        const descripcion = String(item?.descripcion || "").toLowerCase();
+
+        return (
+          nombre.includes(term) ||
+          categoria.includes(term) ||
+          descripcion.includes(term)
+        );
+      })
+      .slice(0, 6);
+  }, [searchProducts, searchTerm]);
+
   const categorias = useMemo(
     () => ["Collares", "Accesorios corporales", "Pulseras", "Aretes y anillos"],
     []
@@ -80,7 +132,25 @@ function Navbar() {
     setMobileOpen(false);
     setShowCatalogMenu(false);
     setShowPurchasesMenu(false);
+    setSearchOpen(false);
+    setSearchTerm("");
   }, [location.pathname]);
+
+
+  useEffect(() => {
+    const cargarProductosBusqueda = async () => {
+      try {
+        const response = await fetch("https://aska-backend-nyx8.onrender.com/api/productos");
+        const data = await response.json();
+        setSearchProducts(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error cargando productos para búsqueda:", error);
+        setSearchProducts([]);
+      }
+    };
+
+    cargarProductosBusqueda();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -133,6 +203,8 @@ function Navbar() {
     setMobileOpen(false);
     setShowCatalogMenu(false);
     setShowPurchasesMenu(false);
+    setSearchOpen(false);
+    setSearchTerm("");
   };
 
   const linkStyle = (active = false) => ({
@@ -223,6 +295,19 @@ function Navbar() {
       clickCountRef.current = 0;
       navigate("/");
     }, 450);
+  };
+
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+
+    const term = searchTerm.trim();
+    if (!term) return;
+
+    navigate(`/catalogo?buscar=${encodeURIComponent(term)}`);
+    setSearchOpen(false);
+    setSearchTerm("");
+    closeMobileMenu();
   };
 
   const dropdownLinkStyle = {
@@ -463,6 +548,54 @@ function Navbar() {
             )}
           </nav>
 
+
+          <div className={`aska-navbar-search ${searchOpen ? "is-open" : ""}`}>
+            <button
+              type="button"
+              className="aska-navbar-search-trigger"
+              onClick={() => setSearchOpen((value) => !value)}
+              aria-label={searchOpen ? "Cerrar búsqueda" : "Buscar productos"}
+            >
+              <SearchIcon />
+            </button>
+
+            {searchOpen && (
+              <form className="aska-navbar-search-panel" onSubmit={handleSearchSubmit}>
+                <input
+                  autoFocus
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Buscar piezas"
+                  aria-label="Buscar productos"
+                />
+
+                {searchTerm.trim() && (
+                  <div className="aska-navbar-search-results">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={`/producto/${item.id}`}
+                          onClick={() => {
+                            setSearchOpen(false);
+                            setSearchTerm("");
+                            closeMobileMenu();
+                          }}
+                        >
+                          <span>{item.nombre}</span>
+                          <small>{item.categoria || "AŞKA"}</small>
+                        </Link>
+                      ))
+                    ) : (
+                      <p>No encontramos piezas con ese nombre.</p>
+                    )}
+                  </div>
+                )}
+              </form>
+            )}
+          </div>
+
           <Link
             to="/cart"
             className={`aska-navbar-cart ${cartLuxPulse ? "aska-navbar-cart-lux-pulse" : ""}`}
@@ -540,7 +673,7 @@ function Navbar() {
             width: 100%;
             margin: 0;
             min-height: 78px;
-            padding: 0 92px 0 18px;
+            padding: 0 138px 0 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -713,10 +846,129 @@ function Navbar() {
             opacity: 1 !important;
           }
 
+
+          .aska-navbar-search {
+            position: absolute;
+            top: 50%;
+            right: 74px;
+            transform: translateY(-50%);
+            z-index: 10003;
+          }
+
+          .aska-navbar-search-trigger {
+            width: 38px;
+            height: 42px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.84);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition:
+              color .28s ease,
+              transform .28s ease,
+              opacity .28s ease;
+          }
+
+          .aska-navbar-search-trigger:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+          }
+
+          .aska-search-icon-svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+          }
+
+          .aska-navbar-search-panel {
+            position: absolute;
+            top: 48px;
+            right: -46px;
+            width: min(420px, calc(100vw - 32px));
+            background: rgba(9,9,9,0.92);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(24px) saturate(118%);
+            -webkit-backdrop-filter: blur(24px) saturate(118%);
+            box-shadow: 0 22px 64px rgba(0,0,0,0.32);
+            padding: 14px;
+            animation: askaSearchReveal .26s ease both;
+          }
+
+          .aska-navbar-search-panel input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+            outline: none;
+            padding: 0 14px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.86rem;
+            letter-spacing: 0.04em;
+          }
+
+          .aska-navbar-search-panel input::placeholder {
+            color: rgba(255,255,255,0.44);
+          }
+
+          .aska-navbar-search-results {
+            display: grid;
+            gap: 4px;
+            margin-top: 12px;
+            max-height: 318px;
+            overflow-y: auto;
+          }
+
+          .aska-navbar-search-results a {
+            display: grid;
+            gap: 4px;
+            padding: 13px 12px;
+            color: rgba(255,255,255,0.84);
+            text-decoration: none;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            transition:
+              background .24s ease,
+              color .24s ease,
+              padding-left .24s ease;
+          }
+
+          .aska-navbar-search-results a:hover {
+            background: rgba(255,255,255,0.055);
+            color: #ffffff;
+            padding-left: 16px;
+          }
+
+          .aska-navbar-search-results span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+
+          .aska-navbar-search-results small {
+            color: rgba(255,255,255,0.46);
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+          }
+
+          .aska-navbar-search-results p {
+            margin: 0;
+            padding: 14px 12px 4px;
+            color: rgba(255,255,255,0.58);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.82rem;
+            line-height: 1.5;
+          }
+
           .aska-navbar-cart {
             position: absolute;
             top: 50%;
-            right: 26px;
+            right: 28px;
             transform: translateY(-50%);
             z-index: 10002;
             width: 38px;
@@ -906,6 +1158,17 @@ function Navbar() {
             line-height: 1.35;
           }
 
+          @keyframes askaSearchReveal {
+            from {
+              opacity: 0;
+              transform: translateY(8px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
           @keyframes askaMenuReveal {
             from {
               opacity: 0;
@@ -986,7 +1249,7 @@ function Navbar() {
             }
 
             .aska-navbar-inner {
-              padding: 10px 108px 10px 16px !important;
+              padding: 10px 144px 10px 16px !important;
               min-height: 66px !important;
             }
 
@@ -1005,7 +1268,7 @@ function Navbar() {
             .aska-hamburger {
               display: flex;
               position: absolute;
-              right: 60px;
+              right: 58px;
               top: 50%;
               transform: translateY(-50%);
               width: 42px;
@@ -1108,7 +1371,126 @@ function Navbar() {
               margin: 0 18px 8px;
             }
 
-            .aska-navbar-cart {
+  
+          .aska-navbar-search {
+            position: absolute;
+            top: 50%;
+            right: 74px;
+            transform: translateY(-50%);
+            z-index: 10003;
+          }
+
+          .aska-navbar-search-trigger {
+            width: 38px;
+            height: 42px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.84);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition:
+              color .28s ease,
+              transform .28s ease,
+              opacity .28s ease;
+          }
+
+          .aska-navbar-search-trigger:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+          }
+
+          .aska-search-icon-svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+          }
+
+          .aska-navbar-search-panel {
+            position: absolute;
+            top: 48px;
+            right: -46px;
+            width: min(420px, calc(100vw - 32px));
+            background: rgba(9,9,9,0.92);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(24px) saturate(118%);
+            -webkit-backdrop-filter: blur(24px) saturate(118%);
+            box-shadow: 0 22px 64px rgba(0,0,0,0.32);
+            padding: 14px;
+            animation: askaSearchReveal .26s ease both;
+          }
+
+          .aska-navbar-search-panel input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+            outline: none;
+            padding: 0 14px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.86rem;
+            letter-spacing: 0.04em;
+          }
+
+          .aska-navbar-search-panel input::placeholder {
+            color: rgba(255,255,255,0.44);
+          }
+
+          .aska-navbar-search-results {
+            display: grid;
+            gap: 4px;
+            margin-top: 12px;
+            max-height: 318px;
+            overflow-y: auto;
+          }
+
+          .aska-navbar-search-results a {
+            display: grid;
+            gap: 4px;
+            padding: 13px 12px;
+            color: rgba(255,255,255,0.84);
+            text-decoration: none;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            transition:
+              background .24s ease,
+              color .24s ease,
+              padding-left .24s ease;
+          }
+
+          .aska-navbar-search-results a:hover {
+            background: rgba(255,255,255,0.055);
+            color: #ffffff;
+            padding-left: 16px;
+          }
+
+          .aska-navbar-search-results span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+
+          .aska-navbar-search-results small {
+            color: rgba(255,255,255,0.46);
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+          }
+
+          .aska-navbar-search-results p {
+            margin: 0;
+            padding: 14px 12px 4px;
+            color: rgba(255,255,255,0.58);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.82rem;
+            line-height: 1.5;
+          }
+
+          .aska-navbar-cart {
               right: 16px;
               min-width: 34px;
               width: 34px;
