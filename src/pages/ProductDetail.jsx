@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { CartContext } from "../context/CartContext";
 
@@ -46,6 +46,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [error, setError] = useState("");
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
     const cargarProducto = async () => {
@@ -72,6 +73,39 @@ function ProductDetail() {
 
     cargarProducto();
   }, [id]);
+
+  useEffect(() => {
+    const cargarRelacionados = async () => {
+      if (!producto?.categoria) {
+        setRelatedProducts([]);
+        return;
+      }
+
+      try {
+        const response = await fetch("https://aska-backend-nyx8.onrender.com/api/productos");
+        const data = await response.json();
+
+        const items = Array.isArray(data) ? data : [];
+
+        const relacionados = items
+          .filter((item) => {
+            const sameCategory =
+              String(item.categoria || "").toLowerCase() ===
+              String(producto.categoria || "").toLowerCase();
+
+            return sameCategory && String(item.id) !== String(producto.id);
+          })
+          .slice(0, 6);
+
+        setRelatedProducts(relacionados);
+      } catch (error) {
+        console.error("Error cargando productos relacionados:", error);
+        setRelatedProducts([]);
+      }
+    };
+
+    cargarRelacionados();
+  }, [producto]);
 
   const imagenesProducto = useMemo(() => {
     if (!producto) return [];
@@ -464,81 +498,48 @@ function ProductDetail() {
           </aside>
         </div>
       </section>
+      {relatedProducts.length > 0 && (
+        <section className="aska-related-products-section">
+          <div className="aska-related-products-wrap">
+            <p className="aska-related-kicker">También podría interesarte</p>
 
-      
-      <section
-        style={{
-          marginTop: "72px",
-          padding: "0 24px 80px",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1320px",
-            margin: "0 auto",
-          }}
-        >
-          <p
-            style={{
-              margin: "0 0 12px",
-              color: "rgba(255,255,255,.42)",
-              fontSize: ".72rem",
-              letterSpacing: ".24em",
-              textTransform: "uppercase",
-              fontFamily: "var(--aska-font-family-secondary, inherit)",
-            }}
-          >
-            También podría interesarte
-          </p>
+            <h2 className="aska-related-title">
+              MÁS PIEZAS
+              <br />
+              DE ESTA LÍNEA
+            </h2>
 
-          <h2
-            style={{
-              margin: 0,
-              color: "#ffffff",
-              fontSize: "clamp(2rem,4vw,4.2rem)",
-              letterSpacing: "-.06em",
-              lineHeight: ".92",
-              marginBottom: "28px",
-            }}
-          >
-            MÁS PIEZAS
-            <br />
-            EDITORIALES
-          </h2>
+            <div className="aska-related-rail">
+              {relatedProducts.map((item) => {
+                const imgs = normalizeImages(item);
+                const image = imgs[0] || item.imagen || "";
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-              gap: "18px",
-            }}
-          >
-            {imagenesProducto.slice(0,3).map((img,index)=>(
-              <div
-                key={index}
-                style={{
-                  borderRadius: "24px",
-                  overflow: "hidden",
-                  background: "#111111",
-                  border: "1px solid rgba(255,255,255,.08)",
-                }}
-              >
-                <img
-                  src={img}
-                  alt={`Editorial ${index + 1}`}
-                  style={{
-                    width: "100%",
-                    height: "420px",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              </div>
-            ))}
+                return (
+                  <Link
+                    key={item.id}
+                    to={`/producto/${item.id}`}
+                    className="aska-related-card"
+                  >
+                    <div className="aska-related-image">
+                      {image ? (
+                        <img src={image} alt={item.nombre || item.name} loading="lazy" />
+                      ) : (
+                        <div className="aska-related-empty">Sin imagen</div>
+                      )}
+                    </div>
+
+                    <div className="aska-related-info">
+                      <span>{item.categoria || item.category || "AŞKA"}</span>
+                      <h3>{item.nombre || item.name}</h3>
+                      <p>{formatPrice(item.precio || item.price)}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
-
+        </section>
+      )}
 
       <style>
         {`
@@ -713,6 +714,122 @@ function ProductDetail() {
           .aska-product-thumbs button:hover {
             transform: translateY(-2px);
             opacity: .92;
+          }
+
+
+          .aska-related-products-section {
+            background: #0b0b0b;
+            padding: 0 24px 92px;
+          }
+
+          .aska-related-products-wrap {
+            max-width: 1320px;
+            margin: 0 auto;
+          }
+
+          .aska-related-kicker {
+            margin: 0 0 12px;
+            color: rgba(255,255,255,.42);
+            font-size: .72rem;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-related-title {
+            margin: 0 0 28px;
+            color: #ffffff;
+            font-size: clamp(2rem,4vw,4.2rem);
+            letter-spacing: -.06em;
+            line-height: .92;
+            text-transform: uppercase;
+          }
+
+          .aska-related-rail {
+            display: flex;
+            gap: 18px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
+          }
+
+          .aska-related-card {
+            flex: 0 0 clamp(240px, 24vw, 340px);
+            scroll-snap-align: start;
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #111111;
+            border: 1px solid rgba(255,255,255,.08);
+            transition:
+              transform .42s cubic-bezier(.22,.61,.36,1),
+              border-color .42s ease,
+              box-shadow .42s ease;
+          }
+
+          .aska-related-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,255,255,.18);
+            box-shadow: 0 28px 78px rgba(0,0,0,.32);
+          }
+
+          .aska-related-image {
+            height: 420px;
+            background: #080808;
+            overflow: hidden;
+          }
+
+          .aska-related-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .72s cubic-bezier(.22,.61,.36,1);
+          }
+
+          .aska-related-card:hover .aska-related-image img {
+            transform: scale(1.045);
+          }
+
+          .aska-related-empty {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: rgba(255,255,255,.45);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-related-info {
+            padding: 18px;
+          }
+
+          .aska-related-info span {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,.48);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+          }
+
+          .aska-related-info h3 {
+            margin: 0 0 8px;
+            color: #ffffff;
+            font-size: 1.2rem;
+            line-height: 1.05;
+            text-transform: uppercase;
+          }
+
+          .aska-related-info p {
+            margin: 0;
+            color: rgba(255,255,255,.78);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-weight: 700;
           }
 
           @media (max-width: 768px) {
