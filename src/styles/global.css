@@ -1864,8 +1864,8 @@ h3 {
 /* ===== AŞKA PALETA PREMIUM JOYERÍA EN PLATA ===== */
 
 /* Navbar y zonas de alto contraste */
-.navbar,
-.aska-navbar-inner {
+/* El navbar principal ahora se controla desde Navbar.jsx para conservar transparencia sobre hero. */
+.navbar {
   background: rgba(5, 5, 5, 0.96) !important;
 }
 
@@ -2103,9 +2103,8 @@ body {
 }
 
 /* Navbar oscuro premium, limpio y fijo visualmente */
-header,
-.navbar,
-.aska-navbar-inner {
+/* No forzar header/.aska-navbar-inner aquí: Navbar.jsx maneja transparente + scroll. */
+.navbar {
   background: rgba(5, 5, 5, 0.98) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
 }
@@ -2508,9 +2507,7 @@ select,
   font-family: var(--aska-font-family-secondary) !important;
 }
 
-header,
-.navbar,
-.aska-navbar-inner {
+.navbar {
   background: var(--aska-navbar-background) !important;
 }
 
@@ -2607,4 +2604,311 @@ body {
   transition:
     min-height .35s ease,
     padding .35s ease;
+}
+
+/* ===== AŞKA GLOBAL LUXURY CLEANUP - FINAL SAFE LAYER ===== */
+/* Esta capa corrige conflictos visuales sin romper lógica, rutas, pagos, auth ni carrito. */
+
+:root {
+  --aska-font-family-primary: "Playfair Display", Georgia, "Times New Roman", serif;
+  --aska-font-family-secondary: "Helvetica Now", Helvetica, Arial, sans-serif;
+
+  --aska-bg-primary: #050505;
+  --aska-bg-secondary: #f8f3f0;
+  --aska-card-bg: #ffffff;
+  --aska-card-dark: #0d0d0d;
+
+  --aska-text-primary: #111111;
+  --aska-text-secondary: #ffffff;
+  --aska-text-muted: rgba(17, 17, 17, 0.58);
+
+  --aska-accent-primary: #c9c9c9;
+  --aska-accent-secondary: #d6b36a;
+
+  --aska-border-light: rgba(17, 17, 17, 0.10);
+  --aska-border-dark: rgba(255, 255, 255, 0.10);
+  --aska-shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.10);
+  --aska-shadow-strong: 0 38px 100px rgba(0, 0, 0, 0.18);
+
+  --aska-radius-card: 28px;
+  --aska-radius-button: 999px;
+  --aska-ease-luxury: cubic-bezier(.22,.61,.36,1);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--aska-bg-secondary) !important;
+}
+
+body {
+  background: var(--aska-bg-secondary) !important;
+  color: var(--aska-text-primary) !important;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--aska-font-family-secondary) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--aska-font-family-primary) !important;
+  text-wrap: balance;
+}
+
+p,
+li,
+span {
+  text-wrap: pretty;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+video {
+  max-width: 100%;
+}
+
+/* IMPORTANTE: no forzar fondo al navbar del componente nuevo. */
+.aska-site-header,
+.aska-site-header .aska-navbar-inner {
+  background: transparent !important;
+}
+
+.aska-site-header.is-transparent,
+.aska-site-header.is-transparent .aska-navbar-inner {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.aska-site-header.is-scrolled {
+  background: rgba(8, 8, 8, 0.86) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(18px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(118%) !important;
+}
+
+/* Botones globales más silenciosos: luxury, no ecommerce pesado. */
+button,
+.product-main-button,
+.product-detail-cart-button,
+.checkout-submit-btn,
+.cart-checkout-button,
+.auth-submit-button {
+  border-radius: var(--aska-radius-button) !important;
+  transition:
+    transform .32s var(--aska-ease-luxury),
+    box-shadow .32s var(--aska-ease-luxury),
+    opacity .32s ease,
+    background .32s ease,
+    border-color .32s ease !important;
+}
+
+button:hover,
+.product-main-button:hover,
+.product-detail-cart-button:hover,
+.checkout-submit-btn:hover,
+.cart-checkout-button:hover,
+.auth-submit-button:hover {
+  transform: translateY(-1px) !important;
+  opacity: .96;
+}
+
+/* Inputs más finos y consistentes. */
+input,
+textarea,
+select {
+  border-radius: 16px !important;
+  transition:
+    border-color .28s ease,
+    box-shadow .28s ease,
+    background .28s ease !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  border-color: rgba(201, 201, 201, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(201, 201, 201, 0.14) !important;
+}
+
+/* Cards oscuras premium, sin exceso de glow. */
+.product-card,
+.product-detail-info,
+.checkout-form-card,
+.checkout-summary-card,
+.checkout-payment-box,
+.admin-home-config,
+.admin-trash-section,
+.admin-product-item,
+.admin-modal-card,
+.admin-preview-box,
+.pedido-card,
+.admin-order-card,
+.cart-drawer,
+.team-member,
+.admin-order-detail-item {
+  background: var(--aska-card-dark) !important;
+  color: #ffffff !important;
+  border-color: var(--aska-border-dark) !important;
+  border-radius: var(--aska-radius-card) !important;
+}
+
+.product-card,
+.home-showcase-card,
+.team-member,
+.pedido-card {
+  transition:
+    transform .48s var(--aska-ease-luxury),
+    box-shadow .48s var(--aska-ease-luxury),
+    border-color .48s ease !important;
+}
+
+.product-card:hover,
+.home-showcase-card:hover,
+.team-member:hover,
+.pedido-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: var(--aska-shadow-strong) !important;
+}
+
+.product-card-main-image,
+.home-product-image,
+.team-member-image-wrap img,
+.nosotras-card-media {
+  transition:
+    transform .82s var(--aska-ease-luxury),
+    filter .82s ease !important;
+}
+
+.product-card:hover .product-card-main-image,
+.home-showcase-card:hover .home-product-image,
+.team-member:hover .team-member-image-wrap img {
+  transform: scale(1.045) !important;
+  filter: contrast(1.04) brightness(1.02) !important;
+}
+
+/* Páginas claras respiradas. */
+.home-brand-text,
+.home-preview-wrapper,
+.home-category-preview,
+.home-instagram-strip,
+.home-intro,
+.home-about,
+.home-story,
+.home-text,
+.home-text-section,
+.home-description,
+.home-description-section,
+.home-info,
+.home-info-section,
+.brand-story,
+.brand-intro,
+.about-brand,
+.nosotras-intro,
+.nosotras-intro-block,
+.nosotras-instagram-strip {
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.82), transparent 32%),
+    var(--aska-bg-secondary) !important;
+  color: var(--aska-text-primary) !important;
+}
+
+.home-brand-text *,
+.home-preview-wrapper *,
+.home-category-preview *,
+.home-instagram-strip *,
+.home-intro *,
+.home-about *,
+.home-story *,
+.home-text *,
+.home-text-section *,
+.home-description *,
+.home-description-section *,
+.home-info *,
+.home-info-section *,
+.brand-story *,
+.brand-intro *,
+.about-brand *,
+.nosotras-intro *,
+.nosotras-intro-block *,
+.nosotras-instagram-strip * {
+  color: inherit;
+}
+
+/* Páginas oscuras conservan contraste para resaltar joyas. */
+.catalog-general-page,
+.catalog-page,
+.category-page,
+.product-detail-shell,
+.checkout-page,
+.mis-pedidos-page,
+.admin-page,
+.nosotras-page {
+  background: var(--aska-bg-primary) !important;
+  color: #ffffff !important;
+}
+
+/* Evitar carrito flotante antiguo duplicado. */
+.floating-cart-button,
+.floating-cart-badge,
+.floating-cart-image {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Scrollbar discreto. */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 17, 17, 0.28) !important;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .aska-site-header.is-transparent,
+  .aska-site-header.is-transparent .aska-navbar-inner {
+    background: transparent !important;
+  }
+
+  .product-card:hover,
+  .home-showcase-card:hover,
+  .team-member:hover,
+  .pedido-card:hover {
+    transform: translateY(-2px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
