@@ -50,8 +50,8 @@ function Cart() {
       <section
         style={{
           minHeight: "100vh",
-          background: "var(--aska-bg-secondary, #f3f3f3)",
-          padding: isMobile ? "28px 16px 60px" : "42px 24px 70px",
+          background: "linear-gradient(180deg, #f8f3f0 0%, #efe7e4 48%, #f8f3f0 100%)",
+          padding: isMobile ? "72px 16px 72px" : "110px 28px 110px",
           color: "var(--aska-text-primary, #111)",
         }}
       >
@@ -74,9 +74,10 @@ function Cart() {
             <h1
               style={{
                 margin: 0,
-                fontSize: "clamp(2.3rem, 5vw, 4rem)",
-                lineHeight: 1,
-                fontWeight: 900,
+                fontSize: "clamp(3.2rem, 8vw, 7rem)",
+                lineHeight: 0.88,
+                fontWeight: 500,
+                letterSpacing: "-0.08em",
               }}
             >
               Carrito de compras
@@ -89,9 +90,9 @@ function Cart() {
                 minHeight: "58vh",
                 background: "var(--aska-card-bg, #fff)",
                 border: "1px solid rgba(0,0,0,0.08)",
-                borderRadius: "30px",
-                padding: "42px 26px",
-                boxShadow: "0 18px 45px rgba(0,0,0,0.07)",
+                borderRadius: "38px",
+                padding: "72px 34px",
+                boxShadow: "0 30px 90px rgba(0,0,0,0.08)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -123,9 +124,10 @@ function Cart() {
                 <h2
                   style={{
                     margin: "0 0 12px",
-                    fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                    lineHeight: 1,
-                    fontWeight: 900,
+                    fontSize: "clamp(3rem, 8vw, 5.4rem)",
+                    lineHeight: 0.88,
+                    fontWeight: 500,
+                    letterSpacing: "-0.07em",
                     color: "var(--aska-text-primary, #111)",
                   }}
                 >
@@ -152,9 +154,11 @@ function Cart() {
                       border: "none",
                       background: "var(--aska-bg-primary, #111)",
                       color: "var(--aska-text-secondary, #fff)",
-                      padding: "15px 28px",
+                      padding: "16px 34px",
                       cursor: "pointer",
-                      fontWeight: 900,
+                      fontWeight: 600,
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase",
                       borderRadius: "999px",
                       fontSize: "1rem",
                       letterSpacing: "0.03em",
@@ -173,7 +177,7 @@ function Cart() {
                 gridTemplateColumns: isMobile
                   ? "1fr"
                   : "minmax(0, 1.2fr) minmax(280px, 0.8fr)",
-                gap: "24px",
+                gap: "clamp(26px, 4vw, 54px)",
                 alignItems: "start",
               }}
             >
@@ -192,9 +196,9 @@ function Cart() {
                       gap: "18px",
                       background: "var(--aska-card-bg, #fff)",
                       border: "1px solid rgba(0,0,0,0.08)",
-                      borderRadius: "24px",
-                      padding: "16px",
-                      boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
+                      borderRadius: "30px",
+                      padding: "18px",
+                      boxShadow: "0 24px 70px rgba(0,0,0,0.07)",
                     }}
                   >
                     <div
@@ -245,9 +249,10 @@ function Cart() {
                       <h3
                         style={{
                           margin: 0,
-                          fontSize: "1.35rem",
-                          lineHeight: 1.1,
-                          fontWeight: 900,
+                          fontSize: "clamp(1.6rem, 2.4vw, 2.2rem)",
+                          lineHeight: 0.96,
+                          fontWeight: 500,
+                          letterSpacing: "-0.04em",
                         }}
                       >
                         {product.name}
@@ -321,9 +326,9 @@ function Cart() {
                 style={{
                   background: "var(--aska-card-bg, #fff)",
                   border: "1px solid rgba(0,0,0,0.08)",
-                  borderRadius: "24px",
-                  padding: "26px",
-                  boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
+                  borderRadius: "34px",
+                  padding: "34px",
+                  boxShadow: "0 24px 70px rgba(0,0,0,0.08)",
                   position: isMobile ? "static" : "sticky",
                   top: isMobile ? "auto" : "100px",
                 }}
@@ -332,8 +337,9 @@ function Cart() {
                   style={{
                     margin: 0,
                     marginBottom: "18px",
-                    fontSize: "1.7rem",
-                    fontWeight: 900,
+                    fontSize: "2.2rem",
+                    fontWeight: 500,
+                    letterSpacing: "-0.04em",
                   }}
                 >
                   Resumen
@@ -479,10 +485,12 @@ function Cart() {
                         border: "none",
                         background: "var(--aska-bg-primary, #111)",
                         color: "var(--aska-text-secondary, #fff)",
-                        padding: "15px 18px",
+                        padding: "16px 18px",
                         cursor: "pointer",
-                        fontWeight: 900,
-                        fontSize: "1rem",
+                        fontWeight: 600,
+                        fontSize: "0.78rem",
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
                         borderRadius: "999px",
                       }}
                     >
@@ -497,10 +505,12 @@ function Cart() {
                         border: "1px solid rgba(0,0,0,0.15)",
                         background: "var(--aska-card-bg, #fff)",
                         color: "var(--aska-text-primary, #111)",
-                        padding: "15px 18px",
+                        padding: "16px 18px",
                         cursor: "pointer",
-                        fontWeight: 900,
-                        fontSize: "1rem",
+                        fontWeight: 600,
+                        fontSize: "0.78rem",
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
                         borderRadius: "999px",
                       }}
                     >
@@ -530,6 +540,48 @@ function Cart() {
   button:hover {
     transform: translateY(-2px);
     opacity: 0.97;
+  }
+
+  .aska-cart-luxury-note {
+    font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+  }
+
+  section::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 8%, rgba(255,255,255,0.72), transparent 28%),
+      radial-gradient(circle at 88% 10%, rgba(17,17,17,0.08), transparent 34%);
+    z-index: 0;
+  }
+
+  section > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  button {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 999px;
+  }
+
+  input {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(10px);
+  }
+
+  img {
+    transition:
+      transform .72s cubic-bezier(.22,.61,.36,1),
+      filter .72s ease;
+  }
+
+  img:hover {
+    transform: scale(1.03);
+    filter: contrast(1.04);
   }
 `}
 </style>
