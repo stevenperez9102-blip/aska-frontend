@@ -153,10 +153,10 @@ function Login() {
         <div className="auth-overlay" />
 
         <div className="auth-container">
-          <p className="auth-eyebrow">Bienvenida de nuevo</p>
+          <p className="auth-eyebrow">AŞKA private access</p>
           <h1>Iniciar sesión</h1>
           <p className="auth-sub">
-            Entra a tu cuenta para continuar con tu experiencia en AŞKA.
+            Accede a tu cuenta para continuar tu experiencia con AŞKA.
           </p>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -225,111 +225,267 @@ function Login() {
     
       <style>
         {`
+
         .auth-page{
           position:relative;
-          min-height:100vh;
+          min-height:100svh;
           display:flex;
           align-items:center;
           justify-content:center;
-          padding:40px 16px;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.85) 40%, var(--aska-bg-secondary, #f5f5f5) 100%);
+          padding:clamp(96px, 9vw, 132px) 18px 72px;
+          background:#050505;
+          overflow:hidden;
         }
+
         .auth-bg-video{
           position:absolute;
           inset:0;
           width:100%;
           height:100%;
           object-fit:cover;
-          opacity:0.35;
+          object-position:center center;
+          opacity:.46;
+          filter:contrast(1.05) saturate(.88) brightness(.72);
+          transform:scale(1.02);
         }
+
         .auth-overlay{
           position:absolute;
           inset:0;
-          background: radial-gradient(circle at center, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+          background:
+            linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.42) 48%, rgba(0,0,0,.76)),
+            radial-gradient(circle at 50% 38%, rgba(255,255,255,.10), transparent 32%),
+            linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.84));
+          z-index:1;
         }
+
+        .auth-page::after{
+          content:"";
+          position:absolute;
+          left:0;
+          right:0;
+          bottom:0;
+          height:26%;
+          background:linear-gradient(180deg, transparent, rgba(0,0,0,.78));
+          z-index:1;
+          pointer-events:none;
+        }
+
         .auth-container{
           position:relative;
           z-index:2;
-          width:100%;
-          max-width:420px;
-          background: color-mix(in srgb, var(--aska-card-bg, #ffffff) 8%, transparent);
-          backdrop-filter: blur(14px);
-          border-radius:20px;
-          padding:28px 22px;
-          border:1px solid rgba(255,255,255,0.15);
-          box-shadow:0 20px 60px rgba(0,0,0,0.5);
-          color:var(--aska-text-secondary, #fff);
+          width:min(100%, 460px);
+          background:rgba(8,8,8,.42);
+          backdrop-filter:blur(22px) saturate(112%);
+          -webkit-backdrop-filter:blur(22px) saturate(112%);
+          border-radius:0;
+          padding:clamp(30px, 4vw, 46px);
+          border:1px solid rgba(255,255,255,.13);
+          box-shadow:0 34px 100px rgba(0,0,0,.44);
+          color:#ffffff;
         }
+
+        .auth-container::before{
+          content:"";
+          display:block;
+          width:72px;
+          height:1px;
+          margin-bottom:24px;
+          background:linear-gradient(90deg, rgba(255,255,255,.82), transparent);
+        }
+
+        .auth-eyebrow{
+          margin:0 0 12px;
+          color:rgba(255,255,255,.62);
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.68rem;
+          font-weight:600;
+          letter-spacing:.24em;
+          text-transform:uppercase;
+        }
+
         .auth-container h1{
-          font-size:2rem;
-          font-family:var(--aska-font-family-primary, inherit);
-          margin:8px 0 10px;
+          margin:0 0 16px;
+          color:#ffffff;
+          font-family:var(--aska-font-family-primary, Georgia, serif);
+          font-size:clamp(3.2rem, 8vw, 5.4rem);
+          line-height:.84;
+          letter-spacing:-.075em;
+          font-weight:500 !important;
+          text-transform:uppercase;
         }
+
         .auth-sub{
-          font-size:0.9rem;
-          font-family:var(--aska-font-family-secondary, inherit);
-          color:rgba(255,255,255,0.7);
-          margin-bottom:18px;
+          margin:0 0 30px;
+          max-width:360px;
+          color:rgba(255,255,255,.72);
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.96rem;
+          line-height:1.7;
+          font-weight:300;
         }
+
+        .auth-form{
+          display:grid;
+          gap:18px;
+        }
+
+        .auth-group{
+          display:grid;
+          gap:8px;
+        }
+
         .auth-group label{
-          font-size:0.8rem;
-          color:rgba(255,255,255,0.78);
+          color:rgba(255,255,255,.68);
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.68rem;
+          font-weight:600;
+          letter-spacing:.18em;
+          text-transform:uppercase;
         }
-        .auth-group input{
+
+        .auth-group input,
+        .password-input{
           width:100%;
-          font-family:var(--aska-font-family-secondary, inherit);
-          padding:12px 14px;
-          border-radius:12px;
-          border:none;
-          margin-top:6px;
-          background:var(--aska-card-bg, #fff);
-          color:var(--aska-text-primary, #000);
-          font-size:0.9rem;
+          height:52px;
+          box-sizing:border-box;
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          padding:0 46px 0 16px;
+          border-radius:0;
+          border:1px solid rgba(255,255,255,.16);
+          background:rgba(255,255,255,.08);
+          color:#ffffff;
+          font-size:.92rem;
+          outline:none;
+          transition:
+            border-color .28s ease,
+            background .28s ease,
+            box-shadow .28s ease;
         }
+
+        .auth-group input::placeholder,
+        .password-input::placeholder{
+          color:rgba(255,255,255,.40);
+        }
+
+        .auth-group input:focus,
+        .password-input:focus{
+          border-color:rgba(255,255,255,.48);
+          background:rgba(255,255,255,.12);
+          box-shadow:0 0 0 4px rgba(255,255,255,.08);
+        }
+
         .password-field{
           position:relative;
+          width:100%;
         }
+
         .password-toggle{
           position:absolute;
-          right:10px;
+          right:12px;
           top:50%;
           transform:translateY(-50%);
-          background:none;
-          border:none;
+          width:34px;
+          height:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:transparent;
+          border:0;
           cursor:pointer;
-          color:#333;
+          color:rgba(255,255,255,.66);
+          padding:0;
+          transition:color .24s ease, transform .24s ease;
         }
+
+        .password-toggle:hover{
+          color:#ffffff;
+          transform:translateY(-50%) scale(1.04);
+        }
+
         .auth-submit-button{
           width:100%;
-          font-family:var(--aska-font-family-secondary, inherit);
-          box-shadow:0 14px 34px rgba(0,0,0,0.18);
-          transition:transform .22s ease, opacity .22s ease, box-shadow .22s ease;
-          margin-top:18px;
-          padding:12px;
+          min-height:52px;
+          margin-top:8px;
+          padding:0 18px;
           border-radius:999px;
-          border:none;
-          background:var(--aska-card-bg, #fff);
-          color:var(--aska-text-primary, #000);
-          font-weight:600;
+          border:1px solid rgba(255,255,255,.86);
+          background:#ffffff;
+          color:#050505;
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.74rem;
+          font-weight:700;
+          letter-spacing:.20em;
+          text-transform:uppercase;
           cursor:pointer;
-        }
-        .auth-extra{
-          margin-top:10px;
-          font-size:0.8rem;
-          text-align:center;
+          box-shadow:none;
+          transition:
+            transform .28s ease,
+            box-shadow .28s ease,
+            opacity .28s ease,
+            background .28s ease;
         }
 
         .auth-submit-button:hover{
           transform:translateY(-2px);
-          opacity:.97;
+          box-shadow:0 22px 52px rgba(0,0,0,.28);
+          opacity:.96;
+        }
+
+        .auth-submit-button:disabled{
+          cursor:not-allowed;
+          opacity:.64;
+          transform:none;
+        }
+
+        .auth-message{
+          margin:0;
+          color:#ffd6de;
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.9rem;
+          line-height:1.5;
+        }
+
+        .auth-extra{
+          margin:16px 0 0;
+          text-align:center;
+          font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          font-size:.82rem;
+          color:rgba(255,255,255,.62);
+        }
+
+        .auth-extra a{
+          color:inherit;
+          text-decoration:none;
+        }
+
+        .auth-extra span{
+          border-bottom:1px solid rgba(255,255,255,.32);
+          padding-bottom:3px;
+          transition:color .24s ease, border-color .24s ease;
+        }
+
+        .auth-extra span:hover{
+          color:#ffffff;
+          border-color:#ffffff;
         }
 
         @media (max-width:768px){
+          .auth-page{
+            padding:94px 14px 54px;
+            align-items:flex-end;
+          }
+
           .auth-container{
-            padding:22px 16px;
-            border-radius:16px;
+            width:100%;
+            padding:28px 20px;
+          }
+
+          .auth-container h1{
+            font-size:clamp(3rem, 18vw, 4.8rem);
           }
         }
+
         `}
       </style>
 
