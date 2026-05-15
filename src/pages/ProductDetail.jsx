@@ -231,7 +231,7 @@ function ProductDetail() {
             </p>
 
             <div
-              className="aska-product-image-frame"
+              className="aska-product-image-frame aska-cinematic-frame"
               style={{
                 position: "relative",
                 width: "100%",
@@ -248,6 +248,7 @@ function ProductDetail() {
             >
               {selectedImage ? (
                 <img
+                  className="aska-main-product-image"
                   src={selectedImage}
                   alt={producto.nombre}
                   style={{
@@ -379,6 +380,8 @@ function ProductDetail() {
               color: "#ffffff",
             }}
           >
+            <div className="aska-piece-badge">AŞKA ATELIER</div>
+
             <h1
               style={{
                 margin: 0,
@@ -419,6 +422,33 @@ function ProductDetail() {
               {producto.descripcion || "Pieza diseñada para presencia brutalista, siluetas oscuras y expresión editorial."}
             </p>
 
+            {producto.editorial && (
+              <div
+                className="aska-editorial-copy"
+                style={{
+                  marginBottom: "28px",
+                  padding: "22px",
+                  borderRadius: "22px",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(14px)",
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#ffffff",
+                    fontSize: "1.1rem",
+                    lineHeight: 1.8,
+                    letterSpacing: "-0.02em",
+                    fontStyle: "italic",
+                  }}
+                >
+                  {producto.editorial}
+                </p>
+              </div>
+            )}
+
             {producto?.categoria?.toLowerCase().includes("corporal") ? (
               <div
                 style={{
@@ -448,6 +478,36 @@ function ProductDetail() {
                 }}
               >
                 El envío tarda de 2 a 4 días hábiles.
+              </div>
+            )}
+
+            {Array.isArray(producto.tags) && producto.tags.length > 0 && (
+              <div
+                className="aska-product-tags"
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                  marginBottom: "28px",
+                }}
+              >
+                {producto.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      padding: "10px 16px",
+                      borderRadius: "999px",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.82)",
+                      fontSize: ".72rem",
+                      letterSpacing: ".12em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
             )}
 
@@ -543,6 +603,72 @@ function ProductDetail() {
 
       <style>
         {`
+
+          
+          .aska-piece-badge{
+            margin-bottom:18px;
+            color:rgba(255,255,255,.42);
+            font-size:.7rem;
+            font-weight:700;
+            letter-spacing:.26em;
+            text-transform:uppercase;
+            font-family:var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-cinematic-frame{
+            cursor: zoom-in;
+          }
+
+          .aska-main-product-image{
+            animation: askaImageReveal .72s cubic-bezier(.22,.61,.36,1);
+            will-change: transform;
+          }
+
+          @keyframes askaImageReveal{
+            from{
+              opacity:0;
+              transform:scale(1.04);
+              filter:blur(8px);
+            }
+            to{
+              opacity:1;
+              transform:scale(1);
+              filter:blur(0);
+            }
+          }
+
+          .aska-product-image-frame::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+              linear-gradient(to top, rgba(0,0,0,.28), transparent 36%);
+            pointer-events:none;
+          }
+
+          .aska-editorial-copy{
+            position:relative;
+            overflow:hidden;
+          }
+
+          .aska-editorial-copy::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+              radial-gradient(circle at top right, rgba(255,255,255,.08), transparent 42%);
+            pointer-events:none;
+          }
+
+          .aska-related-rail::-webkit-scrollbar{
+            height:6px;
+          }
+
+          .aska-related-rail::-webkit-scrollbar-thumb{
+            background:rgba(255,255,255,.18);
+            border-radius:999px;
+          }
+
 
           .aska-product-detail-page {
             position: relative;
