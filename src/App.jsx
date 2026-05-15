@@ -46,6 +46,7 @@ function App() {
   const [musicMuted, setMusicMuted] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
+  const [musicOpen, setMusicOpen] = useState(false);
 
   const [cmsLoaded, setCmsLoaded] = useState(false);
 
@@ -177,7 +178,7 @@ function App() {
   useEffect(() => {
     if (!audioRef.current) return;
 
-    audioRef.current.volume = 0.32;
+    audioRef.current.volume = 0.28;
     audioRef.current.muted = musicMuted;
 
     if (musicPlaying) {
@@ -192,6 +193,11 @@ function App() {
   const handleNextTrack = () => {
     setCurrentTrack((prev) => (prev + 1) % tracks.length);
     setMusicPlaying(true);
+  };
+
+  const handleToggleMusic = () => {
+    setMusicPlaying((prev) => !prev);
+    setMusicOpen(true);
   };
 
   const handleSecretAreaClick = (e) => {
@@ -279,24 +285,59 @@ function App() {
 
           .aska-music-player{
             position:fixed;
-            left:24px;
-            bottom:24px;
+            left:18px;
+            bottom:18px;
             z-index:99999;
-            min-width:290px;
-            padding:16px 18px;
-            background:rgba(8,8,8,0.82);
+            display:flex;
+            align-items:flex-end;
+            gap:10px;
+            color:#ffffff;
+            pointer-events:auto;
+          }
+
+          .aska-music-orb{
+            width:46px;
+            height:46px;
+            border-radius:999px;
+            border:1px solid rgba(255,255,255,0.16);
+            background:rgba(5,5,5,0.74);
+            color:#ffffff;
+            display:grid;
+            place-items:center;
+            cursor:pointer;
+            font-size:1.05rem;
+            box-shadow:0 18px 48px rgba(0,0,0,0.28);
+            backdrop-filter:blur(16px) saturate(118%);
+            -webkit-backdrop-filter:blur(16px) saturate(118%);
+            opacity:.82;
+            transition:
+              opacity .24s ease,
+              transform .24s ease,
+              background .24s ease;
+          }
+
+          .aska-music-orb:hover{
+            opacity:1;
+            transform:translateY(-2px);
+            background:rgba(5,5,5,0.92);
+          }
+
+          .aska-music-panel{
+            width:260px;
+            padding:14px 15px;
+            background:rgba(8,8,8,0.78);
             border:1px solid rgba(255,255,255,0.12);
             backdrop-filter:blur(20px) saturate(120%);
             -webkit-backdrop-filter:blur(20px) saturate(120%);
-            color:#ffffff;
             box-shadow:0 24px 70px rgba(0,0,0,0.28);
+            animation:askaMusicReveal .22s ease both;
           }
 
           .aska-music-player-info span{
             display:block;
-            margin-bottom:6px;
+            margin-bottom:5px;
             color:rgba(255,255,255,0.48);
-            font-size:0.62rem;
+            font-size:0.58rem;
             font-weight:700;
             letter-spacing:0.18em;
             text-transform:uppercase;
@@ -304,7 +345,7 @@ function App() {
 
           .aska-music-player-info strong{
             display:block;
-            font-size:1rem;
+            font-size:0.9rem;
             font-weight:600;
             letter-spacing:0.04em;
           }
@@ -313,27 +354,28 @@ function App() {
             display:block;
             margin-top:3px;
             color:rgba(255,255,255,0.58);
-            font-size:0.78rem;
+            font-size:0.68rem;
             letter-spacing:0.08em;
             text-transform:uppercase;
           }
 
           .aska-music-player-controls{
             display:flex;
-            gap:10px;
-            margin-top:14px;
+            gap:8px;
+            margin-top:12px;
           }
 
           .aska-music-player-controls button{
-            min-height:34px;
-            padding:0 12px;
+            min-height:30px;
+            padding:0 10px;
             border:none;
-            background:rgba(255,255,255,0.08);
+            border-radius:999px;
+            background:rgba(255,255,255,0.09);
             color:#ffffff;
             cursor:pointer;
-            font-size:0.66rem;
+            font-size:0.58rem;
             font-weight:700;
-            letter-spacing:0.14em;
+            letter-spacing:0.12em;
             text-transform:uppercase;
             transition:
               background .24s ease,
@@ -341,17 +383,35 @@ function App() {
           }
 
           .aska-music-player-controls button:hover{
-            background:rgba(255,255,255,0.16);
+            background:rgba(255,255,255,0.17);
             transform:translateY(-1px);
+          }
+
+          @keyframes askaMusicReveal{
+            from{
+              opacity:0;
+              transform:translateY(8px);
+            }
+            to{
+              opacity:1;
+              transform:translateY(0);
+            }
           }
 
           @media (max-width:768px){
             .aska-music-player{
-              left:14px;
-              bottom:14px;
-              min-width:auto;
-              width:calc(100vw - 28px);
-              padding:13px 14px;
+              left:12px;
+              bottom:12px;
+            }
+
+            .aska-music-orb{
+              width:42px;
+              height:42px;
+            }
+
+            .aska-music-panel{
+              width:min(260px, calc(100vw - 74px));
+              padding:12px;
             }
 
             .aska-music-player-controls{
@@ -483,38 +543,51 @@ function App() {
           onEnded={handleNextTrack}
         />
 
-        <div className="aska-music-player">
-          <div className="aska-music-player-info">
-            <span>Now playing</span>
-            <strong>{tracks[currentTrack].title}</strong>
-            <small>{tracks[currentTrack].artist}</small>
-          </div>
+        <div className={`aska-music-player ${musicOpen ? "is-open" : ""}`}>
+          <button
+            type="button"
+            className="aska-music-orb"
+            onClick={() => setMusicOpen((prev) => !prev)}
+            aria-label={musicOpen ? "Ocultar reproductor" : "Mostrar reproductor"}
+          >
+            {musicPlaying ? "♪" : "♫"}
+          </button>
 
-          <div className="aska-music-player-controls">
-            <button
-              type="button"
-              onClick={() => setMusicPlaying((prev) => !prev)}
-              aria-label={musicPlaying ? "Pausar música" : "Reproducir música"}
-            >
-              {musicPlaying ? "Pause" : "Play"}
-            </button>
+          {musicOpen && (
+            <div className="aska-music-panel">
+              <div className="aska-music-player-info">
+                <span>Now playing</span>
+                <strong>{tracks[currentTrack].title}</strong>
+                <small>{tracks[currentTrack].artist}</small>
+              </div>
 
-            <button
-              type="button"
-              onClick={handleNextTrack}
-              aria-label="Siguiente canción"
-            >
-              Next
-            </button>
+              <div className="aska-music-player-controls">
+                <button
+                  type="button"
+                  onClick={handleToggleMusic}
+                  aria-label={musicPlaying ? "Pausar música" : "Reproducir música"}
+                >
+                  {musicPlaying ? "Pause" : "Play"}
+                </button>
 
-            <button
-              type="button"
-              onClick={() => setMusicMuted((prev) => !prev)}
-              aria-label={musicMuted ? "Activar sonido" : "Silenciar"}
-            >
-              {musicMuted ? "Muted" : "Sound"}
-            </button>
-          </div>
+                <button
+                  type="button"
+                  onClick={handleNextTrack}
+                  aria-label="Siguiente canción"
+                >
+                  Next
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMusicMuted((prev) => !prev)}
+                  aria-label={musicMuted ? "Activar sonido" : "Silenciar"}
+                >
+                  {musicMuted ? "Muted" : "Sound"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <Routes>
