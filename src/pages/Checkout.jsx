@@ -340,8 +340,8 @@ function Checkout() {
       <section
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(180deg, #f8f3f0 0%, #efe7e4 48%, #f8f3f0 100%)",
-          color: "var(--aska-text-primary, #111)",
+          background: "#0b0b0b",
+          color: "#ffffff",
           padding: isMobile ? "72px 16px 80px" : "110px 28px 120px",
         }}
       >
@@ -359,7 +359,8 @@ function Checkout() {
               background: "var(--aska-card-bg, #fff)",
               borderRadius: "36px",
               padding: "clamp(28px, 4vw, 54px)",
-              boxShadow: "0 30px 90px rgba(0,0,0,0.08)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.38)",
+              border: "1px solid rgba(255,255,255,0.06)",
             }}
           >
             <h1
@@ -370,12 +371,12 @@ function Checkout() {
                 marginBottom: "16px",
               }}
             >
-              Finalizar compra
+              FINALIZAR EXPERIENCIA
             </h1>
 
             <p
               style={{
-                color: "rgba(0,0,0,0.58)",
+                color: "rgba(255,255,255,0.62)",
                 lineHeight: 1.6,
                 marginTop: 0,
                 marginBottom: "22px",
@@ -386,6 +387,18 @@ function Checkout() {
               <br />
               <br />
               Puedes comprar sin registrarte. Solo completa tus datos.
+            </p>
+
+            <p
+              style={{
+                color: "rgba(255,255,255,0.48)",
+                lineHeight: 1.7,
+                marginTop: "-4px",
+                marginBottom: "28px",
+                letterSpacing: ".03em",
+              }}
+            >
+              Cada pieza es preparada artesanalmente antes de ser enviada.
             </p>
 
             {mensaje && (
@@ -483,7 +496,7 @@ function Checkout() {
                   style={{
                     margin: 0,
                     marginBottom: "16px",
-                    color: "rgba(0,0,0,0.58)",
+                    color: "rgba(255,255,255,0.62)",
                     lineHeight: 1.6,
                   }}
                 >
@@ -496,7 +509,7 @@ function Checkout() {
                 </p>
 
                 {loadingMetodos ? (
-                  <p style={{ margin: 0, color: "#666" }}>
+                  <p style={{ margin: 0, color: "rgba(255,255,255,0.62)" }}>
                     Cargando métodos de pago...
                   </p>
                 ) : metodosPago.length === 0 ? (
@@ -513,7 +526,7 @@ function Checkout() {
                       style={{
                         margin: 0,
                         marginTop: "6px",
-                        color: "rgba(0,0,0,0.58)",
+                        color: "rgba(255,255,255,0.62)",
                         lineHeight: 1.5,
                       }}
                     >
@@ -613,20 +626,39 @@ function Checkout() {
                   border: "none",
                   borderRadius: "999px",
                   padding: "16px 24px",
-                  background: "var(--aska-bg-primary, #111)",
-                  color: "var(--aska-text-secondary, #fff)",
-                  fontWeight: 600,
+                  background: "#ffffff",
+                  color: "#111111",
+                  fontWeight: 700,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   cursor: loading ? "not-allowed" : "pointer",
                   fontFamily: "var(--aska-font-family-secondary, inherit)",
-                  boxShadow: "0 14px 34px rgba(0,0,0,0.16)",
+                  boxShadow: "0 18px 48px rgba(0,0,0,0.36)",
                   marginTop: "4px",
                   opacity: loading ? 0.75 : 1,
                 }}
               >
-                {loading ? "Procesando pago..." : "Pagar de forma segura"}
+                {loading ? "Procesando pago..." : "CONTINUAR CON EL PEDIDO"}
               </button>
+
+              <a
+                href={`https://wa.me/573125183100?text=${encodeURIComponent(
+                  "Hola ASKA, necesito ayuda con mi pedido."
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "block",
+                  marginTop: "18px",
+                  textAlign: "center",
+                  color: "rgba(255,255,255,0.66)",
+                  textDecoration: "none",
+                  letterSpacing: ".08em",
+                  fontSize: ".88rem",
+                }}
+              >
+                ¿Necesitas ayuda? Hablar con ASKA
+              </a>
             </form>
           </div>
 
@@ -635,8 +667,11 @@ function Checkout() {
               background: "var(--aska-card-bg, #fff)",
               borderRadius: "36px",
               padding: "clamp(28px, 4vw, 54px)",
-              boxShadow: "0 30px 90px rgba(0,0,0,0.08)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.38)",
+              border: "1px solid rgba(255,255,255,0.06)",
               alignSelf: "start",
+              position: isMobile ? "relative" : "sticky",
+              top: isMobile ? "0" : "120px",
             }}
           >
             <h2 style={{ marginTop: 0, marginBottom: "24px", fontSize: "2rem", fontWeight: 500, letterSpacing: "-0.04em" }}>Resumen</h2>
@@ -671,7 +706,7 @@ function Checkout() {
 
                       <div>
                         <div style={{ fontWeight: 700 }}>{item.name || item.nombre}</div>
-                        <div style={{ color: "#666" }}>
+                        <div style={{ color: "rgba(255,255,255,0.62)" }}>
                           Cantidad: {item.quantity || item.cantidad}
                         </div>
                       </div>
@@ -737,7 +772,7 @@ function Checkout() {
                     display: "flex",
                     justifyContent: "space-between",
                     marginTop: "10px",
-                    color: "rgba(0,0,0,0.72)",
+                    color: "rgba(255,255,255,0.72)",
                   }}
                 >
                   <span>Envío:</span>
@@ -779,7 +814,7 @@ function Checkout() {
                     borderRadius: "18px",
                     background: "var(--aska-card-bg-soft, #f7f7f7)",
                     border: "1px solid rgba(0,0,0,0.08)",
-                    color: "rgba(0,0,0,0.72)",
+                    color: "rgba(255,255,255,0.72)",
                     lineHeight: 1.55,
                   }}
                 >
@@ -796,10 +831,10 @@ function Checkout() {
 <style>
 {`
   :root {
-    --aska-card-bg: #ffffff;
-    --aska-card-bg-soft: #f7f7f7;
-    --aska-success-color: #356f48;
-    --aska-error-color: #9b243c;
+    --aska-card-bg: #111111;
+    --aska-card-bg-soft: #171717;
+    --aska-success-color: #7dd39a;
+    --aska-error-color: #ff6b81;
   }
 
   button {
@@ -810,19 +845,9 @@ function Checkout() {
   }
 
   button:hover {
-    transform: translateY(-2px);
-    opacity: 0.97;
-  }
-
-  section::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 10% 8%, rgba(255,255,255,0.74), transparent 28%),
-      radial-gradient(circle at 88% 12%, rgba(17,17,17,0.08), transparent 34%);
-    z-index: 0;
+    transform: translateY(-3px);
+    opacity: 0.98;
+    box-shadow: 0 24px 54px rgba(0,0,0,.32);
   }
 
   section > div {
@@ -837,8 +862,14 @@ function Checkout() {
   }
 
   input {
-    background: rgba(255,255,255,0.72) !important;
+    background: rgba(255,255,255,0.04) !important;
     backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #fff !important;
+  }
+
+  input::placeholder {
+    color: rgba(255,255,255,0.42);
   }
 
   img {
@@ -860,20 +891,20 @@ function Checkout() {
 
 const inputStyle = {
   width: "100%",
-  border: "1px solid rgba(0,0,0,0.12)",
+  border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "14px",
   padding: "14px 16px",
   fontSize: "1rem",
   outline: "none",
   fontFamily: "var(--aska-font-family-secondary, inherit)",
-  background: "var(--aska-card-bg, #ffffff)",
-  color: "var(--aska-text-primary, #111)",
+  background: "rgba(255,255,255,0.04)",
+  color: "#ffffff",
 };
 
 const paymentTextStyle = {
   margin: 0,
   marginTop: "5px",
-  color: "rgba(0,0,0,0.72)",
+  color: "rgba(255,255,255,0.72)",
 };
 
 export default Checkout;
