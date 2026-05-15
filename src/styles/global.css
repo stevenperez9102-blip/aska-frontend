@@ -2912,3 +2912,99 @@ select:focus {
     transition-duration: .01ms !important;
   }
 }
+
+
+/* ===== AŞKA CINEMATIC ROUTE TRANSITIONS ===== */
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+img {
+  image-rendering: auto;
+}
+
+.product-card,
+.home-showcase-card,
+.aska-related-card,
+.team-member,
+.checkout-form-card,
+.checkout-summary-card {
+  will-change: transform;
+}
+
+.product-card,
+.home-showcase-card,
+.aska-related-card {
+  transition:
+    transform .62s cubic-bezier(.22,.61,.36,1),
+    box-shadow .62s cubic-bezier(.22,.61,.36,1),
+    border-color .42s ease !important;
+}
+
+.product-card:hover,
+.home-showcase-card:hover,
+.aska-related-card:hover {
+  transform: translateY(-7px) scale(1.008) !important;
+}
+
+.product-card img,
+.home-showcase-card img,
+.aska-related-card img {
+  transition:
+    transform .9s cubic-bezier(.22,.61,.36,1),
+    filter .9s ease !important;
+}
+
+.product-card:hover img,
+.home-showcase-card:hover img,
+.aska-related-card:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.03) contrast(1.04);
+}
+
+.page-loading,
+.aska-page-loader {
+  min-height: 72vh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-loading::before,
+.aska-page-loader::before {
+  content: "";
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-top-color: rgba(255,255,255,.42);
+  animation: askaSpin 1s linear infinite;
+}
+
+@keyframes askaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.aska-site-header {
+  transition:
+    background .42s ease,
+    border-color .42s ease,
+    backdrop-filter .42s ease,
+    transform .42s ease !important;
+}
+
+@media (max-width: 768px) {
+  .product-card:hover,
+  .home-showcase-card:hover,
+  .aska-related-card:hover {
+    transform: translateY(-3px) scale(1.003) !important;
+  }
+}

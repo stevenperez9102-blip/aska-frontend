@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Confirmacion from "./pages/Confirmacion";
 
 import Home from "./pages/Home";
@@ -40,6 +41,96 @@ function AdminRoute({ children }) {
 
   return children;
 }
+
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        className="aska-route-motion-shell"
+        initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+        transition={{
+          duration: 0.48,
+          ease: [0.22, 0.61, 0.36, 1],
+        }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/confirmacion" element={<Confirmacion />} />
+          <Route path="/nosotras" element={<Nosotras />} />
+          <Route path="/catalogo" element={<Catalog />} />
+          <Route path="/catalogo/:slug" element={<Catalog />} />
+          <Route path="/producto/:id" element={<ProductDetail />} />
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/registro" element={<Navigate to="/register" replace />} />
+          <Route path="/verificar-correo" element={<VerifyEmail />} />
+          <Route path="/recuperar-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/carrito" element={<Navigate to="/cart" replace />} />
+
+          <Route path="/checkout" element={<Checkout />} />
+
+          <Route
+            path="/mis-pedidos"
+            element={
+              <PrivateRoute>
+                <MisPedidos />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/admin/pagina"
+            element={
+              <AdminRoute>
+                <AdminPagina />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/productos"
+            element={
+              <AdminRoute>
+                <AdminProductos />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/pedidos"
+            element={
+              <AdminRoute>
+                <AdminPedidos />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 
 function App() {
   const [secretActive, setSecretActive] = useState(false);
@@ -333,6 +424,24 @@ function App() {
           a{
             color:inherit;
             text-decoration:none;
+          }
+
+          .aska-route-motion-shell{
+            min-height:100vh;
+            width:100%;
+            overflow-x:hidden;
+            will-change:opacity, transform, filter;
+          }
+
+          .aska-route-motion-shell img{
+            image-rendering:auto;
+          }
+
+          @media (prefers-reduced-motion: reduce){
+            .aska-route-motion-shell{
+              transform:none !important;
+              filter:none !important;
+            }
           }
 
           .aska-music-player{
@@ -646,73 +755,7 @@ function App() {
           )}
         </div>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/confirmacion" element={<Confirmacion />} />
-          <Route path="/nosotras" element={<Nosotras />} />
-          <Route path="/catalogo" element={<Catalog />} />
-          <Route path="/catalogo/:slug" element={<Catalog />} />
-          <Route path="/producto/:id" element={<ProductDetail />} />
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/registro" element={<Navigate to="/register" replace />} />
-          <Route path="/verificar-correo" element={<VerifyEmail />} />
-          <Route path="/recuperar-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/carrito" element={<Navigate to="/cart" replace />} />
-
-          <Route path="/checkout" element={<Checkout />} />
-
-          <Route
-            path="/mis-pedidos"
-            element={
-              <PrivateRoute>
-                <MisPedidos />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/admin/pagina"
-            element={
-              <AdminRoute>
-                <AdminPagina />
-              </AdminRoute>
-            }
-          />
-
-          <Route
-            path="/admin/productos"
-            element={
-              <AdminRoute>
-                <AdminProductos />
-              </AdminRoute>
-            }
-          />
-
-          <Route
-            path="/admin/pedidos"
-            element={
-              <AdminRoute>
-                <AdminPedidos />
-              </AdminRoute>
-            }
-          />
-
-          <Route
-            path="/admin/dashboard"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <AnimatedRoutes />
       </div>
     </Router>
   );
