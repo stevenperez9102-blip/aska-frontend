@@ -13,19 +13,6 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
 
-const ASKA_EDITORIAL_QUOTES = [
-  "No diseñamos accesorios. Diseñamos presencia.",
-  "Metal convertido en identidad.",
-  "Piezas para quienes nunca pasan desapercibidos.",
-  "La belleza también puede intimidar.",
-];
-
-const ASKA_CATEGORY_COPY = {
-  Collares: "Cadenas, texturas y metal para transformar el cuello en declaración.",
-  Pulseras: "Piezas que acompañan el gesto, la piel y el movimiento.",
-  "Accesorios corporales": "Diseños para cuerpos que convierten presencia en lenguaje.",
-  "Aretes y anillos": "Detalles filosos, íntimos y precisos para cerrar el look.",
-};
 
 const ASKA_CATEGORY_EDITORIAL = {
   catalogo: {
@@ -152,12 +139,7 @@ function Catalog() {
   const categoriaActiva = slug ? CATEGORY_MAP[slug] || "" : "";
   const heroSlug = slug || "catalogo";
   const searchTerm = (searchParams.get("buscar") || "").trim();
-
-  const editorialMessage = useMemo(() => {
-    const source = categoriaActiva || searchTerm || "catalogo";
-    const index = source.length % ASKA_EDITORIAL_QUOTES.length;
-    return ASKA_EDITORIAL_QUOTES[index];
-  }, [categoriaActiva, searchTerm]);
+  const editorial = ASKA_CATEGORY_EDITORIAL[heroSlug] || ASKA_CATEGORY_EDITORIAL.catalogo;
 
   useEffect(() => {
     const cargar = async () => {
@@ -286,8 +268,9 @@ function Catalog() {
 
   const heroSubtitulo =
     hero?.subtitulo?.trim() ||
+    editorial.subtitle ||
     (categoriaActiva
-      ? ASKA_CATEGORY_COPY[categoriaActiva] || `Descubre todas las piezas de ${categoriaActiva}.`
+      ? `Descubre todas las piezas de ${categoriaActiva}.`
       : "Piezas artesanales con actitud, presencia y fuerza visual.");
 
   const heroColor = hero?.color_texto || "#ffffff";
@@ -472,36 +455,17 @@ function Catalog() {
       <Navbar />
       <section className="aska-catalog-maison-hero">
         <div className="aska-catalog-maison-media">
-          <img src={catalogHero} alt="AŞKA editorial campaign" />
+          <img src={editorial.image} alt={`AŞKA ${editorial.title}`} />
         </div>
 
         <div className="aska-catalog-maison-copy">
-          <p>Explora la colección</p>
-          <h1>{heroTitulo}</h1>
+          <p>{editorial.kicker}</p>
+          <h1>{editorial.title}</h1>
           <span>{heroSubtitulo}</span>
 
           <div className="aska-catalog-maison-line" />
 
-          <strong>{editorialMessage}</strong>
-        </div>
-      </section>
-
-      <section className="aska-catalog-manifesto-row">
-        <div className="aska-catalog-manifesto-copy">
-          <p>AŞKA MANIFESTO</p>
-          <h2>
-            No es accesorio.
-            <br />
-            Es identidad.
-          </h2>
-          <span>
-            Diseños oscuros, contemporáneos y artesanales para personas que
-            convierten presencia en lenguaje visual.
-          </span>
-        </div>
-
-        <div className="aska-catalog-manifesto-image">
-          <img src={editorialPortrait} alt="AŞKA portrait editorial" />
+          <strong>{editorial.quote}</strong>
         </div>
       </section>
 
@@ -550,6 +514,24 @@ function Catalog() {
                 </div>
 
                 <div className="aska-catalog-rail-shell">
+                  <button
+                    type="button"
+                    className="aska-catalog-floating-arrow is-left"
+                    onClick={() => scrollRail(slugifyCategory(categoriaActiva), -1)}
+                    aria-label="Anterior"
+                  >
+                    ‹
+                  </button>
+
+                  <button
+                    type="button"
+                    className="aska-catalog-floating-arrow is-right"
+                    onClick={() => scrollRail(slugifyCategory(categoriaActiva), 1)}
+                    aria-label="Siguiente"
+                  >
+                    ›
+                  </button>
+
                   <div className="aska-catalog-rail-top">
                     <p>Desliza la colección</p>
 
@@ -594,6 +576,24 @@ function Catalog() {
               </p>
             ) : (
               <div className="aska-catalog-rail-shell">
+                <button
+                  type="button"
+                  className="aska-catalog-floating-arrow is-left"
+                  onClick={() => scrollRail("search-results", -1)}
+                  aria-label="Anterior"
+                >
+                  ‹
+                </button>
+
+                <button
+                  type="button"
+                  className="aska-catalog-floating-arrow is-right"
+                  onClick={() => scrollRail("search-results", 1)}
+                  aria-label="Siguiente"
+                >
+                  ›
+                </button>
+
                 <div className="aska-catalog-rail-top">
                   <p>Resultados en carrusel</p>
 
@@ -636,24 +636,30 @@ function Catalog() {
                 <p className="aska-catalog-status">No hay productos disponibles.</p>
               ) : (
                 categories.map((category) => {
+                  const categorySlug = slugifyCategory(category);
+                  const categoryEditorial =
+                    ASKA_CATEGORY_EDITORIAL[categorySlug] ||
+                    ASKA_CATEGORY_EDITORIAL.catalogo;
+
                   const preview = products
                     .filter(
                       (p) =>
                         String(p.categoria || "").toLowerCase() ===
                         String(category || "").toLowerCase()
                     )
-                    .slice(0, 5);
+                    .slice(0, 8);
 
                   return (
                     <section key={category} className="aska-editorial-category-block">
                       <div className="aska-editorial-category-header">
                         <div>
-                          <p>Colección AŞKA</p>
-                          <h2>{category}</h2>
+                          <p>{categoryEditorial.kicker}</p>
+                          <h2>{categoryEditorial.title}</h2>
+                          <span>{categoryEditorial.subtitle}</span>
                         </div>
 
                         <Link
-                          to={`/catalogo/${slugifyCategory(category)}`}
+                          to={`/catalogo/${categorySlug}`}
                           className="aska-editorial-see-more"
                         >
                           Ver más
@@ -661,13 +667,31 @@ function Catalog() {
                       </div>
 
                       <div className="aska-catalog-rail-shell">
+                        <button
+                          type="button"
+                          className="aska-catalog-floating-arrow is-left"
+                          onClick={() => scrollRail(categorySlug, -1)}
+                          aria-label="Anterior"
+                        >
+                          ‹
+                        </button>
+
+                        <button
+                          type="button"
+                          className="aska-catalog-floating-arrow is-right"
+                          onClick={() => scrollRail(categorySlug, 1)}
+                          aria-label="Siguiente"
+                        >
+                          ›
+                        </button>
+
                         <div className="aska-catalog-rail-top">
                           <p>Desliza la colección</p>
 
-                          <div>
+                          <div className="aska-catalog-rail-top-buttons">
                             <button
                               type="button"
-                              onClick={() => scrollRail(slugifyCategory(category), -1)}
+                              onClick={() => scrollRail(categorySlug, -1)}
                               aria-label="Anterior"
                             >
                               ‹
@@ -675,7 +699,7 @@ function Catalog() {
 
                             <button
                               type="button"
-                              onClick={() => scrollRail(slugifyCategory(category), 1)}
+                              onClick={() => scrollRail(categorySlug, 1)}
                               aria-label="Siguiente"
                             >
                               ›
@@ -686,7 +710,7 @@ function Catalog() {
                         <div
                           className="aska-catalog-product-rail"
                           ref={(node) => {
-                            railRefs.current[slugifyCategory(category)] = node;
+                            railRefs.current[categorySlug] = node;
                           }}
                         >
                           {preview.map((item) => (
@@ -935,7 +959,7 @@ function Catalog() {
             width: 100%;
             text-decoration: none;
             color: #ffffff;
-            border-radius: 28px;
+            border-radius: 22px;
             overflow: hidden;
             background: #050505;
             border: 1px solid rgba(17,17,17,0.10);
@@ -1117,7 +1141,7 @@ function Catalog() {
             font-size: 1.4rem;
             line-height: 1;
             cursor: pointer;
-            opacity: 1;
+            opacity: 0;
             transition:
               opacity .28s ease,
               background .28s ease,
@@ -1262,7 +1286,7 @@ function Catalog() {
             right: 18px;
             top: 18px;
             z-index: 7;
-            min-height: 46px;
+            min-height: 38px;
             padding: 0 13px;
             border: 1px solid rgba(255,255,255,0.38);
             border-radius: 999px;
@@ -1272,7 +1296,7 @@ function Catalog() {
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            opacity: 1;
+            opacity: 0;
             transform: translateY(-6px);
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             font-size: 0.7rem;
@@ -1339,7 +1363,7 @@ function Catalog() {
 
           @keyframes askaToastReveal {
             from {
-              opacity: 1;
+              opacity: 0;
               transform: translateY(14px);
             }
             to {
@@ -1683,29 +1707,27 @@ function Catalog() {
           }
 
           .aska-catalog-rail-top button {
-            width: 46px;
-            height: 46px;
+            width: 38px;
+            height: 38px;
             border-radius: 999px;
             border: 1px solid rgba(17,17,17,.14);
-            background: rgba(255,255,255,.96);
+            background: rgba(255,255,255,.76);
             color: #111111;
             cursor: pointer;
-            font-size: 1.6rem;
+            font-size: 1.24rem;
             line-height: 1;
-            box-shadow: 0 18px 38px rgba(0,0,0,.18);
+            box-shadow: 0 12px 28px rgba(0,0,0,.08);
           }
 
           .aska-catalog-product-rail {
             display: flex !important;
             gap: clamp(18px, 2vw, 28px);
-            overflow-x: auto !important;
+            overflow-x: auto;
             overflow-y: hidden;
             scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
             overscroll-behavior-x: contain;
             padding: 0 0 18px;
             scrollbar-width: thin;
-            padding-bottom: 24px;
           }
 
           .aska-catalog-rail-item {
@@ -1798,6 +1820,245 @@ function Catalog() {
               min-height: 58vh !important;
             }
           }
+
+
+          /* ===== ASKA FINAL FIX GENERAL CATALOGO + FLECHAS ===== */
+
+          .aska-catalog-maison-hero {
+            min-height: 76svh !important;
+            grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr) !important;
+          }
+
+          .aska-catalog-maison-media {
+            min-height: 76svh !important;
+          }
+
+          .aska-catalog-maison-copy {
+            padding: clamp(96px, 10vw, 144px) clamp(28px, 5vw, 76px) clamp(56px, 7vw, 86px) !important;
+            min-width: 0 !important;
+          }
+
+          .aska-catalog-maison-copy h1 {
+            font-size: clamp(3.4rem, 7vw, 7.2rem) !important;
+            line-height: .88 !important;
+            letter-spacing: -.065em !important;
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .aska-catalog-editorial-section {
+            padding-top: clamp(48px, 5vw, 72px) !important;
+          }
+
+          .aska-home-catalog-sections {
+            gap: clamp(64px, 7vw, 104px) !important;
+          }
+
+          .aska-editorial-category-block {
+            overflow: hidden !important;
+            padding-right: 0 !important;
+          }
+
+          .aska-editorial-category-block::before {
+            margin-bottom: 22px !important;
+          }
+
+          .aska-editorial-category-block::after {
+            content: none !important;
+          }
+
+          .aska-editorial-category-block:nth-child(even) .aska-editorial-category-header {
+            flex-direction: row !important;
+            text-align: left !important;
+          }
+
+          .aska-editorial-category-block:nth-child(even)::before {
+            margin-left: 0 !important;
+            background: linear-gradient(90deg, rgba(17,17,17,.58), rgba(17,17,17,0)) !important;
+          }
+
+          .aska-editorial-category-header {
+            width: 100% !important;
+            max-width: 100% !important;
+            align-items: flex-end !important;
+            overflow: hidden !important;
+            margin-bottom: clamp(22px, 3vw, 34px) !important;
+          }
+
+          .aska-editorial-category-header > div {
+            min-width: 0 !important;
+            max-width: min(820px, 72vw) !important;
+          }
+
+          .aska-editorial-category-header h2,
+          .aska-category-editorial-intro h2 {
+            font-size: clamp(2.6rem, 5.2vw, 5.8rem) !important;
+            line-height: .9 !important;
+            letter-spacing: -.055em !important;
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+          }
+
+          .aska-editorial-category-header span {
+            display: block !important;
+            max-width: 560px !important;
+            margin-top: 16px !important;
+            color: rgba(17,17,17,.58) !important;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif) !important;
+            font-size: 1rem !important;
+            line-height: 1.65 !important;
+            text-transform: none !important;
+            letter-spacing: 0 !important;
+            font-weight: 300 !important;
+          }
+
+          .aska-catalog-rail-shell {
+            position: relative !important;
+            overflow: visible !important;
+            isolation: isolate !important;
+          }
+
+          .aska-catalog-rail-top {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-bottom: 18px !important;
+          }
+
+          .aska-catalog-rail-top-buttons {
+            display: inline-flex !important;
+            gap: 8px !important;
+          }
+
+          .aska-catalog-rail-top button {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: grid !important;
+            place-items: center !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 999px !important;
+            background: rgba(255,255,255,.96) !important;
+            color: #111 !important;
+            border: 1px solid rgba(17,17,17,.16) !important;
+            box-shadow: 0 18px 38px rgba(0,0,0,.16) !important;
+            font-size: 1.55rem !important;
+            line-height: 1 !important;
+            z-index: 20 !important;
+          }
+
+          .aska-catalog-floating-arrow {
+            position: absolute !important;
+            top: 52% !important;
+            transform: translateY(-50%) !important;
+            z-index: 30 !important;
+            width: 52px !important;
+            height: 52px !important;
+            border-radius: 999px !important;
+            border: 1px solid rgba(255,255,255,.58) !important;
+            background: rgba(5,5,5,.70) !important;
+            color: #fff !important;
+            box-shadow: 0 18px 42px rgba(0,0,0,.28) !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 2rem !important;
+            line-height: 1 !important;
+            cursor: pointer !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            backdrop-filter: blur(12px) !important;
+          }
+
+          .aska-catalog-floating-arrow.is-left {
+            left: 10px !important;
+          }
+
+          .aska-catalog-floating-arrow.is-right {
+            right: 10px !important;
+          }
+
+          .aska-catalog-product-rail {
+            display: flex !important;
+            gap: clamp(18px, 2vw, 28px) !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            scroll-snap-type: x mandatory !important;
+            scroll-behavior: smooth !important;
+            padding: 0 56px 26px !important;
+            scrollbar-width: thin !important;
+          }
+
+          .aska-catalog-rail-item {
+            flex: 0 0 clamp(260px, 23vw, 360px) !important;
+            scroll-snap-align: start !important;
+            min-width: 0 !important;
+          }
+
+          .aska-catalog-product-rail .aska-editorial-card-media,
+          .aska-catalog-product-rail .aska-editorial-card.is-featured .aska-editorial-card-media {
+            height: clamp(390px, 37vw, 520px) !important;
+          }
+
+          @media (max-width: 768px) {
+            .aska-catalog-maison-hero {
+              display: block !important;
+              min-height: auto !important;
+            }
+
+            .aska-catalog-maison-media {
+              height: 46svh !important;
+              min-height: 46svh !important;
+            }
+
+            .aska-catalog-maison-copy {
+              padding: 34px 20px 50px !important;
+              background: #050505 !important;
+            }
+
+            .aska-catalog-editorial-section {
+              padding-top: 44px !important;
+            }
+
+            .aska-editorial-category-header {
+              align-items: flex-start !important;
+              flex-direction: column !important;
+            }
+
+            .aska-editorial-category-header > div {
+              max-width: 100% !important;
+            }
+
+            .aska-editorial-category-header h2,
+            .aska-category-editorial-intro h2 {
+              font-size: clamp(2.7rem, 12vw, 4.7rem) !important;
+            }
+
+            .aska-catalog-product-rail {
+              padding-left: 46px !important;
+              padding-right: 46px !important;
+            }
+
+            .aska-catalog-rail-item {
+              flex-basis: 78vw !important;
+            }
+
+            .aska-catalog-floating-arrow {
+              width: 44px !important;
+              height: 44px !important;
+              font-size: 1.7rem !important;
+            }
+
+            .aska-catalog-floating-arrow.is-left {
+              left: 2px !important;
+            }
+
+            .aska-catalog-floating-arrow.is-right {
+              right: 2px !important;
+            }
+          }
+
 
           @media (max-width: 1100px) {
             .aska-editorial-feature-grid {
@@ -1964,8 +2225,8 @@ function Catalog() {
 
             .aska-editorial-thumb,
             .aska-editorial-card.is-featured .aska-editorial-thumb {
-              width: 46px;
-              height: 46px;
+              width: 38px;
+              height: 38px;
             }
           }
         `}
