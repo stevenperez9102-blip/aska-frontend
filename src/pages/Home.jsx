@@ -625,7 +625,7 @@ function Home() {
       </section>
 
       <a
-        href="https://wa.me/573001234567"
+        href="https://wa.me/573125183100"
         target="_blank"
         rel="noreferrer"
         className="aska-whatsapp-button"
