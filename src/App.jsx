@@ -47,6 +47,7 @@ function App() {
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [musicOpen, setMusicOpen] = useState(false);
+  const [musicUnlocked, setMusicUnlocked] = useState(false);
 
   const [cmsLoaded, setCmsLoaded] = useState(false);
 
@@ -175,29 +176,80 @@ function App() {
   }, []);
 
 
-  useEffect(() => {
-    if (!audioRef.current) return;
+  const playCurrentTrack = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    audioRef.current.volume = 0.28;
-    audioRef.current.muted = musicMuted;
+    try {
+      audio.volume = 0.32;
+      audio.muted = musicMuted;
+      audio.src = tracks[currentTrack].src;
+      await audio.play();
+      setMusicPlaying(true);
+      setMusicUnlocked(true);
+    } catch (error) {
+      console.warn("El navegador bloqueó el audio hasta una interacción del usuario:", error);
+      setMusicPlaying(false);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.32;
+    audio.muted = musicMuted;
 
     if (musicPlaying) {
-      audioRef.current.play().catch(() => {
+      audio.play().catch(() => {
         setMusicPlaying(false);
       });
     } else {
-      audioRef.current.pause();
+      audio.pause();
     }
   }, [musicMuted, musicPlaying, currentTrack]);
+
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (musicUnlocked) return;
+      playCurrentTrack();
+      setMusicOpen(false);
+    };
+
+    window.addEventListener("click", unlockAudio, { once: true });
+    window.addEventListener("scroll", unlockAudio, { once: true, passive: true });
+    window.addEventListener("touchstart", unlockAudio, { once: true, passive: true });
+    window.addEventListener("keydown", unlockAudio, { once: true });
+
+    return () => {
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("scroll", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+    };
+  }, [musicUnlocked, currentTrack, musicMuted]);
+
+  const handlePlayPause = async () => {
+    if (musicPlaying) {
+      audioRef.current?.pause();
+      setMusicPlaying(false);
+      setMusicOpen(true);
+      return;
+    }
+
+    setMusicOpen(true);
+    await playCurrentTrack();
+  };
 
   const handleNextTrack = () => {
     setCurrentTrack((prev) => (prev + 1) % tracks.length);
     setMusicPlaying(true);
-  };
 
-  const handleToggleMusic = () => {
-    setMusicPlaying((prev) => !prev);
-    setMusicOpen(true);
+    window.setTimeout(() => {
+      audioRef.current?.play().catch(() => {
+        setMusicPlaying(false);
+      });
+    }, 80);
   };
 
   const handleSecretAreaClick = (e) => {
@@ -296,8 +348,8 @@ function App() {
           }
 
           .aska-music-orb{
-            width:46px;
-            height:46px;
+            width:44px;
+            height:44px;
             border-radius:999px;
             border:1px solid rgba(255,255,255,0.16);
             background:rgba(5,5,5,0.74);
@@ -305,11 +357,11 @@ function App() {
             display:grid;
             place-items:center;
             cursor:pointer;
-            font-size:1.05rem;
+            font-size:1rem;
             box-shadow:0 18px 48px rgba(0,0,0,0.28);
             backdrop-filter:blur(16px) saturate(118%);
             -webkit-backdrop-filter:blur(16px) saturate(118%);
-            opacity:.82;
+            opacity:.78;
             transition:
               opacity .24s ease,
               transform .24s ease,
@@ -540,6 +592,7 @@ function App() {
         <audio
           ref={audioRef}
           src={tracks[currentTrack].src}
+          preload="auto"
           onEnded={handleNextTrack}
         />
 
@@ -547,16 +600,19 @@ function App() {
           <button
             type="button"
             className="aska-music-orb"
-            onClick={() => setMusicOpen((prev) => !prev)}
+            onClick={(event) => {
+              event.stopPropagation();
+              setMusicOpen((prev) => !prev);
+            }}
             aria-label={musicOpen ? "Ocultar reproductor" : "Mostrar reproductor"}
           >
             {musicPlaying ? "♪" : "♫"}
           </button>
 
           {musicOpen && (
-            <div className="aska-music-panel">
+            <div className="aska-music-panel" onClick={(event) => event.stopPropagation()}>
               <div className="aska-music-player-info">
-                <span>Now playing</span>
+                <span>{musicUnlocked ? "Now playing" : "Scroll / tap to play"}</span>
                 <strong>{tracks[currentTrack].title}</strong>
                 <small>{tracks[currentTrack].artist}</small>
               </div>
@@ -564,7 +620,7 @@ function App() {
               <div className="aska-music-player-controls">
                 <button
                   type="button"
-                  onClick={handleToggleMusic}
+                  onClick={handlePlayPause}
                   aria-label={musicPlaying ? "Pausar música" : "Reproducir música"}
                 >
                   {musicPlaying ? "Pause" : "Play"}
