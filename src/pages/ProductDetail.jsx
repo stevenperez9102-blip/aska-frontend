@@ -119,7 +119,7 @@ function ProductDetail() {
             minHeight: "100vh",
             background: "var(--aska-bg-secondary, #f5f5f5)",
             padding: "120px 24px 60px",
-            color: "var(--aska-text-primary, #111)",
+            color: "#fff",
           }}
         >
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -158,7 +158,7 @@ function ProductDetail() {
         className="aska-product-detail-page"
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(180deg, #f8f3f0 0%, #efe7e4 48%, #f8f3f0 100%)",
+          background: "#0b0b0b",
           padding: "clamp(96px, 9vw, 132px) 24px clamp(72px, 8vw, 118px)",
         }}
       >
@@ -203,7 +203,7 @@ function ProductDetail() {
                 width: "100%",
                 height: "clamp(520px, 62vw, 740px)",
                 minHeight: "420px",
-                background: "#f4eee9",
+                background: "#0f0f0f",
                 borderRadius: "28px",
                 overflow: "hidden",
                 display: "flex",
@@ -248,7 +248,9 @@ function ProductDetail() {
                       height: "42px",
                       borderRadius: "999px",
                       border: "none",
-                      background: "rgba(0,0,0,0.55)",
+                      background: "rgba(255,255,255,0.14)",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.12)",
                       color: "var(--aska-text-secondary, #fff)",
                       fontSize: "1.6rem",
                       cursor: "pointer",
@@ -270,7 +272,9 @@ function ProductDetail() {
                       height: "42px",
                       borderRadius: "999px",
                       border: "none",
-                      background: "rgba(0,0,0,0.55)",
+                      background: "rgba(255,255,255,0.14)",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.12)",
                       color: "var(--aska-text-secondary, #fff)",
                       fontSize: "1.6rem",
                       cursor: "pointer",
@@ -373,7 +377,7 @@ function ProductDetail() {
               style={{
                 margin: 0,
                 marginBottom: "28px",
-                color: "var(--aska-text-primary, #2b2b2b)",
+                color: "rgba(255,255,255,0.72)",
                 lineHeight: 1.8,
                 fontSize: "1.02rem",
               }}
@@ -437,6 +441,26 @@ function ProductDetail() {
             >
               Agregar al carrito
             </button>
+
+            <a
+              href={`https://wa.me/573125183100?text=${encodeURIComponent(
+                `Hola ASKA, quiero comprar ${producto.nombre}`
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: "block",
+                marginTop: "16px",
+                color: "rgba(255,255,255,0.7)",
+                textDecoration: "none",
+                fontSize: ".9rem",
+                letterSpacing: ".08em",
+                textAlign: "center",
+                fontFamily: "var(--aska-font-family-secondary, inherit)",
+              }}
+            >
+              Comprar por WhatsApp
+            </a>
           </aside>
         </div>
       </section>
@@ -444,7 +468,7 @@ function ProductDetail() {
       <style>
         {`
           :root {
-            --aska-card-bg: #ffffff;
+            --aska-card-bg: #111111;
           }
 
           .aska-add-to-cart-button:hover {
@@ -489,16 +513,7 @@ function ProductDetail() {
 
 
 
-          .aska-product-detail-page::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background:
-              radial-gradient(circle at 12% 8%, rgba(255,255,255,0.70), transparent 28%),
-              radial-gradient(circle at 86% 12%, rgba(17,17,17,0.08), transparent 34%);
-            z-index: 0;
-          }
+          
 
           .aska-product-detail-grid {
             position: relative;
@@ -519,7 +534,7 @@ function ProductDetail() {
           }
 
           .aska-product-image-frame:hover img {
-            transform: scale(1.018);
+            transform: scale(1.035);
             filter: contrast(1.05) saturate(1.02);
           }
 
