@@ -850,14 +850,14 @@ function Navbar() {
           .aska-navbar-search {
             position: absolute;
             top: 50%;
-            right: 74px;
+            right: 112px;
             transform: translateY(-50%);
             z-index: 10003;
           }
 
           .aska-navbar-search-trigger {
-            width: 38px;
-            height: 42px;
+            width: 30px;
+            height: 30px;
             border: none;
             background: transparent;
             color: rgba(255,255,255,0.84);
@@ -878,8 +878,8 @@ function Navbar() {
           }
 
           .aska-search-icon-svg {
-            width: 21px;
-            height: 21px;
+            width: 16px;
+            height: 16px;
             display: block;
           }
 
@@ -1268,7 +1268,7 @@ function Navbar() {
             .aska-hamburger {
               display: flex;
               position: absolute;
-              right: 58px;
+              right: 64px;
               top: 50%;
               transform: translateY(-50%);
               width: 42px;
@@ -1375,14 +1375,14 @@ function Navbar() {
           .aska-navbar-search {
             position: absolute;
             top: 50%;
-            right: 74px;
+            right: 112px;
             transform: translateY(-50%);
             z-index: 10003;
           }
 
           .aska-navbar-search-trigger {
-            width: 38px;
-            height: 42px;
+            width: 30px;
+            height: 30px;
             border: none;
             background: transparent;
             color: rgba(255,255,255,0.84);
@@ -1403,8 +1403,8 @@ function Navbar() {
           }
 
           .aska-search-icon-svg {
-            width: 21px;
-            height: 21px;
+            width: 16px;
+            height: 16px;
             display: block;
           }
 
@@ -1491,7 +1491,7 @@ function Navbar() {
           }
 
           .aska-navbar-cart {
-              right: 16px;
+              right: 14px;
               min-width: 34px;
               width: 34px;
               height: 40px;
