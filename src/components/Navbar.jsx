@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import cartLogo from "../assets/casado.png";
 
 function slugifyCategory(name = "") {
   return name
@@ -442,7 +443,7 @@ function Navbar() {
             aria-label="Ir al carrito de compras"
             onClick={closeMobileMenu}
           >
-            <span aria-hidden="true" className="aska-cart-icon">Bag</span>
+            <img src={cartLogo} alt="Carrito" className="aska-cart-icon" />
             {totalCarrito > 0 && (
               <span className={`aska-navbar-cart-badge ${cartLuxPulse ? "aska-navbar-cart-badge-lux-pulse" : ""}`}>{totalCarrito}</span>
             )}
@@ -478,13 +479,33 @@ function Navbar() {
           }
 
           .aska-site-header.is-transparent {
-            background: linear-gradient(180deg, rgba(0,0,0,0.34), rgba(0,0,0,0.00));
-            backdrop-filter: blur(0px);
+            background: transparent !important;
+            border-bottom-color: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+
+          .aska-site-header.is-transparent::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 140%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.24), rgba(0,0,0,0.08) 52%, rgba(0,0,0,0.00));
+            pointer-events: none;
+            z-index: -1;
+          }
+
+          .aska-site-header.is-transparent .aska-navbar-inner {
+            background: transparent !important;
+            border-bottom-color: transparent !important;
+            box-shadow: none !important;
           }
 
           .aska-site-header.is-scrolled {
-            background: var(--aska-navbar-bg-scrolled);
-            border-bottom-color: var(--aska-navbar-border);
+            background: var(--aska-navbar-bg-scrolled) !important;
+            border-bottom-color: var(--aska-navbar-border) !important;
             backdrop-filter: blur(18px) saturate(118%);
             -webkit-backdrop-filter: blur(18px) saturate(118%);
           }
@@ -672,24 +693,30 @@ function Navbar() {
             right: 24px;
             transform: translateY(-50%);
             z-index: 10002;
-            min-width: 54px;
-            height: 38px;
-            padding: 0 14px;
+            width: 48px;
+            height: 48px;
+            padding: 0;
             border-radius: 999px;
             color: rgba(255,255,255,0.86);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.045);
-            border: 1px solid rgba(255,255,255,0.16);
-            box-shadow: none;
+            background: rgba(5,5,5,0.34);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 16px 42px rgba(0,0,0,0.18);
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            overflow: visible;
             transition:
               background .28s ease,
               border-color .28s ease,
               color .28s ease,
-              transform .28s ease;
+              transform .28s ease,
+              box-shadow .28s ease;
+          }
+
+          .aska-site-header.is-scrolled .aska-navbar-cart {
+            background: rgba(255,255,255,0.055);
           }
 
           .aska-navbar-cart:hover {
@@ -700,11 +727,18 @@ function Navbar() {
           }
 
           .aska-cart-icon {
-            font-size: 0.68rem;
-            font-weight: 620;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            line-height: 1;
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            display: block;
+            filter: brightness(0) invert(1);
+            opacity: 0.92;
+            transition: opacity .28s ease, transform .28s ease;
+          }
+
+          .aska-navbar-cart:hover .aska-cart-icon {
+            opacity: 1;
+            transform: scale(1.04);
           }
 
           .aska-navbar-cart-badge {
@@ -912,10 +946,16 @@ function Navbar() {
           }
 
           @media (max-width: 768px) {
-            .aska-site-header.is-transparent,
+            .aska-site-header.is-transparent {
+              background: transparent !important;
+              border-bottom-color: transparent !important;
+              backdrop-filter: none !important;
+              -webkit-backdrop-filter: none !important;
+            }
+
             .aska-site-header.is-scrolled {
-              background: rgba(5,5,5,0.88);
-              border-bottom: 1px solid rgba(255,255,255,0.08);
+              background: rgba(5,5,5,0.88) !important;
+              border-bottom: 1px solid rgba(255,255,255,0.08) !important;
               backdrop-filter: blur(16px);
               -webkit-backdrop-filter: blur(16px);
             }
@@ -1052,13 +1092,8 @@ function Navbar() {
             }
 
             .aska-cart-icon {
-              font-size: 0;
-            }
-
-            .aska-cart-icon::before {
-              content: "Bag";
-              font-size: 0.58rem;
-              letter-spacing: 0.12em;
+              width: 21px;
+              height: 21px;
             }
           }
         `}
