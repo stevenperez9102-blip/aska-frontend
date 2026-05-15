@@ -450,7 +450,7 @@ function Catalog() {
 
           .aska-catalog-hero {
             position: relative;
-            min-height: 58vh;
+            min-height: 68vh;
             overflow: hidden;
             background: #050505;
             display: flex;
@@ -540,7 +540,7 @@ function Catalog() {
 
           .aska-home-catalog-sections {
             display: grid;
-            gap: clamp(92px, 10vw, 154px);
+            gap: clamp(110px, 12vw, 180px);
           }
 
           .aska-editorial-category-block {
@@ -593,7 +593,7 @@ function Catalog() {
             min-height: 46px;
             padding: 0 22px;
             border: 1px solid rgba(17,17,17,0.14);
-            border-radius: 999px;
+            border-radius: 2px;
             background: rgba(255,255,255,0.72);
             color: #111111;
             text-decoration: none;
@@ -647,11 +647,11 @@ function Catalog() {
             width: 100%;
             text-decoration: none;
             color: #ffffff;
-            border-radius: 30px;
+            border-radius: 22px;
             overflow: hidden;
             background: #050505;
             border: 1px solid rgba(17,17,17,0.10);
-            box-shadow: 0 28px 80px rgba(0,0,0,0.12);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.10);
             transform: translateY(0);
             transition:
               transform .54s cubic-bezier(.22,.61,.36,1),
@@ -661,20 +661,20 @@ function Catalog() {
 
           .aska-editorial-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 42px 100px rgba(0,0,0,0.18);
+            box-shadow: 0 38px 92px rgba(0,0,0,0.16);
             border-color: rgba(17,17,17,0.24);
           }
 
           .aska-editorial-card-media {
             position: relative;
             width: 100%;
-            height: 430px;
+            height: 460px;
             overflow: hidden;
             background: #050505;
           }
 
           .aska-editorial-card.is-featured .aska-editorial-card-media {
-            height: 720px;
+            height: 760px;
           }
 
           .aska-editorial-card-media img {
@@ -783,7 +783,7 @@ function Catalog() {
           .aska-editorial-thumb {
             width: 42px;
             height: 42px;
-            border-radius: 999px;
+            border-radius: 2px;
             overflow: hidden;
             padding: 0;
             cursor: pointer;
@@ -822,7 +822,7 @@ function Catalog() {
             z-index: 5;
             width: 40px;
             height: 40px;
-            border-radius: 999px;
+            border-radius: 2px;
             border: 1px solid rgba(255,255,255,0.18);
             background: rgba(0,0,0,0.42);
             color: #ffffff;
@@ -881,11 +881,45 @@ function Catalog() {
           }
 
           .aska-category-products-grid > .is-wide .aska-editorial-card-media {
-            height: 640px;
+            height: 680px;
           }
 
           .aska-category-products-grid .aska-editorial-card-media {
-            height: 520px;
+            height: 540px;
+          }
+
+
+
+          .aska-editorial-arrow {
+            border-radius: 999px !important;
+          }
+
+          .aska-editorial-thumb {
+            border-radius: 999px !important;
+          }
+
+          .aska-editorial-see-more {
+            border-radius: 999px !important;
+          }
+
+          .aska-editorial-card-info h3 {
+            text-wrap: balance;
+          }
+
+          .aska-catalog-hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 28%;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.42));
+            z-index: 2;
+            pointer-events: none;
+          }
+
+          .aska-catalog-hero-content {
+            z-index: 3;
           }
 
           @media (max-width: 1100px) {
@@ -959,7 +993,7 @@ function Catalog() {
             .aska-editorial-card.is-featured .aska-editorial-card-media,
             .aska-category-products-grid .aska-editorial-card-media,
             .aska-category-products-grid > .is-wide .aska-editorial-card-media {
-              height: 430px;
+              height: 460px;
             }
 
             .aska-editorial-card-info h3,
