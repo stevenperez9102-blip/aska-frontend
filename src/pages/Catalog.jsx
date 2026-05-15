@@ -97,6 +97,7 @@ function Catalog() {
             initialSelected[product.id] = 0;
           }
         });
+
         setSelectedImages(initialSelected);
       } catch (error) {
         console.error("Error cargando productos:", error);
@@ -112,7 +113,9 @@ function Catalog() {
   useEffect(() => {
     const cargarHero = async () => {
       try {
-        const res = await fetch(`https://aska-backend-nyx8.onrender.com/api/catalogo-hero/${heroSlug}`);
+        const res = await fetch(
+          `https://aska-backend-nyx8.onrender.com/api/catalogo-hero/${heroSlug}`
+        );
         const data = await res.json();
         setHero(data || null);
       } catch (error) {
@@ -125,12 +128,38 @@ function Catalog() {
   }, [heroSlug]);
 
   const categories = useMemo(() => {
-    return [...new Set(products.map((p) => p.categoria).filter(Boolean))];
+    const orden = [
+      "Collares",
+      "Pulseras",
+      "Accesorios corporales",
+      "Aretes y anillos",
+    ];
+
+    const reales = [...new Set(products.map((p) => p.categoria).filter(Boolean))];
+
+    return reales.sort((a, b) => {
+      const indexA = orden.findIndex(
+        (item) => item.toLowerCase() === String(a).toLowerCase()
+      );
+      const indexB = orden.findIndex(
+        (item) => item.toLowerCase() === String(b).toLowerCase()
+      );
+
+      if (indexA === -1 && indexB === -1) return String(a).localeCompare(String(b));
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+
+      return indexA - indexB;
+    });
   }, [products]);
 
   const filteredProducts = useMemo(() => {
     if (!categoriaActiva) return products;
-    return products.filter((p) => p.categoria === categoriaActiva);
+    return products.filter(
+      (p) =>
+        String(p.categoria || "").toLowerCase() ===
+        String(categoriaActiva || "").toLowerCase()
+    );
   }, [products, categoriaActiva]);
 
   const heroMediaUrl =
@@ -148,13 +177,13 @@ function Catalog() {
     hero?.subtitulo?.trim() ||
     (categoriaActiva
       ? `Descubre todas las piezas de ${categoriaActiva}.`
-      : "Descubre algunas piezas por categoría y entra al catálogo completo de cada sección.");
+      : "Piezas artesanales con actitud, presencia y fuerza visual.");
 
   const heroColor = hero?.color_texto || "#ffffff";
   const heroOverlay =
     hero?.overlay_opacidad !== null && hero?.overlay_opacidad !== undefined
       ? Number(hero.overlay_opacidad)
-      : 0.2;
+      : 0.28;
   const heroFuente = hero?.fuente_texto || "Georgia, serif";
 
   const handleThumbnailClick = (event, productId, index) => {
@@ -199,7 +228,7 @@ function Catalog() {
     });
   };
 
-  const renderCard = (item) => {
+  const renderCard = (item, featured = false) => {
     const imgs = getProductImages(item).slice(0, 4);
     const currentIndex = selectedImages[item.id] ?? 0;
     const cover = imgs[currentIndex] || imgs[0] || item.imagen || "";
@@ -208,57 +237,24 @@ function Catalog() {
       <Link
         key={item.id}
         to={`/producto/${item.id}`}
-        style={{
-          textDecoration: "none",
-          color: "var(--aska-text-primary, #111)",
-          background: "var(--aska-card-bg, #fff)",
-          borderRadius: "24px",
-          overflow: "hidden",
-          border: "1px solid rgba(0,0,0,0.08)",
-          boxShadow: "0 16px 36px rgba(0,0,0,0.08)",
-          display: "block",
-        }}
+        className={`aska-editorial-card ${featured ? "is-featured" : ""}`}
       >
-        <div
-          style={{
-            width: "100%",
-            height: "300px",
-            background: "var(--aska-card-bg, #efefef)",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
-          <img
-            src={cover}
-            alt={item.nombre}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
+        <div className="aska-editorial-card-media">
+          {cover ? (
+            <img src={cover} alt={item.nombre} />
+          ) : (
+            <div className="aska-editorial-card-empty">Sin imagen</div>
+          )}
+
+          <div className="aska-editorial-card-gradient" />
 
           {imgs.length > 1 && (
             <>
               <button
                 type="button"
                 onClick={(event) => handlePrevImage(event, item)}
-                style={{
-                  position: "absolute",
-                  left: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "999px",
-                  border: "none",
-                  background: "rgba(0,0,0,0.55)",
-                  color: "#fff",
-                  fontSize: "1.6rem",
-                  cursor: "pointer",
-                  zIndex: 3,
-                }}
+                className="aska-editorial-arrow aska-editorial-arrow-left"
+                aria-label="Imagen anterior"
               >
                 ‹
               </button>
@@ -266,108 +262,45 @@ function Catalog() {
               <button
                 type="button"
                 onClick={(event) => handleNextImage(event, item)}
-                style={{
-                  position: "absolute",
-                  right: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "999px",
-                  border: "none",
-                  background: "rgba(0,0,0,0.55)",
-                  color: "#fff",
-                  fontSize: "1.6rem",
-                  cursor: "pointer",
-                  zIndex: 3,
-                }}
+                className="aska-editorial-arrow aska-editorial-arrow-right"
+                aria-label="Imagen siguiente"
               >
                 ›
               </button>
             </>
           )}
-        </div>
 
-        <div style={{ padding: "16px 16px 18px" }}>
-          <h3
-            style={{
-              margin: 0,
-              marginBottom: "4px",
-              fontSize: categoriaActiva ? "1.4rem" : "1.25rem",
-            }}
-          >
-            {item.nombre}
-          </h3>
+          <div className="aska-editorial-card-info">
+            <p className="aska-editorial-category">{item.categoria}</p>
+            <h3>{item.nombre}</h3>
+            <p className="aska-editorial-price">{formatPrice(item.precio)}</p>
 
-          <p
-            style={{
-              margin: 0,
-              marginBottom: imgs.length > 0 ? "12px" : "0",
-              fontWeight: 700,
-              color: "var(--aska-text-primary, #222)",
-            }}
-          >
-            {formatPrice(item.precio)}
-          </p>
+            {categoriaActiva && item.descripcion && (
+              <p className="aska-editorial-description">{item.descripcion}</p>
+            )}
 
-          {categoriaActiva && (
-            <p
-              style={{
-                margin: 0,
-                marginBottom: imgs.length > 0 ? "12px" : "0",
-                color: "#444",
-                lineHeight: 1.6,
-              }}
-            >
-              {item.descripcion}
-            </p>
-          )}
+            {imgs.length > 1 && (
+              <div className="aska-editorial-thumbs">
+                {imgs.map((img, index) => {
+                  const active = currentIndex === index;
 
-          {imgs.length > 0 && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${Math.min(imgs.length, 4)}, minmax(0, 1fr))`,
-                gap: "8px",
-              }}
-            >
-              {imgs.map((img, index) => {
-                const active = currentIndex === index;
-
-                return (
-                  <button
-                    key={`${img}-${index}`}
-                    type="button"
-                    onClick={(event) =>
-                      handleThumbnailClick(event, item.id, index)
-                    }
-                    style={{
-                      border: active
-                        ? "1px solid var(--aska-accent-primary, rgba(111, 84, 145, 0.85))"
-                        : "1px solid rgba(0,0,0,0.10)",
-                      background: "var(--aska-card-bg, #f5f5f5)",
-                      borderRadius: "10px",
-                      height: "48px",
-                      overflow: "hidden",
-                      padding: 0,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <img
-                      src={img}
-                      alt={`${item.nombre} miniatura ${index + 1}`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                  return (
+                    <button
+                      key={`${img}-${index}`}
+                      type="button"
+                      onClick={(event) =>
+                        handleThumbnailClick(event, item.id, index)
+                      }
+                      className={`aska-editorial-thumb ${active ? "active" : ""}`}
+                      aria-label={`Ver imagen ${index + 1} de ${item.nombre}`}
+                    >
+                      <img src={img} alt={`${item.nombre} miniatura ${index + 1}`} />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </Link>
     );
@@ -377,14 +310,7 @@ function Catalog() {
     <>
       <Navbar />
 
-      <section
-        style={{
-          position: "relative",
-          minHeight: "46vh",
-          overflow: "hidden",
-          background: "#000",
-        }}
-      >
+      <section className="aska-catalog-hero">
         {heroMediaTipo === "video" ? (
           <video
             autoPlay
@@ -392,162 +318,113 @@ function Catalog() {
             muted
             playsInline
             src={heroMediaUrl}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            className="aska-catalog-hero-media"
           />
         ) : (
           <img
             src={heroMediaUrl}
             alt={heroTitulo}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            className="aska-catalog-hero-media"
           />
         )}
 
         <div
+          className="aska-catalog-hero-overlay"
           style={{
-            position: "absolute",
-            inset: 0,
-            background: `rgba(0,0,0,${heroOverlay})`,
+            background: `linear-gradient(90deg, rgba(0,0,0,${
+              heroOverlay + 0.18
+            }), rgba(0,0,0,${heroOverlay}) 45%, rgba(0,0,0,${
+              heroOverlay + 0.16
+            })), linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.48))`,
           }}
         />
 
         <div
+          className="aska-catalog-hero-content"
           style={{
-            position: "relative",
-            zIndex: 2,
-            maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "44px 30px 70px",
             color: heroColor,
             fontFamily: `var(--aska-font-family-primary, ${heroFuente})`,
           }}
         >
-          <p
-            style={{
-              margin: 0,
-              marginBottom: "10px",
-              fontSize: "1.05rem",
-              opacity: 0.95,
-            }}
-          >
-            Explora la colección
-          </p>
+          <p>Explora la colección</p>
 
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "clamp(3rem, 8vw, 5.6rem)",
-              lineHeight: 0.95,
-              marginBottom: "18px",
-            }}
-          >
-            {heroTitulo}
-          </h1>
+          <h1>{heroTitulo}</h1>
 
-          <p
-            style={{
-              margin: 0,
-              fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
-              lineHeight: 1.4,
-              maxWidth: "860px",
-            }}
-          >
-            {heroSubtitulo}
-          </p>
+          <span>{heroSubtitulo}</span>
         </div>
       </section>
 
-      <section
-        style={{
-          background: "var(--aska-bg-secondary, #f3f3f3)",
-          minHeight: "60vh",
-          padding: "36px 24px 70px",
-        }}
-      >
-        <div className="aska-catalog-wrap" style={{ maxWidth: "1320px", margin: "0 auto" }}>
+      <section className="aska-catalog-editorial-section">
+        <div className="aska-catalog-wrap">
           {loading ? (
-            <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>Cargando catálogo...</p>
+            <p className="aska-catalog-status">Cargando catálogo...</p>
           ) : categoriaActiva ? (
             filteredProducts.length === 0 ? (
-              <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>
+              <p className="aska-catalog-status">
                 No hay productos en esta categoría todavía.
               </p>
             ) : (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                  gap: "24px",
-                }}
-              >
-                {filteredProducts.map((item) => renderCard(item))}
-              </div>
+              <>
+                <div className="aska-category-editorial-intro">
+                  <p>Colección AŞKA</p>
+                  <h2>{categoriaActiva}</h2>
+                  <span>
+                    Una selección de piezas creadas para destacar presencia,
+                    textura y carácter.
+                  </span>
+                </div>
+
+                <div className="aska-category-products-grid">
+                  {filteredProducts.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className={index % 5 === 0 ? "is-wide" : ""}
+                    >
+                      {renderCard(item, index % 5 === 0)}
+                    </div>
+                  ))}
+                </div>
+              </>
             )
           ) : (
-            <div style={{ display: "grid", gap: "36px" }}>
+            <div className="aska-home-catalog-sections">
               {categories.length === 0 ? (
-                <p style={{ color: "var(--aska-text-primary, #222)", fontSize: "1rem" }}>
-                  No hay productos disponibles.
-                </p>
+                <p className="aska-catalog-status">No hay productos disponibles.</p>
               ) : (
                 categories.map((category) => {
                   const preview = products
-                    .filter((p) => p.categoria === category)
+                    .filter(
+                      (p) =>
+                        String(p.categoria || "").toLowerCase() ===
+                        String(category || "").toLowerCase()
+                    )
                     .slice(0, 5);
 
                   return (
-                    <section key={category}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          gap: "12px",
-                          marginBottom: "18px",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <h2
-                          style={{
-                            margin: 0,
-                            color: "var(--aska-text-primary, #111)",
-                            fontSize: "clamp(1.7rem, 3vw, 2.4rem)",
-                          }}
-                        >
-                          {category}
-                        </h2>
+                    <section key={category} className="aska-editorial-category-block">
+                      <div className="aska-editorial-category-header">
+                        <div>
+                          <p>Colección AŞKA</p>
+                          <h2>{category}</h2>
+                        </div>
 
                         <Link
                           to={`/catalogo/${slugifyCategory(category)}`}
-                          style={{
-                            textDecoration: "none",
-                            color: "var(--aska-accent-primary, #6f5491)",
-                            fontWeight: 700,
-                          }}
+                          className="aska-editorial-see-more"
                         >
                           Ver más
                         </Link>
                       </div>
 
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                          gap: "20px",
-                        }}
-                      >
-                        {preview.map((item) => renderCard(item))}
+                      <div className="aska-editorial-feature-grid">
+                        {preview.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={index === 0 ? "is-main" : "is-secondary"}
+                          >
+                            {renderCard(item, index === 0)}
+                          </div>
+                        ))}
                       </div>
                     </section>
                   );
@@ -560,23 +437,6 @@ function Catalog() {
 
       <style>
         {`
-          :root {
-            --aska-card-bg: #ffffff;
-          }
-
-          .aska-catalog-wrap a {
-            transition:
-              transform 0.28s ease,
-              box-shadow 0.28s ease,
-              border-color 0.28s ease;
-          }
-
-          .aska-catalog-wrap a:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.12) !important;
-          }
-
-
           html,
           body,
           #root {
@@ -588,19 +448,556 @@ function Catalog() {
             box-sizing: border-box;
           }
 
+          .aska-catalog-hero {
+            position: relative;
+            min-height: 58vh;
+            overflow: hidden;
+            background: #050505;
+            display: flex;
+            align-items: flex-end;
+          }
+
+          .aska-catalog-hero-media {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            display: block;
+          }
+
+          .aska-catalog-hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+          }
+
+          .aska-catalog-hero-content {
+            position: relative;
+            z-index: 2;
+            width: min(1440px, 100%);
+            margin: 0 auto;
+            padding: clamp(120px, 16vw, 190px) clamp(24px, 5vw, 76px) clamp(54px, 7vw, 92px);
+          }
+
+          .aska-catalog-hero-content p {
+            margin: 0 0 18px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.78);
+          }
+
+          .aska-catalog-hero-content h1 {
+            margin: 0;
+            max-width: 980px;
+            font-size: clamp(3.8rem, 10vw, 9.4rem);
+            line-height: 0.82;
+            letter-spacing: -0.075em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 18px 60px rgba(0,0,0,0.36);
+          }
+
+          .aska-catalog-hero-content span {
+            display: block;
+            margin-top: 28px;
+            max-width: 720px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: clamp(1rem, 1.4vw, 1.28rem);
+            line-height: 1.72;
+            color: rgba(255,255,255,0.84);
+            font-weight: 300;
+          }
+
+          .aska-catalog-editorial-section {
+            position: relative;
+            background:
+              radial-gradient(circle at 8% 2%, rgba(255,255,255,0.85), transparent 32%),
+              radial-gradient(circle at 88% 12%, rgba(17,17,17,0.08), transparent 34%),
+              var(--aska-bg-secondary, #f8f3f0);
+            min-height: 60vh;
+            padding: clamp(72px, 7vw, 118px) clamp(20px, 3.5vw, 58px) clamp(92px, 9vw, 150px);
+            color: #111111;
+          }
+
           .aska-catalog-wrap {
-            max-width: 100%;
+            max-width: 1480px;
+            margin: 0 auto;
             min-width: 0;
           }
 
+          .aska-catalog-status {
+            color: #111111;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          .aska-home-catalog-sections {
+            display: grid;
+            gap: clamp(92px, 10vw, 154px);
+          }
+
+          .aska-editorial-category-block {
+            position: relative;
+          }
+
+          .aska-editorial-category-block::before {
+            content: "";
+            display: block;
+            width: 82px;
+            height: 1px;
+            margin-bottom: 28px;
+            background: linear-gradient(90deg, rgba(17,17,17,0.58), rgba(17,17,17,0));
+          }
+
+          .aska-editorial-category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 28px;
+            margin-bottom: clamp(24px, 3vw, 46px);
+          }
+
+          .aska-editorial-category-header p,
+          .aska-category-editorial-intro p {
+            margin: 0 0 10px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: rgba(17,17,17,0.48);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+          }
+
+          .aska-editorial-category-header h2,
+          .aska-category-editorial-intro h2 {
+            margin: 0;
+            color: #111111;
+            font-size: clamp(2.7rem, 6.2vw, 7.6rem);
+            line-height: 0.82;
+            letter-spacing: -0.075em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+          }
+
+          .aska-editorial-see-more {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 22px;
+            border: 1px solid rgba(17,17,17,0.14);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.72);
+            color: #111111;
+            text-decoration: none;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            box-shadow: 0 14px 34px rgba(0,0,0,0.08);
+            transition:
+              transform .32s ease,
+              box-shadow .32s ease,
+              border-color .32s ease,
+              background .32s ease;
+          }
+
+          .aska-editorial-see-more:hover {
+            transform: translateY(-2px);
+            background: #ffffff;
+            border-color: rgba(17,17,17,0.28);
+            box-shadow: 0 22px 48px rgba(0,0,0,0.12);
+          }
+
+          .aska-editorial-feature-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.58fr) minmax(0, 0.86fr) minmax(0, 0.86fr);
+            gap: clamp(20px, 2.4vw, 38px);
+            align-items: start;
+          }
+
+          .aska-editorial-feature-grid .is-main {
+            grid-row: span 2;
+          }
+
+          .aska-editorial-feature-grid .is-secondary {
+            transform: translateY(34px);
+          }
+
+          .aska-editorial-feature-grid .is-secondary:nth-child(3) {
+            transform: translateY(0);
+          }
+
+          .aska-editorial-feature-grid .is-secondary:nth-child(4),
+          .aska-editorial-feature-grid .is-secondary:nth-child(5) {
+            transform: translateY(58px);
+          }
+
+          .aska-editorial-card {
+            display: block;
+            position: relative;
+            width: 100%;
+            text-decoration: none;
+            color: #ffffff;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #050505;
+            border: 1px solid rgba(17,17,17,0.10);
+            box-shadow: 0 28px 80px rgba(0,0,0,0.12);
+            transform: translateY(0);
+            transition:
+              transform .54s cubic-bezier(.22,.61,.36,1),
+              box-shadow .54s cubic-bezier(.22,.61,.36,1),
+              border-color .54s ease;
+          }
+
+          .aska-editorial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 42px 100px rgba(0,0,0,0.18);
+            border-color: rgba(17,17,17,0.24);
+          }
+
+          .aska-editorial-card-media {
+            position: relative;
+            width: 100%;
+            height: 430px;
+            overflow: hidden;
+            background: #050505;
+          }
+
+          .aska-editorial-card.is-featured .aska-editorial-card-media {
+            height: 720px;
+          }
+
+          .aska-editorial-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scale(1);
+            filter: contrast(1.02) saturate(0.96);
+            transition:
+              transform .86s cubic-bezier(.22,.61,.36,1),
+              filter .86s ease;
+          }
+
+          .aska-editorial-card:hover .aska-editorial-card-media > img {
+            transform: scale(1.055);
+            filter: contrast(1.06) saturate(1.02) brightness(1.02);
+          }
+
+          .aska-editorial-card-empty {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: rgba(255,255,255,0.56);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+          }
+
+          .aska-editorial-card-gradient {
+            position: absolute;
+            inset: 0;
+            background:
+              linear-gradient(180deg, rgba(0,0,0,0.00) 38%, rgba(0,0,0,0.35) 66%, rgba(0,0,0,0.76) 100%),
+              linear-gradient(90deg, rgba(0,0,0,0.16), transparent 36%, rgba(0,0,0,0.12));
+            z-index: 1;
+            pointer-events: none;
+          }
+
+          .aska-editorial-card-info {
+            position: absolute;
+            left: clamp(18px, 2vw, 34px);
+            right: clamp(18px, 2vw, 34px);
+            bottom: clamp(18px, 2vw, 30px);
+            z-index: 4;
+            color: #ffffff;
+          }
+
+          .aska-editorial-category {
+            margin: 0 0 9px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: rgba(255,255,255,0.74);
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+          }
+
+          .aska-editorial-card-info h3 {
+            margin: 0 0 9px;
+            max-width: 92%;
+            color: #ffffff;
+            font-size: clamp(1rem, 1.45vw, 1.7rem);
+            line-height: 1;
+            letter-spacing: 0.01em;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            text-shadow: 0 12px 32px rgba(0,0,0,0.42);
+          }
+
+          .aska-editorial-card.is-featured .aska-editorial-card-info h3 {
+            font-size: clamp(1.75rem, 3.4vw, 4.2rem);
+            letter-spacing: -0.04em;
+            line-height: 0.92;
+            max-width: 760px;
+          }
+
+          .aska-editorial-price {
+            margin: 0;
+            color: rgba(255,255,255,0.92);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+          }
+
+          .aska-editorial-description {
+            margin: 12px 0 0;
+            max-width: 520px;
+            color: rgba(255,255,255,0.72);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.9rem;
+            line-height: 1.58;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .aska-editorial-thumbs {
+            display: flex;
+            gap: 9px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+          }
+
+          .aska-editorial-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            overflow: hidden;
+            padding: 0;
+            cursor: pointer;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            opacity: 0.58;
+            transition:
+              opacity .24s ease,
+              transform .24s ease,
+              border-color .24s ease;
+          }
+
+          .aska-editorial-card.is-featured .aska-editorial-thumb {
+            width: 50px;
+            height: 50px;
+          }
+
+          .aska-editorial-thumb.active,
+          .aska-editorial-thumb:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.78);
+          }
+
+          .aska-editorial-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          .aska-editorial-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(0,0,0,0.42);
+            color: #ffffff;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0;
+            transition:
+              opacity .28s ease,
+              background .28s ease,
+              transform .28s ease;
+          }
+
+          .aska-editorial-card:hover .aska-editorial-arrow {
+            opacity: 1;
+          }
+
+          .aska-editorial-arrow:hover {
+            background: rgba(0,0,0,0.68);
+            transform: translateY(-50%) scale(1.05);
+          }
+
+          .aska-editorial-arrow-left {
+            left: 18px;
+          }
+
+          .aska-editorial-arrow-right {
+            right: 18px;
+          }
+
+          .aska-category-editorial-intro {
+            max-width: 980px;
+            margin: 0 0 clamp(34px, 5vw, 72px);
+          }
+
+          .aska-category-editorial-intro span {
+            display: block;
+            margin-top: 20px;
+            max-width: 620px;
+            color: rgba(17,17,17,0.62);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: clamp(1rem, 1.28vw, 1.22rem);
+            line-height: 1.72;
+            font-weight: 300;
+          }
+
+          .aska-category-products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(20px, 2.4vw, 34px);
+            align-items: start;
+          }
+
+          .aska-category-products-grid > .is-wide {
+            grid-column: span 2;
+          }
+
+          .aska-category-products-grid > .is-wide .aska-editorial-card-media {
+            height: 640px;
+          }
+
+          .aska-category-products-grid .aska-editorial-card-media {
+            height: 520px;
+          }
+
+          @media (max-width: 1100px) {
+            .aska-editorial-feature-grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .aska-editorial-feature-grid .is-main {
+              grid-column: span 2;
+            }
+
+            .aska-editorial-feature-grid .is-secondary {
+              transform: none !important;
+            }
+
+            .aska-editorial-card.is-featured .aska-editorial-card-media {
+              height: 620px;
+            }
+
+            .aska-category-products-grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+          }
+
+          @media (max-width: 768px) {
+            .aska-catalog-hero {
+              min-height: 52vh;
+            }
+
+            .aska-catalog-hero-content {
+              padding: 118px 20px 44px;
+            }
+
+            .aska-catalog-hero-content h1 {
+              font-size: clamp(3.2rem, 18vw, 5.4rem);
+              letter-spacing: -0.06em;
+            }
+
+            .aska-catalog-editorial-section {
+              padding: 56px 16px 86px;
+            }
+
+            .aska-editorial-category-header {
+              align-items: flex-start;
+              flex-direction: column;
+              gap: 18px;
+            }
+
+            .aska-editorial-category-header h2,
+            .aska-category-editorial-intro h2 {
+              font-size: clamp(2.8rem, 15vw, 5.2rem);
+            }
+
+            .aska-editorial-feature-grid,
+            .aska-category-products-grid {
+              grid-template-columns: 1fr;
+              gap: 22px;
+            }
+
+            .aska-editorial-feature-grid .is-main,
+            .aska-category-products-grid > .is-wide {
+              grid-column: auto;
+              grid-row: auto;
+            }
+
+            .aska-editorial-feature-grid .is-secondary {
+              transform: none !important;
+            }
+
+            .aska-editorial-card-media,
+            .aska-editorial-card.is-featured .aska-editorial-card-media,
+            .aska-category-products-grid .aska-editorial-card-media,
+            .aska-category-products-grid > .is-wide .aska-editorial-card-media {
+              height: 430px;
+            }
+
+            .aska-editorial-card-info h3,
+            .aska-editorial-card.is-featured .aska-editorial-card-info h3 {
+              font-size: clamp(1.35rem, 8vw, 2.7rem);
+            }
+
+            .aska-editorial-arrow {
+              opacity: 1;
+              width: 36px;
+              height: 36px;
+            }
+          }
+
           @media (max-width: 480px) {
-            .aska-catalog-wrap {
-              width: 100%;
+            .aska-editorial-card {
+              border-radius: 24px;
+            }
+
+            .aska-editorial-card-media,
+            .aska-editorial-card.is-featured .aska-editorial-card-media,
+            .aska-category-products-grid .aska-editorial-card-media,
+            .aska-category-products-grid > .is-wide .aska-editorial-card-media {
+              height: 390px;
+            }
+
+            .aska-editorial-thumbs {
+              gap: 7px;
+            }
+
+            .aska-editorial-thumb,
+            .aska-editorial-card.is-featured .aska-editorial-thumb {
+              width: 38px;
+              height: 38px;
             }
           }
         `}
       </style>
-
     </>
   );
 }
