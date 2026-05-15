@@ -338,6 +338,7 @@ function Checkout() {
       <Navbar />
 
       <section
+        className="aska-checkout-premium-page"
         style={{
           minHeight: "100vh",
           background: "#0b0b0b",
@@ -355,8 +356,9 @@ function Checkout() {
           }}
         >
           <div
+            className="aska-checkout-card"
             style={{
-              background: "var(--aska-card-bg, #fff)",
+              background: "#111111",
               borderRadius: "36px",
               padding: "clamp(28px, 4vw, 54px)",
               boxShadow: "0 30px 90px rgba(0,0,0,0.38)",
@@ -365,7 +367,10 @@ function Checkout() {
           >
             <h1
               style={{
-                fontSize: "clamp(3.2rem, 8vw, 6rem)",
+                fontSize: "clamp(2.8rem, 6.8vw, 5.4rem)",
+                color: "#ffffff",
+                lineHeight: ".88",
+                letterSpacing: "-0.065em",
                 marginTop: 0,
                 fontFamily: "var(--aska-font-family-primary, inherit)",
                 marginBottom: "16px",
@@ -410,8 +415,8 @@ function Checkout() {
                     mensaje.includes("Preparando") ||
                     mensaje.includes("Conectando") ||
                     mensaje.includes("Redirigiendo")
-                      ? "#356f48"
-                      : "#9b243c",
+                      ? "#7dd39a"
+                      : "#ff6b81",
                   fontWeight: 600,
                 }}
               >
@@ -478,8 +483,8 @@ function Checkout() {
                   marginTop: "10px",
                   padding: "28px",
                   borderRadius: "28px",
-                  background: "var(--aska-card-bg-soft, #f7f7f7)",
-                  border: "1px solid rgba(0,0,0,0.08)",
+                  background: "#171717",
+                  border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
                 <h2
@@ -517,8 +522,8 @@ function Checkout() {
                     style={{
                       borderRadius: "16px",
                       padding: "14px",
-                      background: "var(--aska-card-bg, #fff)",
-                      border: "1px solid rgba(0,0,0,0.08)",
+                      background: "#111111",
+                      border: "1px solid rgba(255,255,255,0.08)",
                     }}
                   >
                     <strong>Pago seguro con Bold</strong>
@@ -545,8 +550,8 @@ function Checkout() {
                           alignItems: "center",
                           borderRadius: "18px",
                           padding: "16px",
-                          background: "var(--aska-card-bg, #fff)",
-                          border: "1px solid rgba(0,0,0,0.08)",
+                          background: "#111111",
+                          border: "1px solid rgba(255,255,255,0.08)",
                         }}
                       >
                         <div>
@@ -569,8 +574,8 @@ function Checkout() {
                                   fontSize: "0.78rem",
                                   padding: "4px 8px",
                                   borderRadius: "999px",
-                                  background: "var(--aska-bg-primary, #111)",
-                                  color: "var(--aska-text-secondary, #fff)",
+                                  background: "#ffffff",
+                                  color: "#111111",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.08em",
                                 }}
@@ -608,8 +613,8 @@ function Checkout() {
                               height: "120px",
                               objectFit: "cover",
                               borderRadius: "14px",
-                              border: "1px solid rgba(0,0,0,0.08)",
-                              background: "var(--aska-card-bg-soft, #f3f3f3)",
+                              border: "1px solid rgba(255,255,255,0.08)",
+                              background: "#171717",
                             }}
                           />
                         )}
@@ -663,8 +668,9 @@ function Checkout() {
           </div>
 
           <div
+            className="aska-checkout-card aska-checkout-summary-card"
             style={{
-              background: "var(--aska-card-bg, #fff)",
+              background: "#111111",
               borderRadius: "36px",
               padding: "clamp(28px, 4vw, 54px)",
               boxShadow: "0 30px 90px rgba(0,0,0,0.38)",
@@ -674,7 +680,7 @@ function Checkout() {
               top: isMobile ? "0" : "120px",
             }}
           >
-            <h2 style={{ marginTop: 0, marginBottom: "24px", fontSize: "2rem", fontWeight: 500, letterSpacing: "-0.04em" }}>Resumen</h2>
+            <h2 style={{ marginTop: 0, marginBottom: "24px", fontSize: "2rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "#ffffff" }}>Resumen</h2>
 
             {cart.length === 0 ? (
               <p>Tu carrito está vacío.</p>
@@ -689,7 +695,7 @@ function Checkout() {
                         gridTemplateColumns: "70px 1fr auto",
                         gap: "14px",
                         alignItems: "center",
-                        borderBottom: "1px solid rgba(0,0,0,0.08)",
+                        borderBottom: "1px solid rgba(255,255,255,0.08)",
                         paddingBottom: "12px",
                       }}
                     >
@@ -736,11 +742,11 @@ function Checkout() {
                     type="button"
                     onClick={aplicarCupon}
                     style={{
-                      border: "none",
+                      border: "1px solid rgba(255,255,255,0.14)",
                       borderRadius: "999px",
                       padding: "10px 16px",
-                      background: "var(--aska-bg-primary, #111)",
-                      color: "var(--aska-text-secondary, #fff)",
+                      background: "rgba(255,255,255,0.08)",
+                      color: "#ffffff",
                       cursor: "pointer",
                     }}
                   >
@@ -749,7 +755,7 @@ function Checkout() {
                 </div>
 
                 {cuponAplicado && (
-                  <div style={{ marginTop: "10px", color: "var(--aska-success-color, #356f48)", fontWeight: 600 }}>
+                  <div style={{ marginTop: "10px", color: "#7dd39a", fontWeight: 600 }}>
                     Cupón aplicado: {cuponAplicado.codigo}
                   </div>
                 )}
@@ -785,7 +791,7 @@ function Checkout() {
                       display: "flex",
                       justifyContent: "space-between",
                       marginTop: "10px",
-                      color: "var(--aska-success-color, #356f48)",
+                      color: "#7dd39a",
                       fontWeight: 700,
                     }}
                   >
@@ -812,8 +818,8 @@ function Checkout() {
                     marginTop: "20px",
                     padding: "16px",
                     borderRadius: "18px",
-                    background: "var(--aska-card-bg-soft, #f7f7f7)",
-                    border: "1px solid rgba(0,0,0,0.08)",
+                    background: "#171717",
+                    border: "1px solid rgba(255,255,255,0.08)",
                     color: "rgba(255,255,255,0.72)",
                     lineHeight: 1.55,
                   }}
@@ -837,6 +843,89 @@ function Checkout() {
     --aska-error-color: #ff6b81;
   }
 
+
+  .aska-checkout-premium-page {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .aska-checkout-premium-page::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 14% 8%, rgba(255,255,255,0.08), transparent 30%),
+      radial-gradient(circle at 90% 18%, rgba(255,255,255,0.05), transparent 34%);
+    z-index: 0;
+  }
+
+  .aska-checkout-premium-page > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  .aska-checkout-card {
+    color: #ffffff !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .aska-checkout-card h1,
+  .aska-checkout-card h2,
+  .aska-checkout-card h3,
+  .aska-checkout-card strong {
+    color: #ffffff !important;
+  }
+
+  .aska-checkout-card p,
+  .aska-checkout-card span,
+  .aska-checkout-card div {
+    color: inherit;
+  }
+
+  .aska-checkout-card input {
+    background: rgba(255,255,255,0.045) !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .aska-checkout-card input:focus {
+    border-color: rgba(255,255,255,0.28) !important;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.05);
+  }
+
+  .aska-checkout-card input::placeholder {
+    color: rgba(255,255,255,0.40) !important;
+  }
+
+  .aska-checkout-summary-card {
+    max-height: calc(100vh - 145px);
+    overflow-y: auto;
+  }
+
+  .aska-checkout-summary-card::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .aska-checkout-summary-card::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 999px;
+  }
+
+  @media (max-width: 768px) {
+    .aska-checkout-premium-page {
+      padding-top: 86px !important;
+    }
+
+    .aska-checkout-summary-card {
+      max-height: none;
+      overflow-y: visible;
+    }
+  }
+
+
   button {
     transition:
       transform 0.22s ease,
@@ -848,11 +937,6 @@ function Checkout() {
     transform: translateY(-3px);
     opacity: 0.98;
     box-shadow: 0 24px 54px rgba(0,0,0,.32);
-  }
-
-  section > div {
-    position: relative;
-    z-index: 1;
   }
 
   button {
