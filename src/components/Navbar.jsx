@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import cartLogo from "../assets/casado.png";
 
 function slugifyCategory(name = "") {
   return name
@@ -9,6 +8,33 @@ function slugifyCategory(name = "") {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+y\s+/g, "-y-")
     .replace(/\s+/g, "-");
+}
+
+
+function ClassicBagIcon() {
+  return (
+    <svg
+      className="aska-cart-bag-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M7.25 8.25V7.1C7.25 4.42 9.36 2.25 12 2.25C14.64 2.25 16.75 4.42 16.75 7.1V8.25"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.65 8.25H18.35L19.25 21.25H4.75L5.65 8.25Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function Navbar() {
@@ -443,7 +469,7 @@ function Navbar() {
             aria-label="Ir al carrito de compras"
             onClick={closeMobileMenu}
           >
-            <img src={cartLogo} alt="Carrito" className="aska-cart-icon" />
+            <ClassicBagIcon />
             {totalCarrito > 0 && (
               <span className={`aska-navbar-cart-badge ${cartLuxPulse ? "aska-navbar-cart-badge-lux-pulse" : ""}`}>{totalCarrito}</span>
             )}
@@ -690,73 +716,72 @@ function Navbar() {
           .aska-navbar-cart {
             position: absolute;
             top: 50%;
-            right: 24px;
+            right: 26px;
             transform: translateY(-50%);
             z-index: 10002;
-            width: 48px;
-            height: 48px;
+            width: 38px;
+            height: 42px;
             padding: 0;
-            border-radius: 999px;
-            color: rgba(255,255,255,0.86);
+            border-radius: 0;
+            color: rgba(255,255,255,0.88);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: transparent;
+            border: none;
             box-shadow: none;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             overflow: visible;
             transition:
-              background .28s ease,
-              border-color .28s ease,
               color .28s ease,
-              transform .28s ease,
-              box-shadow .28s ease;
+              opacity .28s ease,
+              transform .28s ease;
           }
 
           .aska-site-header.is-scrolled .aska-navbar-cart {
-            background: rgba(255,255,255,0.055);
+            background: transparent;
           }
 
           .aska-navbar-cart:hover {
             color: #ffffff;
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.14);
-            transform: translateY(-50%);
+            opacity: 1;
+            transform: translateY(-50%) translateY(-1px);
           }
 
-          .aska-cart-icon {
+          .aska-cart-bag-svg {
             width: 24px;
             height: 24px;
-            object-fit: contain;
             display: block;
-            filter: brightness(0) invert(1);
+            color: currentColor;
             opacity: 0.92;
-            transition: opacity .28s ease, transform .28s ease;
+            transition:
+              opacity .28s ease,
+              transform .28s ease;
           }
 
-          .aska-navbar-cart:hover .aska-cart-icon {
+          .aska-navbar-cart:hover .aska-cart-bag-svg {
             opacity: 1;
-            transform: scale(1.04);
+            transform: scale(1.045);
           }
 
           .aska-navbar-cart-badge {
             position: absolute;
-            top: -8px;
-            right: -7px;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 6px;
+            top: 3px;
+            right: -10px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.92);
-            color: #111111;
+            background: transparent;
+            color: rgba(255,255,255,0.92);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.68rem;
-            font-weight: 800;
-            border: 1px solid rgba(0,0,0,0.12);
+            font-size: 0.62rem;
+            font-weight: 600;
+            border: none;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
           }
 
           .aska-navbar-cart::before {
@@ -780,8 +805,8 @@ function Navbar() {
 
           .aska-navbar-cart-badge-lux-pulse {
             animation: askaBadgeLuxuryPop 0.82s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            background: linear-gradient(135deg, #ffffff, #d8d8d8);
-            color: #050505;
+            background: transparent;
+            color: #ffffff;
           }
 
           .aska-hamburger {
@@ -1084,16 +1109,16 @@ function Navbar() {
             }
 
             .aska-navbar-cart {
-              right: 14px;
-              min-width: 42px;
-              width: 42px;
-              height: 42px;
+              right: 16px;
+              min-width: 34px;
+              width: 34px;
+              height: 40px;
               padding: 0;
             }
 
-            .aska-cart-icon {
-              width: 21px;
-              height: 21px;
+            .aska-cart-bag-svg {
+              width: 22px;
+              height: 22px;
             }
           }
         `}
