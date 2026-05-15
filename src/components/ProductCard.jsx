@@ -1,7 +1,34 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import cartLogo from "../assets/casado.png";
+
+
+function CartBagIcon({ className = "" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className={className}
+    >
+      <path
+        d="M7.2 8.4V7.2C7.2 4.6 9.3 2.5 12 2.5C14.7 2.5 16.8 4.6 16.8 7.2V8.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.5 8.4H18.5L19.4 21.5H4.6L5.5 8.4Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 
 function formatPrice(value) {
   return new Intl.NumberFormat("es-CO", {
@@ -111,7 +138,7 @@ function ProductCard({ product }) {
               onClick={handleAddToCart}
               aria-label="Agregar al carrito"
             >
-              <img src={cartLogo} alt="" aria-hidden="true" />
+              <CartBagIcon className="aska-cart-svg" />
             </button>
 
             {gallery.length > 1 && (
@@ -184,7 +211,7 @@ function ProductCard({ product }) {
               onClick={handleAddToCart}
               aria-label="Agregar al carrito"
             >
-              <img src={cartLogo} alt="" aria-hidden="true" />
+              <CartBagIcon className="aska-cart-svg" />
               <span>Agregar</span>
             </button>
           </div>
@@ -199,9 +226,9 @@ function ProductCard({ product }) {
             flex-direction: column;
             height: 100%;
             overflow: hidden;
-            background: rgba(255,255,255,0.92) !important;
+            background: rgba(255,255,255,0.94) !important;
             border: 1px solid rgba(17,17,17,0.08) !important;
-            border-radius: 0 !important;
+            border-radius: 18px !important;
             box-shadow: none !important;
             color: #111111 !important;
             isolation: isolate;
@@ -224,7 +251,7 @@ function ProductCard({ product }) {
           }
 
           .aska-lux-product-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px);
             border-color: rgba(17,17,17,0.16) !important;
             box-shadow: 0 32px 72px rgba(0,0,0,0.13) !important;
             background: rgba(255,255,255,0.98) !important;
@@ -243,8 +270,8 @@ function ProductCard({ product }) {
           .aska-lux-product-media {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 5;
-            min-height: 360px;
+            aspect-ratio: 0.78;
+            min-height: 420px;
             overflow: hidden;
             background:
               radial-gradient(circle at 50% 18%, rgba(255,255,255,0.62), transparent 34%),
@@ -354,7 +381,7 @@ function ProductCard({ product }) {
           }
 
           .aska-lux-overlay-cart:hover {
-            background: rgba(255,255,255,0.92) !important;
+            background: rgba(255,255,255,0.94) !important;
             border-color: rgba(255,255,255,0.72) !important;
             transform: translateY(0) scale(1.04) !important;
           }
@@ -415,7 +442,7 @@ function ProductCard({ product }) {
           }
 
           .aska-lux-gallery-arrow:hover {
-            background: rgba(255,255,255,0.92) !important;
+            background: rgba(255,255,255,0.94) !important;
             color: #050505 !important;
             border-color: rgba(255,255,255,0.72) !important;
             box-shadow: none !important;
@@ -446,10 +473,10 @@ function ProductCard({ product }) {
             margin: 0;
             color: #111111 !important;
             font-family: var(--aska-font-family-primary, Georgia, serif) !important;
-            font-size: clamp(1.05rem, 1.35vw, 1.28rem);
+            font-size: clamp(1.1rem, 1.4vw, 1.5rem);
             font-weight: 520 !important;
             line-height: 1.08;
-            letter-spacing: 0.035em !important;
+            letter-spacing: -0.03em !important;
             text-transform: none !important;
           }
 
@@ -584,6 +611,31 @@ function ProductCard({ product }) {
             box-shadow: none !important;
             opacity: 1 !important;
           }
+
+          
+
+          .aska-cart-svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+          }
+
+          .aska-lux-overlay-cart .aska-cart-svg {
+            width: 19px;
+            height: 19px;
+          }
+
+          .aska-lux-product-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              linear-gradient(180deg, transparent 52%, rgba(0,0,0,0.02)),
+              radial-gradient(circle at top left, rgba(255,255,255,0.42), transparent 28%);
+            pointer-events: none;
+            z-index: 1;
+          }
+
 
           @media (max-width: 768px) {
             .aska-lux-product-media {
