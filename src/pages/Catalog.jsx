@@ -1,26 +1,52 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import procesoVideo from "../assets/proceso.mp4";
-import editorialHero from "../assets/editorial/cadena-serpiente.jpg";
-import editorialShadow from "../assets/editorial/choker-ethereal.jpg";
-import editorialPortrait from "../assets/editorial/galata-editorial.png";
+import editorialCatalogo from "../assets/editorial/catalogo-hero.jpg";
+import editorialCollares from "../assets/editorial/collares-hero.jpg";
+import editorialCorporal from "../assets/editorial/corporal-hero.jpg";
+import editorialAretes from "../assets/editorial/aretes-hero.jpg";
+import editorialPulseras from "../assets/editorial/pulseras-hero.jpg";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
 
-const ASKA_EDITORIAL_QUOTES = [
-  "No diseñamos accesorios. Diseñamos presencia.",
-  "Metal convertido en identidad.",
-  "Piezas para quienes nunca pasan desapercibidos.",
-  "La belleza también puede intimidar.",
-];
-
-const ASKA_CATEGORY_COPY = {
-  Collares: "Cadenas, texturas y metal para transformar el cuello en declaración.",
-  Pulseras: "Piezas que acompañan el gesto, la piel y el movimiento.",
-  "Accesorios corporales": "Diseños para cuerpos que convierten presencia en lenguaje.",
-  "Aretes y anillos": "Detalles filosos, íntimos y precisos para cerrar el look.",
+const ASKA_CATEGORY_EDITORIAL = {
+  catalogo: {
+    image: editorialCatalogo,
+    kicker: "ASKA COLLECTION",
+    title: "CATÁLOGO",
+    subtitle: "Piezas artesanales con actitud, presencia y fuerza visual.",
+    quote: "No diseñamos accesorios. Diseñamos presencia.",
+  },
+  collares: {
+    image: editorialCollares,
+    kicker: "COLLARES ASKA",
+    title: "COLLARES",
+    subtitle: "Cadenas, texturas y metal para transformar el cuello en declaración.",
+    quote: "Metal sobre piel. Presencia antes que permiso.",
+  },
+  pulseras: {
+    image: editorialPulseras,
+    kicker: "PULSERAS",
+    title: "PULSERAS",
+    subtitle: "Piezas que acompañan el gesto, la piel y el movimiento.",
+    quote: "El gesto también lleva metal.",
+  },
+  "accesorios-corporales": {
+    image: editorialCorporal,
+    kicker: "BODY PIECES",
+    title: "CUERPO",
+    subtitle: "Diseños para cuerpos que convierten actitud en lenguaje visual.",
+    quote: "La belleza también puede intimidar.",
+  },
+  "aretes-y-anillos": {
+    image: editorialAretes,
+    kicker: "DETALLES",
+    title: "DETALLES",
+    subtitle: "Aretes y anillos filosos, íntimos y precisos para cerrar el look.",
+    quote: "Pequeñas piezas. Presencia absoluta.",
+  },
 };
 
 const CATEGORY_MAP = {
@@ -105,16 +131,12 @@ function Catalog() {
   const [hero, setHero] = useState(null);
   const [selectedImages, setSelectedImages] = useState({});
   const [quickAdded, setQuickAdded] = useState(null);
+  const railRefs = useRef({});
 
   const categoriaActiva = slug ? CATEGORY_MAP[slug] || "" : "";
   const heroSlug = slug || "catalogo";
   const searchTerm = (searchParams.get("buscar") || "").trim();
-
-  const editorialMessage = useMemo(() => {
-    const source = categoriaActiva || searchTerm || "catalogo";
-    const index = source.length % ASKA_EDITORIAL_QUOTES.length;
-    return ASKA_EDITORIAL_QUOTES[index];
-  }, [categoriaActiva, searchTerm]);
+  const editorial = ASKA_CATEGORY_EDITORIAL[heroSlug] || ASKA_CATEGORY_EDITORIAL.catalogo;
 
   useEffect(() => {
     const cargar = async () => {
@@ -243,8 +265,9 @@ function Catalog() {
 
   const heroSubtitulo =
     hero?.subtitulo?.trim() ||
+    editorial.subtitle ||
     (categoriaActiva
-      ? ASKA_CATEGORY_COPY[categoriaActiva] || `Descubre todas las piezas de ${categoriaActiva}.`
+      ? `Descubre todas las piezas de ${categoriaActiva}.`
       : "Piezas artesanales con actitud, presencia y fuerza visual.");
 
   const heroColor = hero?.color_texto || "#ffffff";
@@ -324,6 +347,16 @@ function Catalog() {
     window.setTimeout(() => {
       setQuickAdded(null);
     }, 2600);
+  };
+
+  const scrollRail = (key, direction) => {
+    const rail = railRefs.current[key];
+    if (!rail) return;
+
+    rail.scrollBy({
+      left: direction * Math.min(rail.clientWidth * 0.88, 780),
+      behavior: "smooth",
+    });
   };
 
   const renderCard = (item, featured = false) => {
@@ -417,38 +450,20 @@ function Catalog() {
   return (
     <>
       <Navbar />
-      <section className="aska-catalog-maison-hero">
-        <div className="aska-catalog-maison-media">
-          <img src={editorialHero} alt="AŞKA editorial campaign" />
-        </div>
+      <section className="aska-catalog-hero aska-catalog-hero-refined">
+        <img
+          src={editorial.image}
+          alt={`AŞKA ${heroTitulo}`}
+          className="aska-catalog-hero-media"
+        />
 
-        <div className="aska-catalog-maison-copy">
-          <p>Explora la colección</p>
-          <h1>{heroTitulo}</h1>
+        <div className="aska-catalog-hero-refined-overlay" />
+
+        <div className="aska-catalog-hero-refined-content">
+          <p>{editorial.kicker || "Explora la colección"}</p>
+          <h1>{editorial.title || heroTitulo}</h1>
           <span>{heroSubtitulo}</span>
-
-          <div className="aska-catalog-maison-line" />
-
-          <strong>{editorialMessage}</strong>
-        </div>
-      </section>
-
-      <section className="aska-catalog-manifesto-row">
-        <div className="aska-catalog-manifesto-copy">
-          <p>AŞKA MANIFESTO</p>
-          <h2>
-            No es accesorio.
-            <br />
-            Es identidad.
-          </h2>
-          <span>
-            Diseños oscuros, contemporáneos y artesanales para personas que
-            convierten presencia en lenguaje visual.
-          </span>
-        </div>
-
-        <div className="aska-catalog-manifesto-image">
-          <img src={editorialPortrait} alt="AŞKA portrait editorial" />
+          <strong>{editorial.quote}</strong>
         </div>
       </section>
 
@@ -496,15 +511,32 @@ function Catalog() {
                   </span>
                 </div>
 
-                <div className="aska-category-products-grid">
-                  {filteredProducts.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className={index % 5 === 0 ? "is-wide" : ""}
-                    >
-                      {renderCard(item, index % 5 === 0)}
+                <div className="aska-catalog-rail-shell">
+                  <div className="aska-catalog-rail-top">
+                    <p>Desliza la colección</p>
+
+                    <div>
+                      <button type="button" onClick={() => scrollRail(slugifyCategory(categoriaActiva), -1)}>
+                        ‹
+                      </button>
+                      <button type="button" onClick={() => scrollRail(slugifyCategory(categoriaActiva), 1)}>
+                        ›
+                      </button>
                     </div>
-                  ))}
+                  </div>
+
+                  <div
+                    className="aska-catalog-product-rail"
+                    ref={(node) => {
+                      railRefs.current[slugifyCategory(categoriaActiva)] = node;
+                    }}
+                  >
+                    {filteredProducts.map((item) => (
+                      <div key={item.id} className="aska-catalog-rail-item">
+                        {renderCard(item, false)}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </>
             )
@@ -514,13 +546,10 @@ function Catalog() {
                 No encontramos piezas para esa búsqueda.
               </p>
             ) : (
-              <div className="aska-category-products-grid">
-                {filteredProducts.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className={index % 5 === 0 ? "is-wide" : ""}
-                  >
-                    {renderCard(item, index % 5 === 0)}
+              <div className="aska-catalog-product-rail is-search">
+                {filteredProducts.map((item) => (
+                  <div key={item.id} className="aska-catalog-rail-item">
+                    {renderCard(item, false)}
                   </div>
                 ))}
               </div>
@@ -555,39 +584,38 @@ function Catalog() {
                         </Link>
                       </div>
 
-                      <div className="aska-editorial-feature-grid">
-                        {preview.map((item, index) => (
-                          <div
-                            key={item.id}
-                            className={index === 0 ? "is-main" : "is-secondary"}
-                          >
-                            {renderCard(item, index === 0)}
+                      <div className="aska-catalog-rail-shell">
+                        <div className="aska-catalog-rail-top">
+                          <p>Desliza la colección</p>
+
+                          <div>
+                            <button type="button" onClick={() => scrollRail(slugifyCategory(category), -1)}>
+                              ‹
+                            </button>
+                            <button type="button" onClick={() => scrollRail(slugifyCategory(category), 1)}>
+                              ›
+                            </button>
                           </div>
-                        ))}
+                        </div>
+
+                        <div
+                          className="aska-catalog-product-rail"
+                          ref={(node) => {
+                            railRefs.current[slugifyCategory(category)] = node;
+                          }}
+                        >
+                          {preview.map((item) => (
+                            <div key={item.id} className="aska-catalog-rail-item">
+                              {renderCard(item, false)}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </section>
                   );
                 })
               )}
             </div>
-          )}
-
-          {!searchTerm && (
-            <section className="aska-catalog-cinematic-quote">
-              <img src={editorialShadow} alt="AŞKA shadow editorial" />
-
-              <div>
-                <p>EDITORIAL</p>
-                <h2>
-                  No seguimos tendencias.
-                  <br />
-                  Creamos tensión visual.
-                </h2>
-                <span>
-                  Una joya AŞKA no completa el look: lo domina.
-                </span>
-              </div>
-            </section>
           )}
         </div>
       </section>
@@ -1218,251 +1246,193 @@ function Catalog() {
           }
 
 
-          .aska-catalog-maison-hero {
-            min-height: 100svh;
-            display: grid;
-            grid-template-columns: minmax(0, 1.02fr) minmax(420px, .98fr);
-            background: #050505;
+          .aska-catalog-hero-refined {
+            min-height: 78svh;
+            align-items: flex-end;
+            overflow: hidden;
+          }
+
+          .aska-catalog-hero-refined .aska-catalog-hero-media {
+            filter: contrast(1.04) saturate(.86) brightness(.82);
+          }
+
+          .aska-catalog-hero-refined-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+              linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.34), rgba(0,0,0,.76)),
+              linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.54));
+          }
+
+          .aska-catalog-hero-refined-content {
+            position: relative;
+            z-index: 3;
+            width: min(1440px, 100%);
+            margin: 0 auto;
+            padding: clamp(118px, 14vw, 176px) clamp(22px, 5vw, 76px) clamp(52px, 7vw, 90px);
             color: #ffffff;
             overflow: hidden;
           }
 
-          .aska-catalog-maison-media {
-            position: relative;
-            min-height: 100svh;
-            overflow: hidden;
-            background: #0a0a0a;
-          }
-
-          .aska-catalog-maison-media::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-              linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0.54)),
-              linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.36));
-            pointer-events: none;
-          }
-
-          .aska-catalog-maison-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            display: block;
-            filter: contrast(1.04) saturate(.88);
-            transform: scale(1.02);
-            animation: askaCatalogSlowZoom 12s ease-in-out infinite alternate;
-          }
-
-          .aska-catalog-maison-copy {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: clamp(110px, 12vw, 178px) clamp(26px, 5vw, 86px) clamp(70px, 7vw, 112px);
-            position: relative;
-            z-index: 2;
-          }
-
-          .aska-catalog-maison-copy p,
-          .aska-catalog-manifesto-copy p,
-          .aska-catalog-cinematic-quote p {
-            margin: 0 0 18px;
+          .aska-catalog-hero-refined-content p {
+            margin: 0 0 16px;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             font-size: .68rem;
             font-weight: 700;
             letter-spacing: .28em;
             text-transform: uppercase;
-            color: rgba(255,255,255,.54);
+            color: rgba(255,255,255,.62);
           }
 
-          .aska-catalog-maison-copy h1 {
+          .aska-catalog-hero-refined-content h1 {
             margin: 0;
-            font-size: clamp(4.8rem, 11vw, 11rem);
-            line-height: .78;
-            letter-spacing: -.088em;
-            font-weight: 500 !important;
-            text-transform: uppercase;
-            color: #ffffff;
-            text-wrap: balance;
-          }
-
-          .aska-catalog-maison-copy span {
-            display: block;
-            margin-top: 30px;
-            max-width: 620px;
-            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
-            font-size: clamp(1rem, 1.28vw, 1.24rem);
-            line-height: 1.78;
-            color: rgba(255,255,255,.72);
-            font-weight: 300;
-          }
-
-          .aska-catalog-maison-line {
-            width: 86px;
-            height: 1px;
-            margin: 38px 0 26px;
-            background: linear-gradient(90deg, rgba(255,255,255,.68), transparent);
-          }
-
-          .aska-catalog-maison-copy strong {
-            max-width: 540px;
-            font-size: clamp(1.8rem, 3.4vw, 4rem);
-            line-height: .96;
-            letter-spacing: -.06em;
-            font-weight: 500;
-            color: #ffffff;
-          }
-
-          .aska-catalog-manifesto-row {
-            display: grid;
-            grid-template-columns: minmax(0, .98fr) minmax(360px, .72fr);
-            gap: clamp(36px, 7vw, 104px);
-            align-items: center;
-            padding: clamp(92px, 10vw, 170px) clamp(22px, 5vw, 86px);
-            background:
-              radial-gradient(circle at 10% 6%, rgba(255,255,255,.78), transparent 26%),
-              #f3f0ec;
-            color: #111111;
-          }
-
-          .aska-catalog-manifesto-copy p {
-            color: rgba(17,17,17,.48);
-          }
-
-          .aska-catalog-manifesto-copy h2 {
-            margin: 0;
-            max-width: 980px;
-            font-size: clamp(3.4rem, 8vw, 8.8rem);
+            max-width: min(980px, 100%);
+            font-size: clamp(4rem, 9vw, 8.4rem);
             line-height: .82;
-            letter-spacing: -.082em;
+            letter-spacing: -.078em;
             font-weight: 500 !important;
             text-transform: uppercase;
+            color: #ffffff;
+            overflow-wrap: break-word;
           }
 
-          .aska-catalog-manifesto-copy span {
+          .aska-catalog-hero-refined-content span {
             display: block;
-            margin-top: 28px;
+            margin-top: 24px;
             max-width: 660px;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
-            color: rgba(17,17,17,.62);
-            font-size: clamp(1rem, 1.34vw, 1.22rem);
-            line-height: 1.78;
-            font-weight: 300;
-          }
-
-          .aska-catalog-manifesto-image {
-            min-height: 640px;
-            overflow: hidden;
-            background: #080808;
-            border-radius: 34px;
-            box-shadow: 0 32px 90px rgba(0,0,0,.18);
-          }
-
-          .aska-catalog-manifesto-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-            display: block;
-            filter: contrast(1.04) saturate(.88);
-            transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s ease;
-          }
-
-          .aska-catalog-manifesto-image:hover img {
-            transform: scale(1.045);
-            filter: contrast(1.08) saturate(.98);
-          }
-
-          .aska-editorial-category-block:nth-child(even) .aska-editorial-category-header {
-            flex-direction: row-reverse;
-            text-align: right;
-          }
-
-          .aska-editorial-category-block:nth-child(even)::before {
-            margin-left: auto;
-            background: linear-gradient(270deg, rgba(17,17,17,0.58), rgba(17,17,17,0));
-          }
-
-          .aska-editorial-category-block::after {
-            content: "Metal · textura · presencia";
-            display: block;
-            margin-top: clamp(28px, 4vw, 52px);
-            color: rgba(17,17,17,.36);
-            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
-            font-size: .68rem;
-            font-weight: 700;
-            letter-spacing: .26em;
-            text-transform: uppercase;
-          }
-
-          .aska-catalog-cinematic-quote {
-            position: relative;
-            min-height: 86vh;
-            margin-top: clamp(100px, 12vw, 180px);
-            overflow: hidden;
-            border-radius: 34px;
-            background: #050505;
-            color: #ffffff;
-            box-shadow: 0 36px 110px rgba(0,0,0,.18);
-          }
-
-          .aska-catalog-cinematic-quote img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            display: block;
-            filter: contrast(1.06) saturate(.84);
-          }
-
-          .aska-catalog-cinematic-quote::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-              linear-gradient(90deg, rgba(0,0,0,.86), rgba(0,0,0,.34), rgba(0,0,0,.58)),
-              linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.44));
-            z-index: 1;
-          }
-
-          .aska-catalog-cinematic-quote div {
-            position: relative;
-            z-index: 2;
-            max-width: 960px;
-            padding: clamp(68px, 9vw, 138px) clamp(24px, 6vw, 92px);
-          }
-
-          .aska-catalog-cinematic-quote h2 {
-            margin: 0;
-            font-size: clamp(3.2rem, 7vw, 8rem);
-            line-height: .84;
-            letter-spacing: -.08em;
-            font-weight: 500 !important;
-            text-transform: uppercase;
-          }
-
-          .aska-catalog-cinematic-quote span {
-            display: block;
-            margin-top: 30px;
-            max-width: 540px;
-            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
-            color: rgba(255,255,255,.72);
-            font-size: clamp(1rem, 1.3vw, 1.22rem);
+            color: rgba(255,255,255,.78);
+            font-size: clamp(1rem, 1.28vw, 1.22rem);
             line-height: 1.72;
           }
 
-          @keyframes askaCatalogSlowZoom {
-            from {
-              transform: scale(1.02);
-            }
-            to {
-              transform: scale(1.07);
-            }
+          .aska-catalog-hero-refined-content strong {
+            display: block;
+            max-width: 720px;
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255,255,255,.26);
+            font-size: clamp(1.8rem, 3.2vw, 3.7rem);
+            line-height: .98;
+            letter-spacing: -.055em;
+            font-weight: 500;
           }
 
+          .aska-editorial-feature-grid,
+          .aska-category-products-grid {
+            display: block !important;
+          }
+
+          .aska-catalog-rail-shell {
+            position: relative;
+            min-width: 0;
+          }
+
+          .aska-catalog-rail-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+          }
+
+          .aska-catalog-rail-top p {
+            margin: 0;
+            color: rgba(17,17,17,.42);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .66rem;
+            font-weight: 700;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-rail-top div {
+            display: inline-flex;
+            gap: 8px;
+          }
+
+          .aska-catalog-rail-top button {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(17,17,17,.14);
+            background: rgba(255,255,255,.72);
+            color: #111;
+            cursor: pointer;
+            font-size: 1.28rem;
+            line-height: 1;
+          }
+
+          .aska-catalog-product-rail {
+            display: flex;
+            gap: clamp(18px, 2vw, 28px);
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0 0 18px;
+            scroll-snap-type: x mandatory;
+            overscroll-behavior-x: contain;
+            scrollbar-width: thin;
+          }
+
+          .aska-catalog-rail-item {
+            flex: 0 0 clamp(260px, 25vw, 390px);
+            scroll-snap-align: start;
+          }
+
+          .aska-catalog-product-rail .aska-editorial-card,
+          .aska-catalog-product-rail .aska-editorial-card:hover {
+            transform: none;
+          }
+
+          .aska-catalog-product-rail .aska-editorial-card-media,
+          .aska-catalog-product-rail .aska-editorial-card.is-featured .aska-editorial-card-media,
+          .aska-catalog-product-rail .aska-category-products-grid .aska-editorial-card-media {
+            height: clamp(390px, 40vw, 560px) !important;
+          }
+
+          .aska-catalog-product-rail .aska-editorial-card-info h3,
+          .aska-catalog-product-rail .aska-editorial-card.is-featured .aska-editorial-card-info h3 {
+            font-size: clamp(1.35rem, 2.2vw, 2.5rem);
+          }
+
+          .aska-catalog-product-rail.is-search {
+            margin-top: 28px;
+          }
+
+          @media (max-width: 768px) {
+            .aska-catalog-hero-refined {
+              min-height: 64svh;
+            }
+
+            .aska-catalog-hero-refined-content {
+              padding: 108px 20px 42px;
+            }
+
+            .aska-catalog-hero-refined-content h1 {
+              font-size: clamp(3.2rem, 16vw, 5.6rem);
+              line-height: .86;
+              letter-spacing: -.065em;
+            }
+
+            .aska-catalog-hero-refined-content strong {
+              font-size: clamp(1.8rem, 9vw, 3.4rem);
+            }
+
+            .aska-catalog-rail-item {
+              flex-basis: 78vw;
+            }
+
+            .aska-catalog-product-rail .aska-editorial-card-media,
+            .aska-catalog-product-rail .aska-editorial-card.is-featured .aska-editorial-card-media {
+              height: 430px !important;
+            }
+
+            .aska-catalog-rail-top {
+              align-items: flex-start;
+              flex-direction: column;
+            }
+          }
 
           @media (max-width: 1100px) {
             .aska-editorial-feature-grid {
@@ -1487,55 +1457,6 @@ function Catalog() {
           }
 
           @media (max-width: 768px) {
-            .aska-catalog-maison-hero,
-            .aska-catalog-manifesto-row {
-              grid-template-columns: 1fr;
-            }
-
-            .aska-catalog-maison-hero {
-              min-height: auto;
-            }
-
-            .aska-catalog-maison-media {
-              min-height: 70svh;
-            }
-
-            .aska-catalog-maison-copy {
-              padding: 44px 20px 64px;
-            }
-
-            .aska-catalog-maison-copy h1 {
-              font-size: clamp(3.6rem, 18vw, 6.4rem);
-            }
-
-            .aska-catalog-maison-copy strong {
-              font-size: clamp(2rem, 10vw, 4rem);
-            }
-
-            .aska-catalog-manifesto-row {
-              padding: 72px 18px;
-            }
-
-            .aska-catalog-manifesto-copy h2,
-            .aska-catalog-cinematic-quote h2 {
-              font-size: clamp(3rem, 14vw, 5.4rem);
-            }
-
-            .aska-catalog-manifesto-image {
-              min-height: 520px;
-              border-radius: 26px;
-            }
-
-            .aska-editorial-category-block:nth-child(even) .aska-editorial-category-header {
-              flex-direction: column;
-              text-align: left;
-            }
-
-            .aska-catalog-cinematic-quote {
-              min-height: 72vh;
-              border-radius: 26px;
-            }
-
             .aska-catalog-hero {
               min-height: 52vh;
             }
