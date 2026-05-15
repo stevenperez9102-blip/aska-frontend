@@ -2,8 +2,26 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import procesoVideo from "../assets/proceso.mp4";
+import editorialHero from "../assets/editorial/cadena-serpiente.jpg";
+import editorialShadow from "../assets/editorial/choker-ethereal.jpg";
+import editorialPortrait from "../assets/editorial/galata-editorial.png";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+
+
+const ASKA_EDITORIAL_QUOTES = [
+  "No diseñamos accesorios. Diseñamos presencia.",
+  "Metal convertido en identidad.",
+  "Piezas para quienes nunca pasan desapercibidos.",
+  "La belleza también puede intimidar.",
+];
+
+const ASKA_CATEGORY_COPY = {
+  Collares: "Cadenas, texturas y metal para transformar el cuello en declaración.",
+  Pulseras: "Piezas que acompañan el gesto, la piel y el movimiento.",
+  "Accesorios corporales": "Diseños para cuerpos que convierten presencia en lenguaje.",
+  "Aretes y anillos": "Detalles filosos, íntimos y precisos para cerrar el look.",
+};
 
 const CATEGORY_MAP = {
   collares: "Collares",
@@ -91,6 +109,12 @@ function Catalog() {
   const categoriaActiva = slug ? CATEGORY_MAP[slug] || "" : "";
   const heroSlug = slug || "catalogo";
   const searchTerm = (searchParams.get("buscar") || "").trim();
+
+  const editorialMessage = useMemo(() => {
+    const source = categoriaActiva || searchTerm || "catalogo";
+    const index = source.length % ASKA_EDITORIAL_QUOTES.length;
+    return ASKA_EDITORIAL_QUOTES[index];
+  }, [categoriaActiva, searchTerm]);
 
   useEffect(() => {
     const cargar = async () => {
@@ -220,7 +244,7 @@ function Catalog() {
   const heroSubtitulo =
     hero?.subtitulo?.trim() ||
     (categoriaActiva
-      ? `Descubre todas las piezas de ${categoriaActiva}.`
+      ? ASKA_CATEGORY_COPY[categoriaActiva] || `Descubre todas las piezas de ${categoriaActiva}.`
       : "Piezas artesanales con actitud, presencia y fuerza visual.");
 
   const heroColor = hero?.color_texto || "#ffffff";
@@ -393,48 +417,38 @@ function Catalog() {
   return (
     <>
       <Navbar />
+      <section className="aska-catalog-maison-hero">
+        <div className="aska-catalog-maison-media">
+          <img src={editorialHero} alt="AŞKA editorial campaign" />
+        </div>
 
-      <section className="aska-catalog-hero">
-        {heroMediaTipo === "video" ? (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            src={heroMediaUrl}
-            className="aska-catalog-hero-media"
-          />
-        ) : (
-          <img
-            src={heroMediaUrl}
-            alt={heroTitulo}
-            className="aska-catalog-hero-media"
-          />
-        )}
-
-        <div
-          className="aska-catalog-hero-overlay"
-          style={{
-            background: `linear-gradient(90deg, rgba(0,0,0,${
-              heroOverlay + 0.18
-            }), rgba(0,0,0,${heroOverlay}) 45%, rgba(0,0,0,${
-              heroOverlay + 0.16
-            })), linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.48))`,
-          }}
-        />
-
-        <div
-          className="aska-catalog-hero-content"
-          style={{
-            color: heroColor,
-            fontFamily: `var(--aska-font-family-primary, ${heroFuente})`,
-          }}
-        >
+        <div className="aska-catalog-maison-copy">
           <p>Explora la colección</p>
-
           <h1>{heroTitulo}</h1>
-
           <span>{heroSubtitulo}</span>
+
+          <div className="aska-catalog-maison-line" />
+
+          <strong>{editorialMessage}</strong>
+        </div>
+      </section>
+
+      <section className="aska-catalog-manifesto-row">
+        <div className="aska-catalog-manifesto-copy">
+          <p>AŞKA MANIFESTO</p>
+          <h2>
+            No es accesorio.
+            <br />
+            Es identidad.
+          </h2>
+          <span>
+            Diseños oscuros, contemporáneos y artesanales para personas que
+            convierten presencia en lenguaje visual.
+          </span>
+        </div>
+
+        <div className="aska-catalog-manifesto-image">
+          <img src={editorialPortrait} alt="AŞKA portrait editorial" />
         </div>
       </section>
 
@@ -556,6 +570,24 @@ function Catalog() {
                 })
               )}
             </div>
+          )}
+
+          {!searchTerm && (
+            <section className="aska-catalog-cinematic-quote">
+              <img src={editorialShadow} alt="AŞKA shadow editorial" />
+
+              <div>
+                <p>EDITORIAL</p>
+                <h2>
+                  No seguimos tendencias.
+                  <br />
+                  Creamos tensión visual.
+                </h2>
+                <span>
+                  Una joya AŞKA no completa el look: lo domina.
+                </span>
+              </div>
+            </section>
           )}
         </div>
       </section>
@@ -1185,6 +1217,253 @@ function Catalog() {
             }
           }
 
+
+          .aska-catalog-maison-hero {
+            min-height: 100svh;
+            display: grid;
+            grid-template-columns: minmax(0, 1.02fr) minmax(420px, .98fr);
+            background: #050505;
+            color: #ffffff;
+            overflow: hidden;
+          }
+
+          .aska-catalog-maison-media {
+            position: relative;
+            min-height: 100svh;
+            overflow: hidden;
+            background: #0a0a0a;
+          }
+
+          .aska-catalog-maison-media::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0.54)),
+              linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.36));
+            pointer-events: none;
+          }
+
+          .aska-catalog-maison-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            display: block;
+            filter: contrast(1.04) saturate(.88);
+            transform: scale(1.02);
+            animation: askaCatalogSlowZoom 12s ease-in-out infinite alternate;
+          }
+
+          .aska-catalog-maison-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: clamp(110px, 12vw, 178px) clamp(26px, 5vw, 86px) clamp(70px, 7vw, 112px);
+            position: relative;
+            z-index: 2;
+          }
+
+          .aska-catalog-maison-copy p,
+          .aska-catalog-manifesto-copy p,
+          .aska-catalog-cinematic-quote p {
+            margin: 0 0 18px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.54);
+          }
+
+          .aska-catalog-maison-copy h1 {
+            margin: 0;
+            font-size: clamp(4.8rem, 11vw, 11rem);
+            line-height: .78;
+            letter-spacing: -.088em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-wrap: balance;
+          }
+
+          .aska-catalog-maison-copy span {
+            display: block;
+            margin-top: 30px;
+            max-width: 620px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: clamp(1rem, 1.28vw, 1.24rem);
+            line-height: 1.78;
+            color: rgba(255,255,255,.72);
+            font-weight: 300;
+          }
+
+          .aska-catalog-maison-line {
+            width: 86px;
+            height: 1px;
+            margin: 38px 0 26px;
+            background: linear-gradient(90deg, rgba(255,255,255,.68), transparent);
+          }
+
+          .aska-catalog-maison-copy strong {
+            max-width: 540px;
+            font-size: clamp(1.8rem, 3.4vw, 4rem);
+            line-height: .96;
+            letter-spacing: -.06em;
+            font-weight: 500;
+            color: #ffffff;
+          }
+
+          .aska-catalog-manifesto-row {
+            display: grid;
+            grid-template-columns: minmax(0, .98fr) minmax(360px, .72fr);
+            gap: clamp(36px, 7vw, 104px);
+            align-items: center;
+            padding: clamp(92px, 10vw, 170px) clamp(22px, 5vw, 86px);
+            background:
+              radial-gradient(circle at 10% 6%, rgba(255,255,255,.78), transparent 26%),
+              #f3f0ec;
+            color: #111111;
+          }
+
+          .aska-catalog-manifesto-copy p {
+            color: rgba(17,17,17,.48);
+          }
+
+          .aska-catalog-manifesto-copy h2 {
+            margin: 0;
+            max-width: 980px;
+            font-size: clamp(3.4rem, 8vw, 8.8rem);
+            line-height: .82;
+            letter-spacing: -.082em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-manifesto-copy span {
+            display: block;
+            margin-top: 28px;
+            max-width: 660px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: rgba(17,17,17,.62);
+            font-size: clamp(1rem, 1.34vw, 1.22rem);
+            line-height: 1.78;
+            font-weight: 300;
+          }
+
+          .aska-catalog-manifesto-image {
+            min-height: 640px;
+            overflow: hidden;
+            background: #080808;
+            border-radius: 34px;
+            box-shadow: 0 32px 90px rgba(0,0,0,.18);
+          }
+
+          .aska-catalog-manifesto-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            filter: contrast(1.04) saturate(.88);
+            transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s ease;
+          }
+
+          .aska-catalog-manifesto-image:hover img {
+            transform: scale(1.045);
+            filter: contrast(1.08) saturate(.98);
+          }
+
+          .aska-editorial-category-block:nth-child(even) .aska-editorial-category-header {
+            flex-direction: row-reverse;
+            text-align: right;
+          }
+
+          .aska-editorial-category-block:nth-child(even)::before {
+            margin-left: auto;
+            background: linear-gradient(270deg, rgba(17,17,17,0.58), rgba(17,17,17,0));
+          }
+
+          .aska-editorial-category-block::after {
+            content: "Metal · textura · presencia";
+            display: block;
+            margin-top: clamp(28px, 4vw, 52px);
+            color: rgba(17,17,17,.36);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .26em;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-cinematic-quote {
+            position: relative;
+            min-height: 86vh;
+            margin-top: clamp(100px, 12vw, 180px);
+            overflow: hidden;
+            border-radius: 34px;
+            background: #050505;
+            color: #ffffff;
+            box-shadow: 0 36px 110px rgba(0,0,0,.18);
+          }
+
+          .aska-catalog-cinematic-quote img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            display: block;
+            filter: contrast(1.06) saturate(.84);
+          }
+
+          .aska-catalog-cinematic-quote::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              linear-gradient(90deg, rgba(0,0,0,.86), rgba(0,0,0,.34), rgba(0,0,0,.58)),
+              linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.44));
+            z-index: 1;
+          }
+
+          .aska-catalog-cinematic-quote div {
+            position: relative;
+            z-index: 2;
+            max-width: 960px;
+            padding: clamp(68px, 9vw, 138px) clamp(24px, 6vw, 92px);
+          }
+
+          .aska-catalog-cinematic-quote h2 {
+            margin: 0;
+            font-size: clamp(3.2rem, 7vw, 8rem);
+            line-height: .84;
+            letter-spacing: -.08em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-cinematic-quote span {
+            display: block;
+            margin-top: 30px;
+            max-width: 540px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: rgba(255,255,255,.72);
+            font-size: clamp(1rem, 1.3vw, 1.22rem);
+            line-height: 1.72;
+          }
+
+          @keyframes askaCatalogSlowZoom {
+            from {
+              transform: scale(1.02);
+            }
+            to {
+              transform: scale(1.07);
+            }
+          }
+
+
           @media (max-width: 1100px) {
             .aska-editorial-feature-grid {
               grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1208,6 +1487,55 @@ function Catalog() {
           }
 
           @media (max-width: 768px) {
+            .aska-catalog-maison-hero,
+            .aska-catalog-manifesto-row {
+              grid-template-columns: 1fr;
+            }
+
+            .aska-catalog-maison-hero {
+              min-height: auto;
+            }
+
+            .aska-catalog-maison-media {
+              min-height: 70svh;
+            }
+
+            .aska-catalog-maison-copy {
+              padding: 44px 20px 64px;
+            }
+
+            .aska-catalog-maison-copy h1 {
+              font-size: clamp(3.6rem, 18vw, 6.4rem);
+            }
+
+            .aska-catalog-maison-copy strong {
+              font-size: clamp(2rem, 10vw, 4rem);
+            }
+
+            .aska-catalog-manifesto-row {
+              padding: 72px 18px;
+            }
+
+            .aska-catalog-manifesto-copy h2,
+            .aska-catalog-cinematic-quote h2 {
+              font-size: clamp(3rem, 14vw, 5.4rem);
+            }
+
+            .aska-catalog-manifesto-image {
+              min-height: 520px;
+              border-radius: 26px;
+            }
+
+            .aska-editorial-category-block:nth-child(even) .aska-editorial-category-header {
+              flex-direction: column;
+              text-align: left;
+            }
+
+            .aska-catalog-cinematic-quote {
+              min-height: 72vh;
+              border-radius: 26px;
+            }
+
             .aska-catalog-hero {
               min-height: 52vh;
             }
