@@ -78,6 +78,7 @@ function Home() {
   const [addedProduct, setAddedProduct] = useState(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [drawerTab, setDrawerTab] = useState("add");
+  const [introDone, setIntroDone] = useState(false);
 
   const railRefs = useRef({});
   const dragRef = useRef({
@@ -86,6 +87,14 @@ function Home() {
     scrollLeft: 0,
     key: "",
   });
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIntroDone(true);
+    }, 1350);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const cargarConfig = async () => {
@@ -454,8 +463,17 @@ function Home() {
     <>
       <Navbar />
 
+      {!introDone && (
+        <div className="aska-premium-loader">
+          <div>
+            <span>AŞKA</span>
+            <p>Contemporary jewelry</p>
+          </div>
+        </div>
+      )}
+
       <section
-        className="aska-hero-section aska-lux-hero"
+        className="aska-hero-section aska-lux-hero aska-reveal-block"
         style={{
           position: "relative",
           minHeight: "100svh",
@@ -532,7 +550,7 @@ function Home() {
         )}
       </section>
 
-      <section className="aska-editorial-intro">
+      <section className="aska-editorial-intro aska-reveal-block">
         <div>
           <p>Joyería artesanal contemporánea</p>
           <h2>Piezas con fuerza, historia y presencia.</h2>
@@ -543,7 +561,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="aska-campaign-grid">
+      <section className="aska-campaign-grid aska-reveal-block">
         <CampaignTile
           product={campaignProducts.first}
           title="Just add presence"
@@ -564,7 +582,7 @@ function Home() {
         />
       </section>
 
-      <section className="aska-home-products-editorial">
+      <section className="aska-home-products-editorial aska-reveal-block">
         {loadingProducts ? (
           <p className="aska-home-loading">Cargando productos...</p>
         ) : categories.length === 0 ? (
@@ -588,7 +606,7 @@ function Home() {
         )}
       </section>
 
-      <section className="aska-home-footer-editorial">
+      <section className="aska-home-footer-editorial aska-reveal-block">
         <div>
           <h2>AŞKA</h2>
           <p>
@@ -705,6 +723,140 @@ function Home() {
           * {
             box-sizing: border-box;
           }
+
+
+          .aska-premium-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: grid;
+            place-items: center;
+            background: #050505;
+            color: #ffffff;
+            animation: askaLoaderExit .44s ease 1.04s forwards;
+          }
+
+          .aska-premium-loader div {
+            text-align: center;
+            animation: askaLoaderIntro .82s cubic-bezier(.22,.61,.36,1) both;
+          }
+
+          .aska-premium-loader span {
+            display: block;
+            font-family: var(--aska-font-family-primary, Georgia, serif);
+            font-size: clamp(3.4rem, 10vw, 9rem);
+            line-height: .84;
+            letter-spacing: -.08em;
+            font-weight: 500;
+          }
+
+          .aska-premium-loader p {
+            margin: 18px 0 0;
+            color: rgba(255,255,255,.56);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+          }
+
+          .aska-reveal-block {
+            animation: askaRevealUp .9s cubic-bezier(.22,.61,.36,1) both;
+          }
+
+          .aska-editorial-intro {
+            animation-delay: .08s;
+          }
+
+          .aska-campaign-grid {
+            animation-delay: .14s;
+          }
+
+          .aska-home-products-editorial {
+            animation-delay: .18s;
+          }
+
+          .aska-home-footer-editorial {
+            animation-delay: .22s;
+          }
+
+          .aska-hero-media {
+            transform: scale(1.018);
+            animation: askaHeroBreath 9s ease-in-out infinite alternate;
+          }
+
+          .aska-campaign-tile,
+          .aska-rail-card,
+          .aska-cart-drawer,
+          .aska-home-footer-editorial {
+            will-change: transform;
+          }
+
+          .aska-campaign-tile:hover .aska-campaign-content,
+          .aska-rail-card:hover .aska-rail-info {
+            transform: translateY(-3px);
+          }
+
+          .aska-campaign-content,
+          .aska-rail-info {
+            transition: transform .52s cubic-bezier(.22,.61,.36,1);
+          }
+
+          @keyframes askaLoaderIntro {
+            from {
+              opacity: 0;
+              transform: translateY(18px) scale(.985);
+              filter: blur(8px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+              filter: blur(0);
+            }
+          }
+
+          @keyframes askaLoaderExit {
+            to {
+              opacity: 0;
+              visibility: hidden;
+              pointer-events: none;
+            }
+          }
+
+          @keyframes askaRevealUp {
+            from {
+              opacity: 0;
+              transform: translateY(22px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes askaHeroBreath {
+            from {
+              transform: scale(1.018);
+            }
+            to {
+              transform: scale(1.046);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .aska-premium-loader,
+            .aska-premium-loader div,
+            .aska-reveal-block,
+            .aska-hero-media {
+              animation: none !important;
+            }
+
+            .aska-premium-loader {
+              display: none;
+            }
+          }
+
+
 
           .aska-hero-section {
             width: 100%;
@@ -1429,10 +1581,12 @@ function Home() {
             }
 
             .aska-whatsapp-button {
-              right: 18px;
-              bottom: 18px;
-              width: 58px;
-              height: 58px;
+              right: 14px;
+              bottom: 74px;
+              width: 50px;
+              height: 50px;
+              font-size: .52rem;
+              opacity: .92;
             }
           }
         `}
