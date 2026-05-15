@@ -112,9 +112,9 @@ function Navbar() {
   const linkStyle = (active = false) => ({
     color: active ? "#ffffff" : "rgba(255,255,255,0.78)",
     textDecoration: "none",
-    fontWeight: active ? 650 : 520,
-    fontSize: "0.72rem",
-    letterSpacing: "0.18em",
+    fontWeight: active ? 560 : 440,
+    fontSize: "0.7rem",
+    letterSpacing: "0.12em",
     textTransform: "uppercase",
     transition: "color 0.28s ease, opacity 0.28s ease, transform 0.28s ease",
     whiteSpace: "nowrap",
@@ -126,9 +126,9 @@ function Navbar() {
     padding: 0,
     cursor: "pointer",
     color: "rgba(255,255,255,0.78)",
-    fontWeight: 520,
-    fontSize: "0.72rem",
-    letterSpacing: "0.18em",
+    fontWeight: 440,
+    fontSize: "0.7rem",
+    letterSpacing: "0.12em",
     textTransform: "uppercase",
     fontFamily: "var(--aska-font-family-secondary, Helvetica, Arial, sans-serif)",
     whiteSpace: "nowrap",
@@ -204,9 +204,9 @@ function Navbar() {
     padding: "15px 28px",
     color: "rgba(255,255,255,0.78)",
     textDecoration: "none",
-    fontSize: "0.78rem",
+    fontSize: "0.74rem",
     whiteSpace: "nowrap",
-    fontWeight: 520,
+    fontWeight: 440,
     letterSpacing: "0.08em",
   };
 
@@ -454,9 +454,9 @@ function Navbar() {
       <style>
         {`
           :root {
-            --aska-navbar-bg: rgba(7,7,7,0.88);
-            --aska-navbar-bg-scrolled: rgba(6,6,6,0.94);
-            --aska-navbar-border: rgba(255,255,255,0.10);
+            --aska-navbar-bg: rgba(7,7,7,0.42);
+            --aska-navbar-bg-scrolled: rgba(8,8,8,0.86);
+            --aska-navbar-border: rgba(255,255,255,0.06);
             --aska-text-color: #f7f2ec;
             --aska-menu-bg: rgba(9,9,9,0.86);
             --aska-menu-border: rgba(255,255,255,0.10);
@@ -492,7 +492,7 @@ function Navbar() {
             right: 0;
             top: 0;
             height: 140%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.24), rgba(0,0,0,0.08) 52%, rgba(0,0,0,0.00));
+            background: linear-gradient(180deg, rgba(0,0,0,0.34), rgba(0,0,0,0.10) 56%, rgba(0,0,0,0.00));
             pointer-events: none;
             z-index: -1;
           }
@@ -513,8 +513,8 @@ function Navbar() {
           .aska-navbar-inner {
             width: 100%;
             margin: 0;
-            min-height: 94px;
-            padding: 0 108px 0 24px;
+            min-height: 78px;
+            padding: 0 92px 0 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -527,7 +527,7 @@ function Navbar() {
           }
 
           .aska-site-header.is-scrolled .aska-navbar-inner {
-            min-height: 76px;
+            min-height: 64px;
           }
 
           .aska-brand-logo-button {
@@ -546,10 +546,10 @@ function Navbar() {
 
           .aska-brand-logo-img {
             display: block;
-            height: 70px;
+            height: 58px;
             width: auto;
             object-fit: contain;
-            transform: scale(1.92) translateX(-14px);
+            transform: scale(1.58) translateX(-10px);
             transform-origin: left center;
             transition:
               height .42s ease,
@@ -562,14 +562,14 @@ function Navbar() {
           }
 
           .aska-site-header.is-scrolled .aska-brand-logo-img {
-            height: 58px;
-            transform: scale(1.72) translateX(-12px);
+            height: 50px;
+            transform: scale(1.46) translateX(-8px);
           }
 
           .aska-nav-menu {
             display: flex;
             align-items: center;
-            gap: clamp(24px, 3.1vw, 48px);
+            gap: clamp(32px, 4vw, 62px);
             position: relative;
             margin-left: auto;
             padding-right: 4px;
@@ -630,11 +630,11 @@ function Navbar() {
             left: 50%;
             transform: translateX(-50%);
             min-width: 292px;
-            padding: 22px 0 14px;
+            padding: 18px 0 10px;
             border-radius: 0;
             background: var(--aska-menu-bg) !important;
             border: 1px solid var(--aska-menu-border);
-            box-shadow: 0 28px 80px rgba(0,0,0,0.44);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.18);
             backdrop-filter: blur(22px) saturate(118%);
             -webkit-backdrop-filter: blur(22px) saturate(118%);
             animation: askaMenuReveal .28s ease both;
@@ -702,9 +702,9 @@ function Navbar() {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(5,5,5,0.34);
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow: 0 16px 42px rgba(0,0,0,0.18);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: none;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             overflow: visible;
             transition:
@@ -721,9 +721,9 @@ function Navbar() {
 
           .aska-navbar-cart:hover {
             color: #ffffff;
-            background: rgba(255,255,255,0.09);
-            border-color: rgba(255,255,255,0.30);
-            transform: translateY(-50%) translateY(-1px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.14);
+            transform: translateY(-50%);
           }
 
           .aska-cart-icon {
@@ -749,8 +749,8 @@ function Navbar() {
             height: 20px;
             padding: 0 6px;
             border-radius: 999px;
-            background: #ffffff;
-            color: #050505;
+            background: rgba(255,255,255,0.92);
+            color: #111111;
             display: flex;
             align-items: center;
             justify-content: center;
