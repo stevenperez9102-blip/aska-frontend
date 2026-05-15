@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import procesoVideo from "../assets/proceso.mp4";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 const CATEGORY_MAP = {
   collares: "Collares",
@@ -54,15 +56,41 @@ function getProductImages(product) {
   return images;
 }
 
+
+function BagIcon() {
+  return (
+    <svg className="aska-catalog-bag-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M7.2 8.4V7.2C7.2 4.6 9.3 2.5 12 2.5C14.7 2.5 16.8 4.6 16.8 7.2V8.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.5 8.4H18.5L19.4 21.5H4.6L5.5 8.4Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function Catalog() {
+  const { addToCart } = useContext(CartContext);
   const { slug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hero, setHero] = useState(null);
   const [selectedImages, setSelectedImages] = useState({});
+  const [quickAdded, setQuickAdded] = useState(null);
 
   const categoriaActiva = slug ? CATEGORY_MAP[slug] || "" : "";
   const heroSlug = slug || "catalogo";
+  const searchTerm = (searchParams.get("buscar") || "").trim();
 
   useEffect(() => {
     const cargar = async () => {
@@ -154,13 +182,29 @@ function Catalog() {
   }, [products]);
 
   const filteredProducts = useMemo(() => {
-    if (!categoriaActiva) return products;
-    return products.filter(
-      (p) =>
-        String(p.categoria || "").toLowerCase() ===
-        String(categoriaActiva || "").toLowerCase()
-    );
-  }, [products, categoriaActiva]);
+    const normalizedSearch = searchTerm.toLowerCase();
+
+    return products.filter((p) => {
+      const matchesCategory = !categoriaActiva
+        ? true
+        : String(p.categoria || "").toLowerCase() ===
+          String(categoriaActiva || "").toLowerCase();
+
+      if (!matchesCategory) return false;
+
+      if (!normalizedSearch) return true;
+
+      const nombre = String(p.nombre || "").toLowerCase();
+      const categoria = String(p.categoria || "").toLowerCase();
+      const descripcion = String(p.descripcion || "").toLowerCase();
+
+      return (
+        nombre.includes(normalizedSearch) ||
+        categoria.includes(normalizedSearch) ||
+        descripcion.includes(normalizedSearch)
+      );
+    });
+  }, [products, categoriaActiva, searchTerm]);
 
   const heroMediaUrl =
     hero?.media_url && hero.media_url.trim() !== "" ? hero.media_url : procesoVideo;
@@ -228,6 +272,36 @@ function Catalog() {
     });
   };
 
+
+  const handleQuickAdd = (event, item) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const imgs = getProductImages(item);
+    const currentIndex = selectedImages[item.id] ?? 0;
+    const image = imgs[currentIndex] || imgs[0] || item.imagen || "";
+
+    addToCart({
+      id: item.id,
+      name: item.nombre,
+      nombre: item.nombre,
+      price: Number(item.precio || 0),
+      precio: Number(item.precio || 0),
+      image,
+      imagen: image,
+      description: item.descripcion || "",
+      category: item.categoria || "",
+      categoria: item.categoria || "",
+    });
+
+    setQuickAdded(item);
+    window.dispatchEvent(new Event("cart-updated"));
+
+    window.setTimeout(() => {
+      setQuickAdded(null);
+    }, 2600);
+  };
+
   const renderCard = (item, featured = false) => {
     const imgs = getProductImages(item).slice(0, 4);
     const currentIndex = selectedImages[item.id] ?? 0;
@@ -247,6 +321,16 @@ function Catalog() {
           )}
 
           <div className="aska-editorial-card-gradient" />
+
+          <button
+            type="button"
+            className="aska-editorial-quick-add"
+            onClick={(event) => handleQuickAdd(event, item)}
+            aria-label={`Agregar ${item.nombre} al carrito`}
+          >
+            <BagIcon />
+            <span>Add +</span>
+          </button>
 
           {imgs.length > 1 && (
             <>
@@ -356,6 +440,29 @@ function Catalog() {
 
       <section className="aska-catalog-editorial-section">
         <div className="aska-catalog-wrap">
+          {searchTerm && (
+            <div className="aska-catalog-search-banner">
+              <div>
+                <p>Resultados de búsqueda</p>
+                <h2>{searchTerm}</h2>
+              </div>
+
+              <button type="button" onClick={() => setSearchParams({})}>
+                Limpiar búsqueda
+              </button>
+            </div>
+          )}
+
+          {quickAdded && (
+            <div className="aska-catalog-added-toast">
+              <BagIcon />
+              <div>
+                <p>Agregado al carrito</p>
+                <span>{quickAdded.nombre}</span>
+              </div>
+            </div>
+          )}
+
           {loading ? (
             <p className="aska-catalog-status">Cargando catálogo...</p>
           ) : categoriaActiva ? (
@@ -367,10 +474,11 @@ function Catalog() {
               <>
                 <div className="aska-category-editorial-intro">
                   <p>Colección AŞKA</p>
-                  <h2>{categoriaActiva}</h2>
+                  <h2>{searchTerm ? "Búsqueda" : categoriaActiva}</h2>
                   <span>
-                    Una selección de piezas creadas para destacar presencia,
-                    textura y carácter.
+                    {searchTerm
+                      ? `Piezas encontradas para "${searchTerm}".`
+                      : "Una selección de piezas creadas para destacar presencia, textura y carácter."}
                   </span>
                 </div>
 
@@ -385,6 +493,23 @@ function Catalog() {
                   ))}
                 </div>
               </>
+            )
+          ) : searchTerm ? (
+            filteredProducts.length === 0 ? (
+              <p className="aska-catalog-status">
+                No encontramos piezas para esa búsqueda.
+              </p>
+            ) : (
+              <div className="aska-category-products-grid">
+                {filteredProducts.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={index % 5 === 0 ? "is-wide" : ""}
+                  >
+                    {renderCard(item, index % 5 === 0)}
+                  </div>
+                ))}
+              </div>
             )
           ) : (
             <div className="aska-home-catalog-sections">
@@ -922,6 +1047,144 @@ function Catalog() {
             z-index: 3;
           }
 
+
+
+          .aska-catalog-search-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: clamp(34px, 5vw, 72px);
+            padding-bottom: 26px;
+            border-bottom: 1px solid rgba(17,17,17,0.12);
+          }
+
+          .aska-catalog-search-banner p {
+            margin: 0 0 10px;
+            color: rgba(17,17,17,0.48);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-search-banner h2 {
+            margin: 0;
+            color: #111111;
+            font-size: clamp(2.7rem, 6vw, 7rem);
+            line-height: 0.82;
+            letter-spacing: -0.075em;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-search-banner button {
+            min-height: 42px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(17,17,17,0.14);
+            background: rgba(255,255,255,0.72);
+            color: #111111;
+            cursor: pointer;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+          }
+
+          .aska-editorial-quick-add {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            z-index: 7;
+            min-height: 38px;
+            padding: 0 13px;
+            border: 1px solid rgba(255,255,255,0.38);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.90);
+            color: #111111;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(-6px);
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition:
+              opacity .28s ease,
+              transform .28s ease,
+              background .28s ease;
+          }
+
+          .aska-editorial-card:hover .aska-editorial-quick-add,
+          .aska-editorial-quick-add:focus-visible {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .aska-editorial-quick-add:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+          }
+
+          .aska-catalog-bag-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+          }
+
+          .aska-catalog-added-toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 100000;
+            min-width: min(340px, calc(100vw - 48px));
+            padding: 16px 18px;
+            background: rgba(10,10,10,0.92);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.28);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: askaToastReveal .28s ease both;
+          }
+
+          .aska-catalog-added-toast p {
+            margin: 0 0 3px;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            color: rgba(255,255,255,0.58);
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+          }
+
+          .aska-catalog-added-toast span {
+            display: block;
+            font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
+            font-size: 0.94rem;
+            color: #ffffff;
+          }
+
+          @keyframes askaToastReveal {
+            from {
+              opacity: 0;
+              transform: translateY(14px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
           @media (max-width: 1100px) {
             .aska-editorial-feature-grid {
               grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1005,6 +1268,18 @@ function Catalog() {
               opacity: 1;
               width: 36px;
               height: 36px;
+            }
+
+            .aska-editorial-quick-add {
+              opacity: 1;
+              transform: none;
+              right: 14px;
+              top: 14px;
+            }
+
+            .aska-catalog-search-banner {
+              align-items: flex-start;
+              flex-direction: column;
             }
           }
 
