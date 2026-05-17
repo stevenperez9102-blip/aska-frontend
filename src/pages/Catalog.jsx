@@ -11,6 +11,7 @@ import editorialShadow from "../assets/editorial/choker-ethereal.jpg";
 import editorialPortrait from "../assets/editorial/galata-editorial.png";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { supabase } from "../lib/supabase";
 
 
 
@@ -146,29 +147,43 @@ function Catalog() {
       try {
         setLoading(true);
 
-        const res = await fetch("https://aska-backend-nyx8.onrender.com/api/productos");
-        const data = await res.json();
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .order("id", { ascending: true });
+
+        if (error) {
+          console.error("Error Supabase cargando productos:", error);
+          setProducts([]);
+          return;
+        }
 
         const productsArray = Array.isArray(data) ? data : [];
 
-        const detailedProducts = await Promise.all(
-          productsArray.map(async (product) => {
-            try {
-              const detailRes = await fetch(
-                `https://aska-backend-nyx8.onrender.com/api/productos/${product.id}`
-              );
-              if (!detailRes.ok) return product;
-              return await detailRes.json();
-            } catch {
-              return product;
-            }
-          })
-        );
+        const normalizedProducts = productsArray.map((product) => {
+          const image = product.image || product.imagen || "";
+          const gallery =
+            Array.isArray(product.imagenes) && product.imagenes.length > 0
+              ? product.imagenes
+              : image
+                ? [image]
+                : [];
 
-        setProducts(detailedProducts);
+          return {
+            ...product,
+            nombre: product.nombre || product.name || "",
+            precio: Number(product.precio ?? product.price ?? 0),
+            categoria: product.categoria || product.category || "",
+            descripcion: product.descripcion || product.description || "",
+            imagen: image,
+            imagenes: gallery,
+          };
+        });
+
+        setProducts(normalizedProducts);
 
         const initialSelected = {};
-        detailedProducts.forEach((product) => {
+        normalizedProducts.forEach((product) => {
           const images = getProductImages(product);
           if (images.length > 0) {
             initialSelected[product.id] = 0;
@@ -188,20 +203,8 @@ function Catalog() {
   }, []);
 
   useEffect(() => {
-    const cargarHero = async () => {
-      try {
-        const res = await fetch(
-          `https://aska-backend-nyx8.onrender.com/api/catalogo-hero/${heroSlug}`
-        );
-        const data = await res.json();
-        setHero(data || null);
-      } catch (error) {
-        console.error("Error cargando hero catálogo:", error);
-        setHero(null);
-      }
-    };
-
-    cargarHero();
+    // Hero editorial local: no depende del backend anterior de Railway/Render.
+    setHero(null);
   }, [heroSlug]);
 
   const categories = useMemo(() => {
