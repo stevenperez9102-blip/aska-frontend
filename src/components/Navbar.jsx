@@ -80,12 +80,6 @@ function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
 
-  const [musicOpen, setMusicOpen] = useState(false);
-  const [tracks, setTracks] = useState([]);
-  const [currentTrack, setCurrentTrack] = useState(null);
-  const audioRef = useRef(null);
-
-
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
 
@@ -156,28 +150,6 @@ function Navbar() {
     };
 
     cargarProductosBusqueda();
-  }, []);
-
-
-  useEffect(() => {
-    const loadTracks = async () => {
-      try {
-        const response = await fetch("https://aska-backend-nyx8.onrender.com/api/admin/music-tracks");
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
-          setTracks(data);
-
-          if (data.length > 0) {
-            setCurrentTrack(data[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading tracks:", error);
-      }
-    };
-
-    loadTracks();
   }, []);
 
   useEffect(() => {
@@ -624,44 +596,6 @@ function Navbar() {
             )}
           </div>
 
-
-          <div className={`aska-navbar-music ${musicOpen ? "is-open" : ""}`}>
-            <button
-              type="button"
-              className="aska-navbar-music-trigger"
-              onClick={() => {
-                setMusicOpen((v) => !v);
-
-                if (audioRef.current) {
-                  audioRef.current.paused
-                    ? audioRef.current.play()
-                    : audioRef.current.pause();
-                }
-              }}
-              aria-label="Control de música"
-            >
-              ♫
-            </button>
-
-            {musicOpen && currentTrack && (
-              <div className="aska-navbar-music-panel">
-                <p>AŞKA SOUND</p>
-
-                <strong>
-                  {currentTrack.title || currentTrack.nombre || "Fashion Session"}
-                </strong>
-
-                <audio
-                  ref={audioRef}
-                  src={currentTrack.url || currentTrack.audioUrl}
-                  controls
-                  autoPlay
-                  style={{ width: "100%" }}
-                />
-              </div>
-            )}
-          </div>
-
           <Link
             to="/cart"
             className={`aska-navbar-cart ${cartLuxPulse ? "aska-navbar-cart-lux-pulse" : ""}`}
@@ -1031,61 +965,7 @@ function Navbar() {
             line-height: 1.5;
           }
 
-          
-          .aska-navbar-music {
-            position: absolute;
-            top: 50%;
-            right: 156px;
-            transform: translateY(-50%);
-            z-index: 10003;
-          }
-
-          .aska-navbar-music-trigger {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.16);
-            background: rgba(255,255,255,0.06);
-            color: #ffffff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all .28s ease;
-          }
-
-          .aska-navbar-music-trigger:hover {
-            transform: scale(1.06);
-            background: rgba(255,255,255,0.12);
-          }
-
-          .aska-navbar-music-panel {
-            position: absolute;
-            top: 46px;
-            right: 0;
-            width: 260px;
-            padding: 16px;
-            background: rgba(8,8,8,0.94);
-            border: 1px solid rgba(255,255,255,0.12);
-            backdrop-filter: blur(24px);
-            box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-          }
-
-          .aska-navbar-music-panel p {
-            margin: 0 0 8px;
-            font-size: 0.62rem;
-            letter-spacing: .22em;
-            color: rgba(255,255,255,0.52);
-          }
-
-          .aska-navbar-music-panel strong {
-            display: block;
-            margin-bottom: 12px;
-            color: #fff;
-            font-size: .78rem;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-          }
-
-.aska-navbar-cart {
+          .aska-navbar-cart {
             position: absolute;
             top: 50%;
             right: 28px;
@@ -1111,61 +991,7 @@ function Navbar() {
               transform .28s ease;
           }
 
-          .aska-site-header.is-scrolled 
-          .aska-navbar-music {
-            position: absolute;
-            top: 50%;
-            right: 156px;
-            transform: translateY(-50%);
-            z-index: 10003;
-          }
-
-          .aska-navbar-music-trigger {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.16);
-            background: rgba(255,255,255,0.06);
-            color: #ffffff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all .28s ease;
-          }
-
-          .aska-navbar-music-trigger:hover {
-            transform: scale(1.06);
-            background: rgba(255,255,255,0.12);
-          }
-
-          .aska-navbar-music-panel {
-            position: absolute;
-            top: 46px;
-            right: 0;
-            width: 260px;
-            padding: 16px;
-            background: rgba(8,8,8,0.94);
-            border: 1px solid rgba(255,255,255,0.12);
-            backdrop-filter: blur(24px);
-            box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-          }
-
-          .aska-navbar-music-panel p {
-            margin: 0 0 8px;
-            font-size: 0.62rem;
-            letter-spacing: .22em;
-            color: rgba(255,255,255,0.52);
-          }
-
-          .aska-navbar-music-panel strong {
-            display: block;
-            margin-bottom: 12px;
-            color: #fff;
-            font-size: .78rem;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-          }
-
-.aska-navbar-cart {
+          .aska-site-header.is-scrolled .aska-navbar-cart {
             background: transparent;
           }
 
@@ -1664,61 +1490,7 @@ function Navbar() {
             line-height: 1.5;
           }
 
-          
-          .aska-navbar-music {
-            position: absolute;
-            top: 50%;
-            right: 156px;
-            transform: translateY(-50%);
-            z-index: 10003;
-          }
-
-          .aska-navbar-music-trigger {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.16);
-            background: rgba(255,255,255,0.06);
-            color: #ffffff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all .28s ease;
-          }
-
-          .aska-navbar-music-trigger:hover {
-            transform: scale(1.06);
-            background: rgba(255,255,255,0.12);
-          }
-
-          .aska-navbar-music-panel {
-            position: absolute;
-            top: 46px;
-            right: 0;
-            width: 260px;
-            padding: 16px;
-            background: rgba(8,8,8,0.94);
-            border: 1px solid rgba(255,255,255,0.12);
-            backdrop-filter: blur(24px);
-            box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-          }
-
-          .aska-navbar-music-panel p {
-            margin: 0 0 8px;
-            font-size: 0.62rem;
-            letter-spacing: .22em;
-            color: rgba(255,255,255,0.52);
-          }
-
-          .aska-navbar-music-panel strong {
-            display: block;
-            margin-bottom: 12px;
-            color: #fff;
-            font-size: .78rem;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-          }
-
-.aska-navbar-cart {
+          .aska-navbar-cart {
               right: 14px;
               min-width: 34px;
               width: 34px;
