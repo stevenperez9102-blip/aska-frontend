@@ -11,7 +11,6 @@ import editorialShadow from "../assets/editorial/choker-ethereal.jpg";
 import editorialPortrait from "../assets/editorial/galata-editorial.png";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
-import { supabase } from "../lib/supabase";
 
 
 
@@ -147,16 +146,11 @@ function Catalog() {
       try {
         setLoading(true);
 
-        const { data, error } = await supabase
-          .from("products")
-          .select("*")
-          .order("id", { ascending: true });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/productos`
+        );
 
-        if (error) {
-          console.error("Error Supabase cargando productos:", error);
-          setProducts([]);
-          return;
-        }
+        const data = await response.json();
 
         const productsArray = Array.isArray(data) ? data : [];
 
