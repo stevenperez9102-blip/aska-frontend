@@ -324,7 +324,7 @@ function Navbar() {
   return (
     <>
       {secretActive && (
-        <div className="aska-secret-overlay">
+        <div className="aska-secret-overlay" onClick={() => setSecretActive(false)} style={{cursor:"pointer"}}>
           {Array.from({ length: 38 }).map((_, i) => (
             <span
               key={i}
@@ -1131,7 +1131,7 @@ function Navbar() {
             padding: 42px 34px;
             text-align: center;
             border-radius: 34px;
-            background: rgba(15,15,16,0.82);
+            background: rgba(8,8,8,0.97);
             border: 1px solid rgba(255,255,255,0.14);
             box-shadow: 0 30px 90px rgba(0,0,0,0.65);
             color: #fff;

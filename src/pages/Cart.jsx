@@ -12,7 +12,7 @@ function formatPrice(value) {
 }
 
 function Cart() {
-  const { cart, removeFromCart } = useContext(CartContext);
+  const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryCity, setDeliveryCity] = useState("");
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
@@ -281,15 +281,50 @@ function Cart() {
                         {formatPrice(product.price)}
                       </p>
 
-                      <p
+                      <div
                         style={{
-                          margin: 0,
-                          color: "var(--aska-text-primary, #444)",
-                          fontWeight: 700,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          margin: "6px 0",
                         }}
                       >
-                        Cantidad: {product.quantity}
-                      </p>
+                        <button
+                          onClick={() => updateQuantity(product.id, (product.quantity || 1) - 1)}
+                          disabled={(product.quantity || 1) <= 1}
+                          style={{
+                            border: "1px solid rgba(0,0,0,0.18)",
+                            background: "var(--aska-bg-primary, #111)",
+                            color: "var(--aska-text-secondary, #fff)",
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            cursor: (product.quantity || 1) <= 1 ? "not-allowed" : "pointer",
+                            fontWeight: 900,
+                            fontSize: "1.2rem",
+                            lineHeight: 1,
+                            opacity: (product.quantity || 1) <= 1 ? 0.4 : 1,
+                          }}
+                        >−</button>
+                        <span style={{ fontWeight: 700, minWidth: 24, textAlign: "center" }}>
+                          {product.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(product.id, (product.quantity || 1) + 1)}
+                          style={{
+                            border: "1px solid rgba(0,0,0,0.18)",
+                            background: "var(--aska-bg-primary, #111)",
+                            color: "var(--aska-text-secondary, #fff)",
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                            fontWeight: 900,
+                            fontSize: "1.2rem",
+                            lineHeight: 1,
+                          }}
+                        >+</button>
+                      </div>
 
                       <p
                         style={{

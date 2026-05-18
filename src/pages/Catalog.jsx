@@ -868,7 +868,7 @@ function Catalog() {
             width: 82px;
             height: 1px;
             margin-bottom: 28px;
-            background: linear-gradient(90deg, rgba(17,17,17,0.58), rgba(17,17,17,0));
+            background: linear-gradient(90deg, rgba(255,255,255,0.22), rgba(255,255,255,0));
           }
 
           .aska-editorial-category-header {
@@ -883,7 +883,7 @@ function Catalog() {
           .aska-category-editorial-intro p {
             margin: 0 0 10px;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
-            color: rgba(17,17,17,0.48);
+            color: rgba(255,255,255,0.48);
             font-size: 0.72rem;
             font-weight: 700;
             letter-spacing: 0.24em;
@@ -893,7 +893,7 @@ function Catalog() {
           .aska-editorial-category-header h2,
           .aska-category-editorial-intro h2 {
             margin: 0;
-            color: #111111;
+            color: #ffffff;
             font-size: clamp(2.7rem, 6.2vw, 7.6rem);
             line-height: 0.82;
             letter-spacing: -0.075em;
@@ -1096,9 +1096,9 @@ function Catalog() {
           }
 
           .aska-editorial-thumb {
-            width: 42px;
-            height: 42px;
-            border-radius: 2px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
             overflow: hidden;
             padding: 0;
             cursor: pointer;
@@ -1112,8 +1112,9 @@ function Catalog() {
           }
 
           .aska-editorial-card.is-featured .aska-editorial-thumb {
-            width: 50px;
-            height: 50px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50% !important;
           }
 
           .aska-editorial-thumb.active,

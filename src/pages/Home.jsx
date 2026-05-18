@@ -68,6 +68,123 @@ function BagIcon() {
   );
 }
 
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Volver arriba"
+      style={{
+        position: "fixed",
+        bottom: 104,
+        right: 26,
+        zIndex: 9997,
+        width: 46,
+        height: 46,
+        borderRadius: "50%",
+        background: "rgba(10,10,10,0.88)",
+        border: "1px solid rgba(255,255,255,0.18)",
+        color: "#ffffff",
+        fontSize: "1.3rem",
+        cursor: "pointer",
+        backdropFilter: "blur(12px)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.32)",
+        display: "grid",
+        placeItems: "center",
+        transition: "opacity 0.3s ease",
+      }}
+    >
+      ↑
+    </button>
+  );
+}
+
+function DraggableWhatsApp({ phone }) {
+  const [pos, setPos] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("aska_wa_pos"));
+      if (saved && typeof saved.x === "number" && typeof saved.y === "number") return saved;
+    } catch {}
+    return { x: window.innerWidth - 88, y: window.innerHeight - 88 };
+  });
+  const dragging = useRef(false);
+  const offset = useRef({ x: 0, y: 0 });
+  const moved = useRef(false);
+  const btnRef = useRef(null);
+
+  const onPointerDown = (e) => {
+    dragging.current = true;
+    moved.current = false;
+    offset.current = {
+      x: e.clientX - pos.x,
+      y: e.clientY - pos.y,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  };
+
+  const onPointerMove = (e) => {
+    if (!dragging.current) return;
+    moved.current = true;
+    const size = 62;
+    const newX = Math.max(8, Math.min(window.innerWidth - size - 8, e.clientX - offset.current.x));
+    const newY = Math.max(8, Math.min(window.innerHeight - size - 8, e.clientY - offset.current.y));
+    setPos({ x: newX, y: newY });
+  };
+
+  const onPointerUp = () => {
+    dragging.current = false;
+    try { localStorage.setItem("aska_wa_pos", JSON.stringify(pos)); } catch {}
+  };
+
+  const onClick = () => {
+    if (moved.current) return;
+    window.open(`https://wa.me/${phone}`, "_blank", "noreferrer");
+  };
+
+  return (
+    <div
+      ref={btnRef}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onClick={onClick}
+      aria-label="Escribir a AŞKA por WhatsApp"
+      style={{
+        position: "fixed",
+        left: pos.x,
+        top: pos.y,
+        zIndex: 9998,
+        width: 62,
+        height: 62,
+        borderRadius: "50%",
+        background: "#25D366",
+        display: "grid",
+        placeItems: "center",
+        cursor: "grab",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.32)",
+        userSelect: "none",
+        touchAction: "none",
+        transition: "box-shadow 0.2s ease",
+      }}
+    >
+      <svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" clipRule="evenodd" d="M16 1C7.716 1 1 7.716 1 16c0 2.644.685 5.126 1.885 7.28L1 31l7.92-1.856A14.94 14.94 0 0016 31c8.284 0 15-6.716 15-15S24.284 1 16 1zm0 2c7.18 0 13 5.82 13 13s-5.82 13-13 13a12.96 12.96 0 01-6.57-1.786l-.38-.225-4.7 1.102 1.13-4.588-.245-.4A12.96 12.96 0 013 16C3 8.82 8.82 3 16 3zm-3.83 7.04c-.21-.47-.43-.48-.63-.49-.16-.01-.35-.01-.53-.01s-.49.07-.75.35c-.26.28-1 .98-1 2.39 0 1.41 1.02 2.77 1.16 2.96.14.19 1.98 3.15 4.87 4.29 2.41.95 2.89.76 3.41.71.52-.05 1.68-.69 1.92-1.35.24-.66.24-1.23.17-1.35-.07-.12-.26-.19-.55-.33-.29-.14-1.68-.83-1.94-.92-.26-.09-.45-.14-.64.14-.19.28-.73.92-.9 1.11-.17.19-.33.21-.62.07-.29-.14-1.22-.45-2.33-1.43-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.33.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.62-1.52-.87-2.1z" fill="#fff"/>
+      </svg>
+    </div>
+  );
+}
+
 function Home() {
   const { addToCart } = useContext(CartContext);
 
@@ -624,15 +741,9 @@ function Home() {
         </a>
       </section>
 
-      <a
-        href="https://wa.me/573125183100"
-        target="_blank"
-        rel="noreferrer"
-        className="aska-whatsapp-button"
-        aria-label="Escribir a AŞKA por WhatsApp"
-      >
-        WhatsApp
-      </a>
+      <DraggableWhatsApp phone="573125183100" />
+
+      <ScrollToTopButton />
 
       {cartDrawerOpen && (
         <div className="aska-cart-drawer-backdrop" onClick={() => setCartDrawerOpen(false)}>
@@ -1336,14 +1447,14 @@ function Home() {
             position: fixed;
             inset: 0;
             z-index: 100000;
-            background: rgba(0,0,0,.54);
+            background: rgba(0,0,0,.28);
             display: flex;
             justify-content: flex-end;
           }
 
           .aska-cart-drawer {
             position: relative;
-            width: min(760px, 94vw);
+            width: min(440px, 94vw);
             height: 100vh;
             overflow-y: auto;
             background: #ffffff;
@@ -1365,7 +1476,7 @@ function Home() {
           }
 
           .aska-cart-drawer h2 {
-            margin: 0 0 70px;
+            margin: 0 0 28px;
             font-family: var(--aska-font-family-secondary, Helvetica, Arial, sans-serif);
             font-size: clamp(2rem, 4vw, 3.2rem);
             letter-spacing: .04em;
@@ -1375,16 +1486,16 @@ function Home() {
 
           .aska-cart-drawer-product {
             display: grid;
-            grid-template-columns: 190px 1fr;
+            grid-template-columns: 110px 1fr;
             gap: 28px;
             align-items: start;
-            margin-bottom: 46px;
+            margin-bottom: 24px;
           }
 
           .aska-cart-drawer-product img,
           .aska-cart-drawer-product > div:first-child {
-            width: 190px;
-            height: 230px;
+            width: 110px;
+            height: 130px;
             background: #f4f4f4;
             object-fit: cover;
           }
@@ -1414,8 +1525,8 @@ function Home() {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 70px;
-            margin-bottom: 54px;
+            min-height: 52px;
+            margin-bottom: 28px;
             background: #050505;
             color: #ffffff;
             text-decoration: none;

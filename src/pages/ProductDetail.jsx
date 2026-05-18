@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { CartContext } from "../context/CartContext";
 
@@ -40,6 +40,7 @@ function normalizeImages(producto) {
 
 function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
 
   const [producto, setProducto] = useState(null);
@@ -196,6 +197,30 @@ function ProductDetail() {
           padding: "clamp(96px, 9vw, 132px) 24px clamp(72px, 8vw, 118px)",
         }}
       >
+        <div style={{ maxWidth: "1320px", margin: "0 auto 28px", display: "flex", alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.14)",
+              borderRadius: "999px",
+              color: "rgba(255,255,255,0.82)",
+              padding: "10px 20px",
+              fontSize: "0.85rem",
+              letterSpacing: "0.10em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              fontFamily: "var(--aska-font-family-secondary, inherit)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            ← Volver
+          </button>
+        </div>
         <div
           className="aska-product-detail-grid"
           style={{
@@ -455,11 +480,12 @@ function ProductDetail() {
                   marginBottom: "22px",
                   padding: "14px 18px",
                   borderRadius: "16px",
-                  background: "#fff4f4",
-                  border: "1px solid rgba(200,0,0,0.15)",
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  fontWeight: 600,
+                  fontSize: "0.92rem",
                   lineHeight: 1.5,
+                  color: "rgba(255,255,255,0.82)",
                 }}
               >
                 Este producto tarda 7 días hábiles en ser diseñado, armado y enviado.
@@ -470,11 +496,12 @@ function ProductDetail() {
                   marginBottom: "22px",
                   padding: "14px 18px",
                   borderRadius: "16px",
-                  background: "#f4f4ff",
-                  border: "1px solid rgba(120,120,255,0.15)",
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  fontWeight: 600,
+                  fontSize: "0.92rem",
                   lineHeight: 1.5,
+                  color: "rgba(255,255,255,0.82)",
                 }}
               >
                 El envío tarda de 2 a 4 días hábiles.

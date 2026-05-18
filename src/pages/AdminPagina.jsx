@@ -102,6 +102,46 @@ const [cmsVisual, setCmsVisual] = useState({
 
 
 
+  useEffect(() => {
+    fetch("https://aska-backend-nyx8.onrender.com/api/admin/music-tracks")
+      .then(r => r.ok ? r.json() : [])
+      .then(d => setTracks(Array.isArray(d) ? d : []))
+      .catch(() => {});
+  }, []);
+
+  const subirCancion = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSubiendoMusica(true);
+    setMensajeMusica("Subiendo canción...");
+    try {
+      const fd = new FormData();
+      fd.append("audio", file);
+      fd.append("titulo", file.name.replace(/\.mp3$/i, ""));
+      const res = await fetch("https://aska-backend-nyx8.onrender.com/api/admin/music-tracks", {
+        method: "POST",
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.mensaje || "Error subiendo");
+      setMensajeMusica("✅ Canción subida correctamente");
+      const r2 = await fetch("https://aska-backend-nyx8.onrender.com/api/admin/music-tracks");
+      const d2 = await r2.json();
+      setTracks(Array.isArray(d2) ? d2 : []);
+    } catch (err) {
+      setMensajeMusica("❌ " + (err.message || "Error subiendo canción"));
+    } finally {
+      setSubiendoMusica(false);
+    }
+  };
+
+  const eliminarCancion = async (id) => {
+    try {
+      await fetch(\`https://aska-backend-nyx8.onrender.com/api/admin/music-tracks/\${id}\`, { method: "DELETE" });
+      setTracks(prev => prev.filter(t => t.id !== id));
+    } catch {}
+  };
+
   const aplicarCmsVisual = (visual = cmsVisual) => {
     const root = document.documentElement;
 

@@ -155,18 +155,26 @@ function App() {
   const clickTimerRef = useRef(null);
   const audioRef = useRef(null);
 
-  const tracks = [
-    {
-      title: "Mwaki",
-      artist: "Zerb",
-      src: "/audio/mwaki.mp3",
-    },
-    {
-      title: "Ritmo",
-      artist: "Raffa FL",
-      src: "/audio/ritmo.mp3",
-    },
-  ];
+  const [tracks, setTracks] = useState([
+    { title: "Mwaki", artist: "Zerb", src: "/audio/mwaki.mp3" },
+    { title: "Ritmo", artist: "Raffa FL", src: "/audio/ritmo.mp3" },
+  ]);
+
+  useEffect(() => {
+    fetch("https://aska-backend-nyx8.onrender.com/api/music-tracks")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTracks(data.map(t => ({
+            title: t.titulo || t.title || "Canción",
+            artist: t.artista || t.artist || "AŞKA",
+            src: t.url || t.src || "",
+          })));
+          setCurrentTrack(0);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
 
   useEffect(() => {
@@ -636,10 +644,10 @@ function App() {
                 padding: "42px 34px",
                 textAlign: "center",
                 borderRadius: "34px",
-                background: `${cmsVisual.background}EE`,
+                background: "rgba(8,8,8,0.97)",
                 border: "1px solid rgba(255,255,255,0.14)",
                 boxShadow: "0 30px 90px rgba(0,0,0,0.65)",
-                color: cmsVisual.text,
+                color: "#ffffff",
               }}
             >
               <p
@@ -669,7 +677,7 @@ function App() {
                 style={{
                   margin: "16px 0 0",
                   fontSize: "clamp(1.05rem, 3vw, 1.7rem)",
-                  color: cmsVisual.accent,
+                  color: "rgba(255,255,255,0.62)",
                   lineHeight: 1.35,
                 }}
               >
