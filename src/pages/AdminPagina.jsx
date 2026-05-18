@@ -137,7 +137,7 @@ const [cmsVisual, setCmsVisual] = useState({
 
   const eliminarCancion = async (id) => {
     try {
-      await fetch(\`https://aska-backend-nyx8.onrender.com/api/admin/music-tracks/\${id}\`, { method: "DELETE" });
+      await fetch(`https://aska-backend-nyx8.onrender.com/api/admin/music-tracks/${id}`, { method: "DELETE" });
       setTracks(prev => prev.filter(t => t.id !== id));
     } catch {}
   };
