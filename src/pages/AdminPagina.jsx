@@ -104,7 +104,85 @@ const [tracks, setTracks] = useState([]);
 const [subiendoMusica, setSubiendoMusica] = useState(false);
 const [mensajeMusica, setMensajeMusica] = useState("");
 
+const [homeCms, setHomeCms] = useState({
+  intro_etiqueta: "Joyería artesanal contemporánea",
+  intro_titulo: "Piezas con fuerza, historia y presencia.",
+  intro_texto: "En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia. Cada joya y accesorio es tejido a mano para acompañar una forma de vestir con carácter.",
+  footer_titulo: "AŞKA",
+  footer_texto: "Taller liderado por mujeres artesanas. Piezas unisex hechas para destacar textura, presencia y actitud.",
+  footer_link_texto: "@aska_bogota",
+  footer_link_url: "https://www.instagram.com/aska_bogota?igsh=ZXYzNnc1OHczOGMy",
+  campaigns: [
+    { label: "AŞKA campaign", title: "Just add presence", imageUrl: "", link: "", productId: "" },
+    { label: "New statement pieces", title: "Signs of power", imageUrl: "", link: "", productId: "" },
+    { label: "Shop the look", title: "Body jewelry", imageUrl: "", link: "", productId: "" },
+  ],
+});
 
+
+
+
+  const parseCampaigns = (value) => {
+    try {
+      const parsed = typeof value === "string" ? JSON.parse(value || "[]") : value;
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const normalizeCampaigns = (value) => {
+    const parsed = parseCampaigns(value);
+    const defaults = homeCms.campaigns;
+    return [0, 1, 2].map((index) => ({
+      ...defaults[index],
+      ...(parsed[index] || {}),
+    }));
+  };
+
+  const updateHomeCms = (name, value) => {
+    setHomeCms((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const updateCampaign = (index, field, value) => {
+    setHomeCms((prev) => ({
+      ...prev,
+      campaigns: prev.campaigns.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, [field]: value } : item
+      ),
+    }));
+  };
+
+  const uploadCampaignImage = async (event, index) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setSubiendo(true);
+      const body = new FormData();
+      body.append("archivo", file);
+
+      const response = await fetch("https://aska-backend-nyx8.onrender.com/api/upload", {
+        method: "POST",
+        body,
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data?.url) {
+        setMensaje(data?.mensaje || "No se pudo subir la imagen de cartelera.");
+        return;
+      }
+
+      updateCampaign(index, "imageUrl", data.url);
+      setMensaje("Imagen de cartelera subida correctamente.");
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error subiendo imagen de cartelera.");
+    } finally {
+      setSubiendo(false);
+      event.target.value = "";
+    }
+  };
 
   useEffect(() => {
     fetch("https://aska-backend-nyx8.onrender.com/api/admin/music-tracks")
@@ -328,6 +406,18 @@ const [mensajeMusica, setMensajeMusica] = useState("");
         subtitulo_font_size: safeNumber(data.subtitulo_font_size, 28),
         texto_align: data.texto_align || "center",
       });
+
+      setHomeCms((prev) => ({
+        ...prev,
+        intro_etiqueta: data.intro_etiqueta || prev.intro_etiqueta,
+        intro_titulo: data.intro_titulo || prev.intro_titulo,
+        intro_texto: data.intro_texto || prev.intro_texto,
+        footer_titulo: data.footer_titulo || prev.footer_titulo,
+        footer_texto: data.footer_texto || prev.footer_texto,
+        footer_link_texto: data.footer_link_texto || prev.footer_link_texto,
+        footer_link_url: data.footer_link_url || prev.footer_link_url,
+        campaigns: normalizeCampaigns(data.campaigns_json),
+      }));
     } else {
       setFormData(defaultHome);
     }
@@ -659,7 +749,17 @@ const cargarMetodos = async () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(heroTarget === "home" ? {
+          ...formData,
+          intro_etiqueta: homeCms.intro_etiqueta,
+          intro_titulo: homeCms.intro_titulo,
+          intro_texto: homeCms.intro_texto,
+          footer_titulo: homeCms.footer_titulo,
+          footer_texto: homeCms.footer_texto,
+          footer_link_texto: homeCms.footer_link_texto,
+          footer_link_url: homeCms.footer_link_url,
+          campaigns_json: JSON.stringify(homeCms.campaigns),
+        } : formData),
       });
 
       let data = null;
@@ -1237,6 +1337,70 @@ const cargarMetodos = async () => {
                     style={inputStyle}
                   />
                 </div>
+
+                {heroTarget === "home" && (
+                  <div
+                    style={{
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      borderRadius: "24px",
+                      padding: "22px",
+                      background: "rgba(255,255,255,0.035)",
+                      display: "grid",
+                      gap: "18px",
+                    }}
+                  >
+                    <div>
+                      <h3 style={{ margin: "0 0 8px" }}>Textos del inicio</h3>
+                      <p style={{ margin: 0, color: "rgba(255,255,255,0.62)", lineHeight: 1.6 }}>
+                        Estos textos aparecen debajo del hero y el bloque se adapta según la cantidad de contenido.
+                      </p>
+                    </div>
+
+                    <input type="text" value={homeCms.intro_etiqueta} onChange={(e) => updateHomeCms("intro_etiqueta", e.target.value)} placeholder="Etiqueta pequeña" style={inputStyle} />
+                    <textarea value={homeCms.intro_titulo} onChange={(e) => updateHomeCms("intro_titulo", e.target.value)} placeholder="Título editorial" rows={3} style={{ ...inputStyle, resize: "vertical" }} />
+                    <textarea value={homeCms.intro_texto} onChange={(e) => updateHomeCms("intro_texto", e.target.value)} placeholder="Texto editorial" rows={5} style={{ ...inputStyle, resize: "vertical" }} />
+
+                    <div>
+                      <h3 style={{ margin: "10px 0 8px" }}>Cartelera de 3 imágenes</h3>
+                      <p style={{ margin: 0, color: "rgba(255,255,255,0.62)", lineHeight: 1.6 }}>
+                        La cliente puede poner 3 productos o 3 imágenes normales. Si deja una imagen vacía, se toma un producto automáticamente.
+                      </p>
+                    </div>
+
+                    {homeCms.campaigns.map((campaign, index) => (
+                      <div key={index} style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: "14px", padding: "14px", borderRadius: "18px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                        <div>
+                          {campaign.imageUrl ? (
+                            <img src={campaign.imageUrl} alt="Cartelera" style={{ width: "120px", height: "150px", objectFit: "cover", borderRadius: "14px" }} />
+                          ) : (
+                            <div style={{ width: "120px", height: "150px", borderRadius: "14px", background: "rgba(255,255,255,0.08)", display: "grid", placeItems: "center", color: "rgba(255,255,255,0.55)" }}>
+                              Imagen {index + 1}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ display: "grid", gap: "10px" }}>
+                          <input type="text" value={campaign.label} onChange={(e) => updateCampaign(index, "label", e.target.value)} placeholder="Etiqueta" style={inputStyle} />
+                          <input type="text" value={campaign.title} onChange={(e) => updateCampaign(index, "title", e.target.value)} placeholder="Título" style={inputStyle} />
+                          <input type="text" value={campaign.link} onChange={(e) => updateCampaign(index, "link", e.target.value)} placeholder="Ruta opcional: /producto/1 o /catalogo" style={inputStyle} />
+                          <input type="text" value={campaign.productId} onChange={(e) => updateCampaign(index, "productId", e.target.value)} placeholder="ID producto opcional" style={inputStyle} />
+                          <input type="file" accept="image/*" disabled={subiendo} onChange={(e) => uploadCampaignImage(e, index)} style={inputStyle} />
+                        </div>
+                      </div>
+                    ))}
+
+                    <div>
+                      <h3 style={{ margin: "10px 0 8px" }}>Información inferior</h3>
+                      <p style={{ margin: 0, color: "rgba(255,255,255,0.62)", lineHeight: 1.6 }}>
+                        Este contenido aparece en la parte final del inicio.
+                      </p>
+                    </div>
+
+                    <input type="text" value={homeCms.footer_titulo} onChange={(e) => updateHomeCms("footer_titulo", e.target.value)} placeholder="Título inferior" style={inputStyle} />
+                    <textarea value={homeCms.footer_texto} onChange={(e) => updateHomeCms("footer_texto", e.target.value)} placeholder="Texto inferior" rows={4} style={{ ...inputStyle, resize: "vertical" }} />
+                    <input type="text" value={homeCms.footer_link_texto} onChange={(e) => updateHomeCms("footer_link_texto", e.target.value)} placeholder="Texto del enlace" style={inputStyle} />
+                    <input type="text" value={homeCms.footer_link_url} onChange={(e) => updateHomeCms("footer_link_url", e.target.value)} placeholder="URL del enlace" style={inputStyle} />
+                  </div>
+                )}
 
                 <button
                   type="submit"

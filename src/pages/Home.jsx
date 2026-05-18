@@ -47,6 +47,18 @@ function getProductImages(product) {
   return images;
 }
 
+
+function parseJsonList(value, fallback = []) {
+  if (Array.isArray(value)) return value;
+  if (!value) return fallback;
+  try {
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 function BagIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -402,14 +414,55 @@ function Home() {
 
   const featuredProducts = useMemo(() => products.slice(0, 8), [products]);
 
-  const campaignProducts = useMemo(() => {
+  const campaignItems = useMemo(() => {
+    const savedCampaigns = parseJsonList(config?.campaigns_json, []);
     const withImages = products.filter((item) => getProductImages(item).length > 0);
-    return {
-      first: withImages[0] || products[0] || null,
-      second: withImages[1] || products[1] || null,
-      third: withImages[2] || products[2] || null,
-    };
-  }, [products]);
+
+    return [0, 1, 2].map((index) => {
+      const saved = savedCampaigns[index] || {};
+      const linkedProduct = saved.productId
+        ? products.find((item) => String(item.id) === String(saved.productId))
+        : null;
+      const fallbackProduct = withImages[index] || products[index] || null;
+      const product = linkedProduct || fallbackProduct;
+      const image = saved.imageUrl || (product ? getProductImages(product)[0] || product.imagen : "");
+
+      return {
+        product,
+        image,
+        title: saved.title || product?.nombre || [
+          "Just add presence",
+          "Signs of power",
+          "Body jewelry",
+        ][index],
+        label: saved.label || [
+          "AŞKA campaign",
+          "New statement pieces",
+          "Shop the look",
+        ][index],
+        link: saved.link || (product ? `/producto/${product.id}` : "/catalogo"),
+      };
+    });
+  }, [config, products]);
+
+  const introContent = {
+    etiqueta: config?.intro_etiqueta || "Joyería artesanal contemporánea",
+    titulo: config?.intro_titulo || "Piezas con fuerza, historia y presencia.",
+    texto:
+      config?.intro_texto ||
+      "En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia. Cada joya y accesorio es tejido a mano para acompañar una forma de vestir con carácter.",
+  };
+
+  const footerContent = {
+    titulo: config?.footer_titulo || "AŞKA",
+    texto:
+      config?.footer_texto ||
+      "Taller liderado por mujeres artesanas. Piezas unisex hechas para destacar textura, presencia y actitud.",
+    linkTexto: config?.footer_link_texto || "@aska_bogota",
+    linkUrl:
+      config?.footer_link_url ||
+      "https://www.instagram.com/aska_bogota?igsh=ZXYzNnc1OHczOGMy",
+  };
 
   const cartCount = useMemo(() => {
     try {
@@ -523,16 +576,17 @@ function Home() {
     rail.scrollLeft = dragRef.current.scrollLeft - walk;
   };
 
-  const CampaignTile = ({ product, title, label, wide = false }) => {
-    const image = product ? getProductImages(product)[0] || product.imagen : "";
+  const CampaignTile = ({ item, wide = false }) => {
+    const image = item?.image || "";
+    const link = item?.link || "/catalogo";
 
     return (
       <Link
-        to={product ? `/producto/${product.id}` : "/catalogo"}
+        to={link.startsWith("http") ? "/catalogo" : link}
         className={`aska-campaign-tile ${wide ? "is-wide" : ""}`}
       >
         {image ? (
-          <img src={image} alt={product?.nombre || title} />
+          <img src={image} alt={item?.title || "Campaña AŞKA"} />
         ) : (
           <div className="aska-campaign-placeholder">AŞKA</div>
         )}
@@ -540,8 +594,8 @@ function Home() {
         <div className="aska-campaign-gradient" />
 
         <div className="aska-campaign-content">
-          <p>{label}</p>
-          <h2>{title}</h2>
+          <p>{item?.label}</p>
+          <h2>{item?.title}</h2>
           <span>
             <BagIcon />
             Shop the look
@@ -738,34 +792,16 @@ function Home() {
 
       <section className="aska-editorial-intro aska-reveal-block">
         <div>
-          <p>Joyería artesanal contemporánea</p>
-          <h2>Piezas con fuerza, historia y presencia.</h2>
-          <span>
-            En AŞKA el acero inoxidable se transforma en piezas únicas que cuentan tu historia.
-            Cada joya y accesorio es tejido a mano para acompañar una forma de vestir con carácter.
-          </span>
+          <p>{introContent.etiqueta}</p>
+          <h2>{introContent.titulo}</h2>
+          <span>{introContent.texto}</span>
         </div>
       </section>
 
       <section className="aska-campaign-grid aska-reveal-block">
-        <CampaignTile
-          product={campaignProducts.first}
-          title="Just add presence"
-          label="AŞKA campaign"
-          wide
-        />
-
-        <CampaignTile
-          product={campaignProducts.second}
-          title="Signs of power"
-          label="New statement pieces"
-        />
-
-        <CampaignTile
-          product={campaignProducts.third}
-          title="Body jewelry"
-          label="Shop the look"
-        />
+        <CampaignTile item={campaignItems[0]} wide />
+        <CampaignTile item={campaignItems[1]} />
+        <CampaignTile item={campaignItems[2]} />
       </section>
 
       <section className="aska-home-products-editorial aska-reveal-block">
@@ -794,20 +830,15 @@ function Home() {
 
       <section className="aska-home-footer-editorial aska-reveal-block">
         <div>
-          <h2>AŞKA</h2>
-          <p>
-            Taller liderado por mujeres artesanas. Piezas unisex hechas para destacar textura,
-            presencia y actitud.
-          </p>
+          <h2>{footerContent.titulo}</h2>
+          <p>{footerContent.texto}</p>
         </div>
 
-        <a
-          href="https://www.instagram.com/aska_bogota?igsh=ZXYzNnc1OHczOGMy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          @aska_bogota
-        </a>
+        {footerContent.linkUrl && (
+          <a href={footerContent.linkUrl} target="_blank" rel="noreferrer">
+            {footerContent.linkTexto}
+          </a>
+        )}
       </section>
 
       <DraggableWhatsApp phone="573125183100" />
@@ -1294,7 +1325,7 @@ function Home() {
           .aska-rail-controls {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 22px;
             flex-wrap: wrap;
           }
 
@@ -1438,8 +1469,8 @@ function Home() {
           }
 
           .aska-rail-swatches button {
-            width: 30px;
-            height: 30px;
+            width: 48px;
+            height: 48px;
             padding: 0;
             border: 1px solid rgba(17,17,17,.14);
             background: transparent;
