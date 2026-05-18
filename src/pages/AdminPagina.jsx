@@ -100,6 +100,10 @@ const [cmsVisual, setCmsVisual] = useState({
   fontFamily: "Playfair Display",
 });
 
+const [tracks, setTracks] = useState([]);
+const [subiendoMusica, setSubiendoMusica] = useState(false);
+const [mensajeMusica, setMensajeMusica] = useState("");
+
 
 
   useEffect(() => {
@@ -1463,6 +1467,93 @@ const cargarMetodos = async () => {
             </div>
           </div>
         </div>
+
+{/* ======================= */}
+{/* MUSICA DEL SITIO */}
+{/* ======================= */}
+
+<div
+  style={{
+    marginTop: "40px",
+    background: "var(--aska-card-dark, #0d0d0d)",
+    padding: "28px",
+    borderRadius: "28px",
+    border: "1px solid rgba(255,255,255,0.08)",
+  }}
+>
+  <h2 style={{ marginTop: 0 }}>Música de la página</h2>
+  <p style={{ color: "rgba(255,255,255,0.68)", lineHeight: 1.7 }}>
+    Sube canciones directamente desde el computador. La cliente no necesita links: el archivo queda guardado y el reproductor de la página lo toma automáticamente.
+  </p>
+
+  <label
+    style={{
+      display: "block",
+      border: "1px dashed rgba(255,255,255,0.25)",
+      borderRadius: "20px",
+      padding: "22px",
+      margin: "18px 0",
+      cursor: "pointer",
+      background: "rgba(255,255,255,0.04)",
+    }}
+  >
+    <strong>{subiendoMusica ? "Subiendo canción..." : "Seleccionar canción desde el PC"}</strong>
+    <input
+      type="file"
+      accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg"
+      onChange={subirCancion}
+      disabled={subiendoMusica}
+      style={{ display: "none" }}
+    />
+  </label>
+
+  {mensajeMusica && (
+    <p style={{ color: mensajeMusica.startsWith("✅") ? "#9ff0b8" : "#ffb4b4" }}>
+      {mensajeMusica}
+    </p>
+  )}
+
+  <div style={{ display: "grid", gap: "12px", marginTop: "20px" }}>
+    {tracks.length === 0 ? (
+      <p style={{ color: "rgba(255,255,255,0.55)" }}>Todavía no hay canciones cargadas.</p>
+    ) : (
+      tracks.map((track) => (
+        <div
+          key={track.id}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr auto",
+            gap: "14px",
+            alignItems: "center",
+            padding: "14px",
+            borderRadius: "16px",
+            background: "rgba(255,255,255,0.05)",
+          }}
+        >
+          <div>
+            <strong>{track.titulo || "Canción sin título"}</strong>
+            {track.artista && <p style={{ margin: "4px 0 0", opacity: 0.7 }}>{track.artista}</p>}
+            {track.url && <audio src={track.url} controls style={{ width: "100%", marginTop: "10px" }} />}
+          </div>
+          <button
+            type="button"
+            onClick={() => eliminarCancion(track.id)}
+            style={{
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "transparent",
+              color: "#fff",
+              borderRadius: "999px",
+              padding: "10px 14px",
+              cursor: "pointer",
+            }}
+          >
+            Eliminar
+          </button>
+        </div>
+      ))
+    )}
+  </div>
+</div>
 
 {/* ======================= */}
 {/* CMS VISUAL */}

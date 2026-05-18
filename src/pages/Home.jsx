@@ -110,6 +110,8 @@ function ScrollToTopButton() {
 }
 
 function DraggableWhatsApp({ phone }) {
+  const size = 62;
+  const margin = 10;
   const [pos, setPos] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("aska_wa_pos"));
@@ -120,11 +122,64 @@ function DraggableWhatsApp({ phone }) {
   const dragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
   const moved = useRef(false);
+  const velocity = useRef({ x: 0, y: 0 });
+  const lastPoint = useRef({ x: 0, y: 0, t: 0 });
+  const animationRef = useRef(null);
   const btnRef = useRef(null);
 
+  const clampPoint = (x, y) => ({
+    x: Math.max(margin, Math.min(window.innerWidth - size - margin, x)),
+    y: Math.max(margin, Math.min(window.innerHeight - size - margin, y)),
+  });
+
+  const savePosition = (point) => {
+    try { localStorage.setItem("aska_wa_pos", JSON.stringify(point)); } catch {}
+  };
+
+  const startBounce = (start, initialVelocity) => {
+    cancelAnimationFrame(animationRef.current);
+    let current = { ...start };
+    let vx = initialVelocity.x;
+    let vy = initialVelocity.y;
+    const maxX = window.innerWidth - size - margin;
+    const maxY = window.innerHeight - size - margin;
+
+    const tick = () => {
+      current.x += vx;
+      current.y += vy;
+
+      if (current.x <= margin || current.x >= maxX) {
+        vx *= -0.82;
+        current.x = Math.max(margin, Math.min(maxX, current.x));
+      }
+
+      if (current.y <= margin || current.y >= maxY) {
+        vy *= -0.82;
+        current.y = Math.max(margin, Math.min(maxY, current.y));
+      }
+
+      vx *= 0.975;
+      vy *= 0.975;
+      setPos({ ...current });
+
+      if (Math.abs(vx) + Math.abs(vy) > 0.35) {
+        animationRef.current = requestAnimationFrame(tick);
+      } else {
+        savePosition(current);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(tick);
+  };
+
+  useEffect(() => () => cancelAnimationFrame(animationRef.current), []);
+
   const onPointerDown = (e) => {
+    cancelAnimationFrame(animationRef.current);
     dragging.current = true;
     moved.current = false;
+    velocity.current = { x: 0, y: 0 };
+    lastPoint.current = { x: e.clientX, y: e.clientY, t: performance.now() };
     offset.current = {
       x: e.clientX - pos.x,
       y: e.clientY - pos.y,
@@ -135,16 +190,30 @@ function DraggableWhatsApp({ phone }) {
 
   const onPointerMove = (e) => {
     if (!dragging.current) return;
-    moved.current = true;
-    const size = 62;
-    const newX = Math.max(8, Math.min(window.innerWidth - size - 8, e.clientX - offset.current.x));
-    const newY = Math.max(8, Math.min(window.innerHeight - size - 8, e.clientY - offset.current.y));
-    setPos({ x: newX, y: newY });
+    const now = performance.now();
+    const dt = Math.max(16, now - lastPoint.current.t);
+    velocity.current = {
+      x: ((e.clientX - lastPoint.current.x) / dt) * 16,
+      y: ((e.clientY - lastPoint.current.y) / dt) * 16,
+    };
+    lastPoint.current = { x: e.clientX, y: e.clientY, t: now };
+
+    const next = clampPoint(e.clientX - offset.current.x, e.clientY - offset.current.y);
+    if (Math.abs(next.x - pos.x) > 2 || Math.abs(next.y - pos.y) > 2) moved.current = true;
+    setPos(next);
   };
 
   const onPointerUp = () => {
     dragging.current = false;
-    try { localStorage.setItem("aska_wa_pos", JSON.stringify(pos)); } catch {}
+    const speed = Math.hypot(velocity.current.x, velocity.current.y);
+    if (speed > 9) {
+      startBounce(pos, {
+        x: Math.max(-24, Math.min(24, velocity.current.x * 1.35)),
+        y: Math.max(-24, Math.min(24, velocity.current.y * 1.35)),
+      });
+      return;
+    }
+    savePosition(pos);
   };
 
   const onClick = () => {
@@ -165,13 +234,13 @@ function DraggableWhatsApp({ phone }) {
         left: pos.x,
         top: pos.y,
         zIndex: 9998,
-        width: 62,
-        height: 62,
+        width: size,
+        height: size,
         borderRadius: "50%",
         background: "#25D366",
         display: "grid",
         placeItems: "center",
-        cursor: "grab",
+        cursor: dragging.current ? "grabbing" : "grab",
         boxShadow: "0 4px 24px rgba(0,0,0,0.32)",
         userSelect: "none",
         touchAction: "none",
@@ -1225,7 +1294,12 @@ function Home() {
           .aska-rail-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            flex-wrap: wrap;
+          }
+
+          .aska-rail-controls a {
+            margin-right: 12px;
           }
 
           .aska-rail-controls a,
@@ -1358,17 +1432,19 @@ function Home() {
 
           .aska-rail-swatches {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 6px;
           }
 
           .aska-rail-swatches button {
-            width: 16px;
-            height: 16px;
+            width: 30px;
+            height: 30px;
             padding: 0;
             border: 1px solid rgba(17,17,17,.14);
             background: transparent;
             cursor: pointer;
-            opacity: .62;
+            opacity: .78;
           }
 
           .aska-rail-swatches button.active {
@@ -1447,7 +1523,7 @@ function Home() {
             position: fixed;
             inset: 0;
             z-index: 100000;
-            background: rgba(0,0,0,.28);
+            background: rgba(0,0,0,.12);
             display: flex;
             justify-content: flex-end;
           }
@@ -1455,7 +1531,8 @@ function Home() {
           .aska-cart-drawer {
             position: relative;
             width: min(440px, 94vw);
-            height: 100vh;
+            height: 100dvh;
+            max-height: 100dvh;
             overflow-y: auto;
             background: #ffffff;
             color: #111111;
