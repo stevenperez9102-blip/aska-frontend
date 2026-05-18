@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Confirmacion from "./pages/Confirmacion";
+import CartDrawer from "./components/CartDrawer";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -763,6 +764,7 @@ function App() {
           )}
         </div>
 
+      <CartDrawer />
         <AnimatedRoutes />
       </div>
     </Router>
