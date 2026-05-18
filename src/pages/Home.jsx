@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import Navbar from "../components/Navbar";
 import { CartContext } from "../context/CartContext";
 
@@ -430,6 +431,7 @@ function Home() {
       return {
         product,
         image,
+        type: saved.type || "image",
         title: saved.title || product?.nombre || [
           "Just add presence",
           "Signs of power",
@@ -586,7 +588,18 @@ function Home() {
         className={`aska-campaign-tile ${wide ? "is-wide" : ""}`}
       >
         {image ? (
-          <img src={image} alt={item?.title || "Campaña AŞKA"} />
+          item?.type === "video" ? (
+            <video
+              src={image}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="aska-campaign-video"
+            />
+          ) : (
+            <img src={image} alt={item?.title || "Campaña AŞKA"} />
+          )
         ) : (
           <div className="aska-campaign-placeholder">AŞKA</div>
         )}
@@ -845,7 +858,8 @@ function Home() {
 
       <ScrollToTopButton />
 
-      {cartDrawerOpen && (
+      {cartDrawerOpen &&
+        createPortal(
         <div className="aska-cart-drawer-backdrop" onClick={() => setCartDrawerOpen(false)}>
           <aside className="aska-cart-drawer" onClick={(event) => event.stopPropagation()}>
             <button
@@ -915,7 +929,8 @@ function Home() {
               })}
             </div>
           </aside>
-        </div>
+        </div>,
+        document.body
       )}
 
       <style>
@@ -1203,7 +1218,8 @@ function Home() {
             min-height: 720px;
           }
 
-          .aska-campaign-tile img {
+          .aska-campaign-tile img,
+          .aska-campaign-video {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -1213,6 +1229,10 @@ function Home() {
             filter: contrast(1.03) saturate(.94);
             transform: scale(1.01);
             transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s ease;
+          }
+
+          .aska-campaign-video {
+            object-fit: cover;
           }
 
           .aska-campaign-tile:hover img {
